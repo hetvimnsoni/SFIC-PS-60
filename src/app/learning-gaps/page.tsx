@@ -246,6 +246,14 @@ export default function LearningGapsPage() {
                       </button>
                     )}
 
+                    <Link
+                      href="/ai?tab=analyzer"
+                      className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 text-xs font-bold transition-colors"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                      <span>AI Diagnosis & Plan</span>
+                    </Link>
+
                     <button
                       type="button"
                       onClick={() => {

@@ -436,6 +436,31 @@ export const db = {
     return plan;
   },
 
+  saveCustomRemedialPlan(plan: RemedialPlan): RemedialPlan {
+    const store = loadStore();
+    const existingIndex = store.remedialPlans.findIndex((p) => p.id === plan.id);
+    if (existingIndex !== -1) {
+      store.remedialPlans[existingIndex] = plan;
+    } else {
+      store.remedialPlans.unshift(plan);
+    }
+
+    // Link to gap if exists
+    const matchingGap = store.learningGaps.find(
+      (g) => g.studentId === plan.studentId && g.conceptId === plan.conceptId
+    );
+    if (matchingGap) {
+      matchingGap.remedialPlanId = plan.id;
+      if (matchingGap.status === "Active") {
+        matchingGap.status = "Under Intervention";
+      }
+      matchingGap.updatedAt = new Date().toISOString();
+    }
+
+    saveStore(store);
+    return plan;
+  },
+
   updateRemedialPlan(id: string, updates: Partial<RemedialPlan>): RemedialPlan | null {
     const store = loadStore();
     const index = store.remedialPlans.findIndex((p) => p.id === id);

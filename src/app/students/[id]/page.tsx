@@ -201,6 +201,13 @@ export default function StudentDetailPage({
                 <span>Launch Practice Activity</span>
               </button>
             )}
+            <Link
+              href="/ai?tab=analyzer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>AI Gap Diagnosis</span>
+            </Link>
             <button
               type="button"
               onClick={() =>

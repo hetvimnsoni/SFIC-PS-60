@@ -13,6 +13,9 @@ export const translations = {
     },
     nav: {
       dashboard: "Dashboard",
+      aiWorkspace: "AI Workspace",
+      aiTutor: "AI Tutor",
+      aiAssistant: "AI Assistant",
       students: "Students",
       assessments: "Assessments",
       learningGaps: "Learning Gaps",
@@ -140,6 +143,9 @@ export const translations = {
     },
     nav: {
       dashboard: "ડેશબોર્ડ",
+      aiWorkspace: "AI વર્કસ્પેસ",
+      aiTutor: "AI શિક્ષા ટ્યુટર",
+      aiAssistant: "AI શિક્ષક સહાયક",
       students: "વિદ્યાર્થીઓ",
       assessments: "મૂલ્યાંકન",
       learningGaps: "શિક્ષણ ત્રુટિઓ",

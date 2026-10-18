@@ -93,6 +93,14 @@ export default function RemedialPlansPage() {
               Targeted step-by-step curricula generated to close student conceptual learning gaps.
             </p>
           </div>
+
+          <Link
+            href="/ai?tab=remedial"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold shadow-md transition-all self-start sm:self-center"
+          >
+            <Sparkles className="w-4 h-4 text-purple-200" />
+            <span>Generate AI Remedial Plan</span>
+          </Link>
         </div>
 
         {/* Filters */}

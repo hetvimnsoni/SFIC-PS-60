@@ -23,21 +23,27 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { gapId, customNotes } = body;
+    const { gapId, customNotes, plan } = body;
 
-    if (!gapId) {
-      return NextResponse.json({ success: false, error: "gapId is required" }, { status: 400 });
+    // Direct save of reviewed AI plan
+    if (plan && plan.studentId && plan.conceptId) {
+      const saved = db.saveCustomRemedialPlan(plan);
+      return NextResponse.json({ success: true, plan: saved });
     }
 
-    const plan = db.createRemedialPlanForGap(gapId, customNotes);
-    if (!plan) {
+    if (!gapId) {
+      return NextResponse.json({ success: false, error: "gapId or full plan object is required" }, { status: 400 });
+    }
+
+    const createdPlan = db.createRemedialPlanForGap(gapId, customNotes);
+    if (!createdPlan) {
       return NextResponse.json(
         { success: false, error: "Could not create plan: Gap or student not found" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ success: true, plan });
+    return NextResponse.json({ success: true, plan: createdPlan });
   } catch (error) {
     console.error("API POST /api/remedial-plans error:", error);
     return NextResponse.json({ success: false, error: "Failed to create remedial plan" }, { status: 500 });

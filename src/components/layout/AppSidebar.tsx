@@ -31,6 +31,13 @@ export function AppSidebar() {
 
   const navItems = [
     { href: "/dashboard", label: t.nav.dashboard, icon: LayoutDashboard },
+    {
+      href: "/ai",
+      label: t.nav.aiWorkspace || "AI Workspace",
+      icon: Sparkles,
+      badge: "AI 5-in-1",
+      badgeColor: "bg-cyan-500 text-slate-950 font-black",
+    },
     { href: "/students", label: t.nav.students, icon: Users },
     { href: "/assessments", label: t.nav.assessments, icon: FileSpreadsheet },
     {

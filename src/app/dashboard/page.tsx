@@ -13,6 +13,7 @@ import {
   AlertTriangle,
   TrendingUp,
   ClipboardCheck,
+  ClipboardList,
   PlusCircle,
   FileSpreadsheet,
   ArrowRight,
@@ -21,7 +22,9 @@ import {
   CheckCircle2,
   Calendar,
   Layers,
+  Bot,
 } from "lucide-react";
+import { AiWorkspaceView, AiTab } from "@/components/ai/AiWorkspaceView";
 import {
   ResponsiveContainer,
   BarChart,
@@ -52,6 +55,8 @@ export default function DashboardPage() {
   const [selectedSubject, setSelectedSubject] = useState("all");
   const [showAddStudentModal, setShowAddStudentModal] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [dashboardView, setDashboardView] = useState<"overview" | "ai">("overview");
+  const [aiTab, setAiTab] = useState<AiTab>("tutor");
 
   const fetchDashboardData = async () => {
     setLoading(true);
@@ -155,8 +160,34 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          {/* Quick Filters */}
+          {/* View Switcher & Quick Filters */}
           <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center rounded-xl bg-slate-100 p-1 border border-slate-200 mr-1">
+              <button
+                type="button"
+                onClick={() => setDashboardView("overview")}
+                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  dashboardView === "overview"
+                    ? "bg-white text-slate-900 shadow-2xs"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                Overview
+              </button>
+              <button
+                type="button"
+                onClick={() => setDashboardView("ai")}
+                className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  dashboardView === "ai"
+                    ? "bg-slate-950 text-cyan-400 shadow-2xs"
+                    : "text-indigo-600 hover:text-indigo-900"
+                }`}
+              >
+                <Sparkles className="w-3 h-3 text-cyan-500 animate-pulse" />
+                <span>AI Workspace</span>
+              </button>
+            </div>
+
             <select
               value={selectedClass}
               aria-label="Filter dashboard by class"
@@ -192,6 +223,25 @@ export default function DashboardPage() {
             </button>
           </div>
         </div>
+
+        {dashboardView === "ai" ? (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => setDashboardView("overview")}
+                className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 cursor-pointer"
+              >
+                ← Back to Classroom Overview
+              </button>
+              <Link href="/ai" className="text-xs text-slate-400 hover:text-slate-700 font-medium">
+                Open in Fullscreen Mode ↗
+              </Link>
+            </div>
+            <AiWorkspaceView defaultTab={aiTab} embedded />
+          </div>
+        ) : (
+          <>
 
         {/* 5 Top Metric Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
@@ -272,6 +322,118 @@ export default function DashboardPage() {
               Verified interventions
             </span>
           </Card>
+        </div>
+
+        {/* Interactive AI Pedagogical Intelligence Hub Banner */}
+        <div className="rounded-3xl border border-cyan-500/20 bg-gradient-to-r from-[#060a14] via-[#0b1226] to-[#060a14] p-5 sm:p-6 shadow-xl text-white relative overflow-hidden">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+                  <Sparkles className="w-4 h-4 animate-pulse" />
+                </span>
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-cyan-400">
+                  Interactive AI Capabilities
+                </span>
+              </div>
+              <h2 className="text-lg sm:text-xl font-extrabold text-white mt-1">
+                AI Pedagogical Intelligence Hub
+              </h2>
+              <p className="text-xs text-slate-300 mt-0.5 max-w-xl">
+                Real configured AI features: Ask the AI Tutor, diagnose assessment evidence, generate targeted remedial plans, and print personalized worksheets.
+              </p>
+            </div>
+
+            <Link
+              href="/ai"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-md shadow-cyan-500/20 transition-all self-start sm:self-center"
+            >
+              <span>Open AI Workspace</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-4 pt-4 border-t border-cyan-500/15">
+            <button
+              type="button"
+              onClick={() => {
+                setAiTab("tutor");
+                setDashboardView("ai");
+              }}
+              className="p-3 rounded-2xl bg-[#0e172e]/80 hover:bg-[#152347] border border-cyan-500/20 text-left transition-all group cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-400 font-mono">01</span>
+                <Sparkles className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
+              </div>
+              <span className="text-xs font-bold text-white block mt-1.5">AI Tutor</span>
+              <span className="text-[10px] text-slate-400 line-clamp-1 block mt-0.5">Equal sharing & activities</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setAiTab("analyzer");
+                setDashboardView("ai");
+              }}
+              className="p-3 rounded-2xl bg-[#0e172e]/80 hover:bg-[#152347] border border-cyan-500/20 text-left transition-all group cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 font-mono">02</span>
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
+              </div>
+              <span className="text-xs font-bold text-white block mt-1.5">Gap Analyzer</span>
+              <span className="text-[10px] text-slate-400 line-clamp-1 block mt-0.5">Evidence diagnosis</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setAiTab("remedial");
+                setDashboardView("ai");
+              }}
+              className="p-3 rounded-2xl bg-[#0e172e]/80 hover:bg-[#152347] border border-cyan-500/20 text-left transition-all group cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400 font-mono">03</span>
+                <ClipboardList className="w-3.5 h-3.5 text-purple-400 group-hover:scale-110 transition-transform" />
+              </div>
+              <span className="text-xs font-bold text-white block mt-1.5">Remedial Plans</span>
+              <span className="text-[10px] text-slate-400 line-clamp-1 block mt-0.5">5-step curricula</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setAiTab("worksheet");
+                setDashboardView("ai");
+              }}
+              className="p-3 rounded-2xl bg-[#0e172e]/80 hover:bg-[#152347] border border-cyan-500/20 text-left transition-all group cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 font-mono">04</span>
+                <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
+              </div>
+              <span className="text-xs font-bold text-white block mt-1.5">Worksheets</span>
+              <span className="text-[10px] text-slate-400 line-clamp-1 block mt-0.5">Printable + Key</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setAiTab("assistant");
+                setDashboardView("ai");
+              }}
+              className="p-3 rounded-2xl bg-[#0e172e]/80 hover:bg-[#152347] border border-cyan-500/20 text-left transition-all group col-span-2 sm:col-span-1 cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-300 font-mono">05</span>
+                <Bot className="w-3.5 h-3.5 text-cyan-300 group-hover:scale-110 transition-transform" />
+              </div>
+              <span className="text-xs font-bold text-white block mt-1.5">Teacher Assistant</span>
+              <span className="text-[10px] text-slate-400 line-clamp-1 block mt-0.5">Classroom guidance</span>
+            </button>
+          </div>
         </div>
 
         {/* Charts Grid */}
@@ -490,7 +652,9 @@ export default function DashboardPage() {
             </Card>
           </div>
         </div>
-      </div>
+      </>
+    )}
+    </div>
 
       {/* Add Student Modal */}
       <StudentFormModal
