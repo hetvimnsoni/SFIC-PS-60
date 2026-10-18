@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useFilter } from "@/context/FilterContext";
 import { LanguageSelector } from "../shared/LanguageSelector";
+import { ThemeToggle } from "../shared/ThemeToggle";
 import {
   Bell,
   Search,
@@ -71,27 +72,27 @@ export function AppHeader({
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white/95 px-4 sm:px-6 backdrop-blur-sm print:hidden">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 px-4 sm:px-6 backdrop-blur-sm print:hidden transition-colors">
       {/* Left section: School info & Class selector */}
       <div className="flex items-center gap-3 sm:gap-6">
-        <div className="hidden md:flex items-center gap-2 text-slate-700">
-          <Building className="h-4 w-4 text-indigo-600 shrink-0" />
-          <span className="font-semibold text-xs lg:text-sm tracking-tight text-slate-800">
+        <div className="hidden md:flex items-center gap-2 text-slate-700 dark:text-slate-300">
+          <Building className="h-4 w-4 text-indigo-600 dark:text-cyan-400 shrink-0" />
+          <span className="font-semibold text-xs lg:text-sm tracking-tight text-slate-800 dark:text-slate-100">
             {t.app.demoSchoolName}
           </span>
-          <span className="hidden xl:inline-block text-[11px] text-slate-400 font-normal">
+          <span className="hidden xl:inline-block text-[11px] text-slate-400 dark:text-slate-500 font-normal">
             (GUJ-GNR-042)
           </span>
         </div>
 
         {/* Current Class Selector */}
-        <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1">
-          <GraduationCap className="h-3.5 w-3.5 text-slate-500" />
+        <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1">
+          <GraduationCap className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
           <select
             value={currentClass}
             aria-label="Filter by class"
             onChange={(e) => handleClassChange(e.target.value)}
-            className="bg-transparent text-xs font-semibold text-slate-700 outline-hidden cursor-pointer"
+            className="bg-transparent text-xs font-semibold text-slate-700 dark:text-slate-200 outline-hidden cursor-pointer"
           >
             <option value="all">{t.dashboard.allClasses}</option>
             <option value="cls-3a">Class 3 - Section A</option>
@@ -104,18 +105,18 @@ export function AppHeader({
       {/* Center Search */}
       <div className="hidden lg:flex items-center flex-1 max-w-xs mx-4">
         <div className="relative w-full">
-          <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
+          <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
           <input
             type="text"
             placeholder={t.actions.search}
             value={ctxSearch}
             onChange={(e) => handleSearchChange(e.target.value)}
-            className="w-full rounded-lg border border-slate-200 bg-slate-50 py-1.5 pl-9 pr-3 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden transition-all"
+            className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 py-1.5 pl-9 pr-3 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:bg-white dark:focus:bg-slate-800 focus:border-indigo-500 dark:focus:border-cyan-400 outline-hidden transition-all"
           />
         </div>
       </div>
 
-      {/* Right section: Demo tag, Language, Notifications, User Role */}
+      {/* Right section: Demo tag, Language, Theme Toggle, Notifications, User Role */}
       <div className="flex items-center gap-2 sm:gap-3">
         {/* AI Workspace Quick Launch */}
         <Link
@@ -127,39 +128,42 @@ export function AppHeader({
         </Link>
 
         {/* Hackathon Demo Tag */}
-        <div className="hidden lg:inline-flex items-center gap-1 bg-amber-50 border border-amber-200 text-amber-800 px-2.5 py-1 rounded-full text-[11px] font-semibold">
-          <Sparkles className="w-3 h-3 text-amber-600" />
+        <div className="hidden xl:inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 text-amber-800 dark:text-amber-300 px-2.5 py-1 rounded-full text-[11px] font-semibold">
+          <Sparkles className="w-3 h-3 text-amber-600 dark:text-amber-400" />
           <span>SFIC Gujarat Hackathon Demo</span>
         </div>
 
         {/* Language Selector */}
         <LanguageSelector />
 
+        {/* Dark/Light Theme Toggle */}
+        <ThemeToggle />
+
         {/* Notifications Icon with active indicator */}
         <div className="relative">
           <button
             type="button"
             onClick={() => setNotificationsOpen(!notificationsOpen)}
-            className="relative p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
+            className="relative p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 transition-colors cursor-pointer"
             title="Learning Gap Notifications"
           >
             <Bell className="w-4 h-4" />
             {urgentGaps.length > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white animate-pulse" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-slate-900 animate-pulse" />
             )}
           </button>
 
           {notificationsOpen && (
-            <div className="absolute right-0 mt-2 w-80 rounded-xl bg-white p-3 shadow-xl ring-1 ring-slate-900/10 z-50">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                <span className="font-semibold text-xs text-slate-800">Learning Gap Alerts</span>
-                <span className="text-[10px] bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded-full font-bold">
+            <div className="absolute right-0 mt-2 w-80 rounded-2xl bg-white dark:bg-slate-900 p-3 shadow-xl border border-slate-100 dark:border-slate-800 ring-1 ring-slate-900/10 dark:ring-slate-700/50 z-50">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                <span className="font-semibold text-xs text-slate-800 dark:text-slate-100">Learning Gap Alerts</span>
+                <span className="text-[10px] bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 px-1.5 py-0.5 rounded-full font-bold">
                   {urgentGaps.length} Urgent
                 </span>
               </div>
               <div className="mt-2 space-y-2 text-xs">
                 {urgentGaps.length === 0 ? (
-                  <p className="text-slate-500 text-center py-2 text-xs">
+                  <p className="text-slate-500 dark:text-slate-400 text-center py-2 text-xs">
                     No active high priority gaps detected!
                   </p>
                 ) : (
@@ -168,12 +172,12 @@ export function AppHeader({
                       key={gap.id}
                       href={`/students/${gap.studentId}`}
                       onClick={() => setNotificationsOpen(false)}
-                      className="block p-2 rounded-lg bg-amber-50/70 hover:bg-amber-100/70 border border-amber-100 transition-colors"
+                      className="block p-2 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 hover:bg-amber-100/70 dark:hover:bg-amber-900/40 border border-amber-100 dark:border-amber-900/50 transition-colors"
                     >
-                      <p className="font-semibold text-slate-900">
+                      <p className="font-semibold text-slate-900 dark:text-slate-100">
                         {gap.studentName} (Class {gap.grade}-A)
                       </p>
-                      <p className="text-slate-600 text-[11px] mt-0.5">
+                      <p className="text-slate-600 dark:text-slate-300 text-[11px] mt-0.5">
                         Needs Support in {gap.conceptName} ({gap.latestPercentage}%).
                       </p>
                     </Link>
@@ -189,29 +193,29 @@ export function AppHeader({
           <button
             type="button"
             onClick={() => setShowRoleMenu(!showRoleMenu)}
-            className="flex items-center gap-2 pl-2 pr-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition-colors cursor-pointer"
+            className="flex items-center gap-2 pl-2 pr-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
           >
-            <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold">
+            <div className="w-6 h-6 rounded-full bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center text-xs font-bold">
               {role === "admin" ? "A" : "T"}
             </div>
             <div className="text-left hidden md:block">
-              <div className="text-xs font-semibold text-slate-900 leading-tight">
+              <div className="text-xs font-semibold text-slate-900 dark:text-white leading-tight">
                 {user?.name || "Teacher"}
               </div>
-              <div className="text-[10px] text-indigo-600 font-medium capitalize">
+              <div className="text-[10px] text-indigo-600 dark:text-indigo-400 font-medium capitalize">
                 {role === "admin" ? t.app.adminRole : t.app.teacherRole}
               </div>
             </div>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
           </button>
 
           {showRoleMenu && (
-            <div className="absolute right-0 mt-2 w-56 rounded-xl bg-white p-2 shadow-xl ring-1 ring-slate-900/10 z-50">
-              <div className="px-3 py-2 border-b border-slate-100 mb-1">
-                <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+            <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white dark:bg-slate-900 p-2 shadow-xl border border-slate-100 dark:border-slate-800 ring-1 ring-slate-900/10 dark:ring-slate-700/50 z-50">
+              <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-800 mb-1">
+                <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                   Switch Active Role
                 </p>
-                <p className="text-xs text-slate-600 mt-0.5">Explore with different permissions</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">Explore with different permissions</p>
               </div>
               <button
                 type="button"
@@ -219,14 +223,16 @@ export function AppHeader({
                   switchRole("teacher");
                   setShowRoleMenu(false);
                 }}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg text-left transition-colors cursor-pointer ${
-                  role === "teacher" ? "bg-indigo-50 text-indigo-700 font-semibold" : "text-slate-700 hover:bg-slate-50"
+                className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-xl text-left transition-colors cursor-pointer ${
+                  role === "teacher"
+                    ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-semibold"
+                    : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
                 }`}
               >
-                <UserCheck className="w-4 h-4 text-indigo-600" />
+                <UserCheck className="w-4 h-4 text-indigo-600 dark:text-cyan-400" />
                 <div>
-                  <div className="font-semibold">Pooja Sharma</div>
-                  <div className="text-[10px] text-slate-500">Class Teacher (Class 4-A)</div>
+                  <div className="font-semibold text-slate-900 dark:text-slate-100">Pooja Sharma</div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400">Class Teacher (Class 4-A)</div>
                 </div>
               </button>
               <button
@@ -235,18 +241,20 @@ export function AppHeader({
                   switchRole("admin");
                   setShowRoleMenu(false);
                 }}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg text-left transition-colors mt-1 cursor-pointer ${
-                  role === "admin" ? "bg-indigo-50 text-indigo-700 font-semibold" : "text-slate-700 hover:bg-slate-50"
+                className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-xl text-left transition-colors mt-1 cursor-pointer ${
+                  role === "admin"
+                    ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-semibold"
+                    : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
                 }`}
               >
-                <ShieldAlert className="w-4 h-4 text-purple-600" />
+                <ShieldAlert className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                 <div>
-                  <div className="font-semibold">Principal R.K. Trivedi</div>
-                  <div className="text-[10px] text-slate-500">School Administrator</div>
+                  <div className="font-semibold text-slate-900 dark:text-slate-100">Principal R.K. Trivedi</div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400">School Administrator</div>
                 </div>
               </button>
 
-              <div className="border-t border-slate-100 my-1 pt-1">
+              <div className="border-t border-slate-100 dark:border-slate-800 my-1 pt-1">
                 <button
                   type="button"
                   onClick={() => {
@@ -254,9 +262,9 @@ export function AppHeader({
                     setShowRoleMenu(false);
                     router.push("/");
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-lg text-left transition-colors cursor-pointer"
+                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-xl text-left transition-colors cursor-pointer"
                 >
-                  <LogOut className="w-4 h-4 text-rose-500" />
+                  <LogOut className="w-4 h-4 text-rose-500 dark:text-rose-400" />
                   <span>{t.nav?.logout || "Sign Out"}</span>
                 </button>
               </div>

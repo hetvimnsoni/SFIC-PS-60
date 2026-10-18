@@ -53,14 +53,14 @@ export function BrandLogo({
       {showText && (
         <div className="flex flex-col">
           <div className="flex items-center gap-1.5">
-            <span className="font-bold text-lg tracking-tight text-slate-900 leading-none">
-              Shiksha<span className="text-indigo-600">Setu</span>
+            <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white leading-none">
+              Shiksha<span className="text-indigo-600 dark:text-indigo-400">Setu</span>
             </span>
-            <span className="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
+            <span className="bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
               AI
             </span>
           </div>
-          <span className="text-[11px] font-medium text-slate-500 tracking-tight mt-0.5">
+          <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 tracking-tight mt-0.5">
             Smart Gap & Remedial Engine
           </span>
         </div>

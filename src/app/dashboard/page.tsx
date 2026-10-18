@@ -162,14 +162,14 @@ export default function DashboardPage() {
 
           {/* View Switcher & Quick Filters */}
           <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center rounded-xl bg-slate-100 p-1 border border-slate-200 mr-1">
+            <div className="flex items-center rounded-xl bg-slate-100 dark:bg-slate-800/80 p-1 border border-slate-200 dark:border-slate-700 mr-1">
               <button
                 type="button"
                 onClick={() => setDashboardView("overview")}
                 className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   dashboardView === "overview"
-                    ? "bg-white text-slate-900 shadow-2xs"
-                    : "text-slate-600 hover:text-slate-900"
+                    ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-2xs"
+                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 Overview
@@ -179,8 +179,8 @@ export default function DashboardPage() {
                 onClick={() => setDashboardView("ai")}
                 className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   dashboardView === "ai"
-                    ? "bg-slate-950 text-cyan-400 shadow-2xs"
-                    : "text-indigo-600 hover:text-indigo-900"
+                    ? "bg-slate-950 dark:bg-cyan-950/80 text-cyan-400 shadow-2xs"
+                    : "text-indigo-600 dark:text-cyan-400 hover:text-indigo-900 dark:hover:text-cyan-300"
                 }`}
               >
                 <Sparkles className="w-3 h-3 text-cyan-500 animate-pulse" />
@@ -192,7 +192,7 @@ export default function DashboardPage() {
               value={selectedClass}
               aria-label="Filter dashboard by class"
               onChange={(e) => setSelectedClass(e.target.value)}
-              className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs outline-hidden cursor-pointer"
+              className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-2xs outline-hidden cursor-pointer"
             >
               <option value="all">{t.dashboard.allClasses}</option>
               <option value="cls-3a">Class 3-A</option>
@@ -204,7 +204,7 @@ export default function DashboardPage() {
               value={selectedSubject}
               aria-label="Filter dashboard by subject"
               onChange={(e) => setSelectedSubject(e.target.value)}
-              className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs outline-hidden cursor-pointer"
+              className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-2xs outline-hidden cursor-pointer"
             >
               <option value="all">{t.dashboard.allSubjects}</option>
               <option value="MATH">Mathematics</option>
@@ -573,31 +573,31 @@ export default function DashboardPage() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <Link
                 href="/assessments/new"
-                className="p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-center transition-all shadow-2xs group"
+                className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 hover:bg-slate-50 dark:hover:bg-slate-800/80 text-center transition-all shadow-2xs group"
               >
-                <FileSpreadsheet className="w-5 h-5 mx-auto text-indigo-600 group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-bold text-slate-800 block mt-2">New Assessment</span>
+                <FileSpreadsheet className="w-5 h-5 mx-auto text-indigo-600 dark:text-cyan-400 group-hover:scale-110 transition-transform" />
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block mt-2">New Assessment</span>
               </Link>
               <Link
                 href="/remedial-plans"
-                className="p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-center transition-all shadow-2xs group"
+                className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 hover:bg-slate-50 dark:hover:bg-slate-800/80 text-center transition-all shadow-2xs group"
               >
-                <ClipboardCheck className="w-5 h-5 mx-auto text-purple-600 group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-bold text-slate-800 block mt-2">Remedial Plans</span>
+                <ClipboardCheck className="w-5 h-5 mx-auto text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform" />
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block mt-2">Remedial Plans</span>
               </Link>
               <Link
                 href="/activities"
-                className="p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-center transition-all shadow-2xs group"
+                className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 hover:bg-slate-50 dark:hover:bg-slate-800/80 text-center transition-all shadow-2xs group"
               >
-                <BookOpen className="w-5 h-5 mx-auto text-emerald-600 group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-bold text-slate-800 block mt-2">Practice Bank</span>
+                <BookOpen className="w-5 h-5 mx-auto text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block mt-2">Practice Bank</span>
               </Link>
               <Link
                 href="/reports"
-                className="p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-center transition-all shadow-2xs group"
+                className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 hover:bg-slate-50 dark:hover:bg-slate-800/80 text-center transition-all shadow-2xs group"
               >
-                <TrendingUp className="w-5 h-5 mx-auto text-amber-600 group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-bold text-slate-800 block mt-2">Progress Reports</span>
+                <TrendingUp className="w-5 h-5 mx-auto text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform" />
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block mt-2">Progress Reports</span>
               </Link>
             </div>
           </div>
@@ -607,23 +607,23 @@ export default function DashboardPage() {
             <Card>
               <CardHeader>
                 <div>
-                  <CardTitle className="text-sm font-bold text-slate-900">
+                  <CardTitle className="text-sm font-bold text-slate-900 dark:text-white">
                     {t.dashboard.recentAssessmentsTitle}
                   </CardTitle>
                   <CardDescription>Recently recorded evaluations</CardDescription>
                 </div>
-                <Link href="/assessments" className="text-xs font-semibold text-indigo-600">
+                <Link href="/assessments" className="text-xs font-semibold text-indigo-600 dark:text-cyan-400 hover:underline">
                   All →
                 </Link>
               </CardHeader>
               <div className="space-y-3">
                 {assessments.slice(0, 3).map((asm) => (
-                  <div key={asm.id} className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <div className="flex items-center justify-between text-xs font-semibold text-slate-800">
+                  <div key={asm.id} className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center justify-between text-xs font-semibold text-slate-800 dark:text-slate-200">
                       <span className="line-clamp-1">{asm.title}</span>
                       <Badge variant="default" size="sm">{asm.subjectCode}</Badge>
                     </div>
-                    <div className="flex items-center justify-between text-[11px] text-slate-500 mt-1.5">
+                    <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 mt-1.5">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
                         <span>{asm.assessmentDate}</span>
@@ -635,17 +635,17 @@ export default function DashboardPage() {
               </div>
             </Card>
 
-            <Card className="bg-gradient-to-br from-indigo-50/60 to-purple-50/40 border-indigo-100">
-              <h4 className="text-xs font-bold text-indigo-950 uppercase tracking-wider mb-2">
+            <Card className="bg-gradient-to-br from-indigo-50/60 to-purple-50/40 dark:from-indigo-950/40 dark:to-purple-950/30 border-indigo-100 dark:border-indigo-800/50">
+              <h4 className="text-xs font-bold text-indigo-950 dark:text-indigo-200 uppercase tracking-wider mb-2">
                 {t.dashboard.recommendedNextActions}
               </h4>
-              <ul className="space-y-2 text-xs text-slate-700">
+              <ul className="space-y-2 text-xs text-slate-700 dark:text-slate-300">
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-4 h-4 text-indigo-600 dark:text-cyan-400 shrink-0 mt-0.5" />
                   <span>Review Aarav Patel&apos;s division token-sharing session notes.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-4 h-4 text-indigo-600 dark:text-cyan-400 shrink-0 mt-0.5" />
                   <span>Assign Class 3-A place value worksheet before Friday.</span>
                 </li>
               </ul>

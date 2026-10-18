@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { BrandLogo } from "@/components/shared/BrandLogo";
 import { LanguageSelector } from "@/components/shared/LanguageSelector";
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { useLanguage } from "@/context/LanguageContext";
 import { Menu, X, ArrowRight, Sparkles, LogIn, Compass } from "lucide-react";
 
@@ -122,6 +123,7 @@ export function LandingNavbar() {
           {/* Desktop Actions */}
           <div className="hidden sm:flex items-center gap-3">
             <LanguageSelector />
+            <ThemeToggle />
 
             <Link
               href="/login"
@@ -143,6 +145,7 @@ export function LandingNavbar() {
           {/* Mobile Hamburger Toggle Button */}
           <div className="flex items-center gap-2 lg:hidden">
             <LanguageSelector />
+            <ThemeToggle />
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
