@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useFilter } from "@/context/FilterContext";
@@ -15,6 +16,7 @@ import {
   Sparkles,
   ChevronDown,
   ShieldAlert,
+  LogOut,
 } from "lucide-react";
 
 interface AppHeaderProps {
@@ -28,7 +30,8 @@ export function AppHeader({
   onClassChange,
   onSearchChange,
 }: AppHeaderProps) {
-  const { user, role, switchRole } = useAuth();
+  const router = useRouter();
+  const { user, role, switchRole, logout } = useAuth();
   const { t } = useLanguage();
   const {
     selectedClass: ctxClass,
@@ -233,6 +236,21 @@ export function AppHeader({
                   <div className="text-[10px] text-slate-500">School Administrator</div>
                 </div>
               </button>
+
+              <div className="border-t border-slate-100 my-1 pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout();
+                    setShowRoleMenu(false);
+                    router.push("/");
+                  }}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-lg text-left transition-colors cursor-pointer"
+                >
+                  <LogOut className="w-4 h-4 text-rose-500" />
+                  <span>{t.nav?.logout || "Sign Out"}</span>
+                </button>
+              </div>
             </div>
           )}
         </div>
