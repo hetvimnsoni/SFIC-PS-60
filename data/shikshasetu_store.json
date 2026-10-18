@@ -675,7 +675,7 @@
       "subjectCode": "MATH",
       "learningObjective": "Understand division as equal grouping, sharing, and inverse multiplication.",
       "recommendationReason": "Recent assessment performance (35%) is below the configured support threshold (60%), and previous result (40%) also showed persistent difficulty.",
-      "status": "Approved",
+      "status": "Completed",
       "estimatedMinutes": 20,
       "difficulty": "Beginner",
       "requiredMaterials": [
