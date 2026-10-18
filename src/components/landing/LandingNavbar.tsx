@@ -24,7 +24,7 @@ export function LandingNavbar() {
       setScrollProgress(progress);
 
       // Active section detection
-      const sections = ["#hero", "#challenge", "#solution", "#features", "#preview", "#how-it-works", "#impact", "#contact"];
+      const sections = ["#hero", "#challenge", "#diagnostics", "#how-it-works", "#impact", "#contact"];
       for (const sec of sections) {
         const el = document.querySelector(sec);
         if (el) {
@@ -44,7 +44,8 @@ export function LandingNavbar() {
 
   const navLinks = [
     { label: language === "gu" ? "મુખ્ય પૃષ્ઠ" : "Home", href: "#hero" },
-    { label: language === "gu" ? "વિશેષતાઓ" : "Features", href: "#features" },
+    { label: language === "gu" ? "શિક્ષણ ત્રુટિ" : "The Challenge", href: "#challenge" },
+    { label: language === "gu" ? "નિદાન પ્રણાલી" : "Diagnostics", href: "#diagnostics" },
     { label: language === "gu" ? "કાર્ય પદ્ધતિ" : "How It Works", href: "#how-it-works" },
     { label: language === "gu" ? "અસર" : "Our Impact", href: "#impact" },
     { label: language === "gu" ? "સંપર્ક" : "Contact", href: "#contact" },
