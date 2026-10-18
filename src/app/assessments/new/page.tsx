@@ -1,0 +1,369 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { AppLayout } from "@/components/layout/AppLayout";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
+import { useLanguage } from "@/context/LanguageContext";
+import { calculatePercentage } from "@/lib/engine/calculations";
+import {
+  FileSpreadsheet,
+  ArrowLeft,
+  CheckCircle2,
+  AlertCircle,
+  Save,
+  Send,
+  Plus,
+} from "lucide-react";
+
+export default function NewAssessmentPage() {
+  const router = useRouter();
+  const { t } = useLanguage();
+
+  const [title, setTitle] = useState("Class 4: Division & Multiplication Check");
+  const [classroomId, setClassroomId] = useState("cls-4a");
+  const [subjectCode, setSubjectCode] = useState<string>("MATH");
+  const [assessmentDate, setAssessmentDate] = useState("2026-10-18");
+  const [maxMarks, setMaxMarks] = useState<number>(20);
+  const [selectedConcepts, setSelectedConcepts] = useState<string[]>(["c-div-01"]);
+
+  const [students, setStudents] = useState<any[]>([]);
+  const [concepts, setConcepts] = useState<any[]>([]);
+  const [scores, setScores] = useState<Record<string, { marks: number; notes: string }>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [resStd, resAsm] = await Promise.all([
+          fetch(`/api/students?classroomId=${classroomId}`),
+          fetch("/api/assessments"),
+        ]);
+        const [dataStd, dataAsm] = await Promise.all([resStd.json(), resAsm.json()]);
+
+        if (dataStd.success) {
+          setStudents(dataStd.students || []);
+          // Initialize scores map with default scores
+          const initialScores: Record<string, { marks: number; notes: string }> = {};
+          dataStd.students.forEach((s: any) => {
+            initialScores[s.id] = { marks: 15, notes: "" };
+          });
+          setScores(initialScores);
+        }
+
+        if (dataAsm.success) {
+          setConcepts(dataAsm.concepts || []);
+        }
+      } catch (e) {
+        console.error("Failed to load setup data", e);
+      }
+    }
+    loadData();
+  }, [classroomId]);
+
+  const handleScoreChange = (studentId: string, marksVal: string) => {
+    const num = Math.min(maxMarks, Math.max(0, parseFloat(marksVal) || 0));
+    setScores((prev) => ({
+      ...prev,
+      [studentId]: { ...prev[studentId], marks: num },
+    }));
+  };
+
+  const handleNotesChange = (studentId: string, notesVal: string) => {
+    setScores((prev) => ({
+      ...prev,
+      [studentId]: { ...prev[studentId], notes: notesVal },
+    }));
+  };
+
+  const toggleConcept = (conceptId: string) => {
+    setSelectedConcepts((prev) =>
+      prev.includes(conceptId) ? prev.filter((id) => id !== conceptId) : [...prev, conceptId]
+    );
+  };
+
+  const handleSubmit = async (publish: boolean) => {
+    if (!title.trim()) {
+      setError("Please enter an assessment title.");
+      return;
+    }
+    if (selectedConcepts.length === 0) {
+      setError("Please select at least one concept evaluated.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      // Map scores to results array
+      const scoresPayload = Object.keys(scores).map((studentId) => ({
+        studentId,
+        conceptId: selectedConcepts[0], // primary concept
+        marksObtained: scores[studentId].marks,
+        notes: scores[studentId].notes,
+      }));
+
+      const res = await fetch("/api/assessments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          classroomId,
+          subjectId: `sub-${subjectCode.toLowerCase()}`,
+          subjectCode,
+          title,
+          assessmentDate,
+          maxMarks,
+          conceptIds: selectedConcepts,
+          status: publish ? "published" : "draft",
+          scores: scoresPayload,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        router.push("/assessments");
+      } else {
+        setError(data.error || "Failed to record assessment");
+      }
+    } catch {
+      setError("Network error submitting assessment");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const relevantConcepts = concepts.filter((c) => c.subjectCode === subjectCode);
+
+  return (
+    <AppLayout>
+      <div className="space-y-6 max-w-4xl mx-auto">
+        {/* Breadcrumb */}
+        <Link
+          href="/assessments"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back to Assessments</span>
+        </Link>
+
+        <div>
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+            Create Concept-Level Assessment
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+            Record student scores mapped directly to primary curriculum concepts for automatic gap detection.
+          </p>
+        </div>
+
+        {/* Assessment Settings Card */}
+        <Card className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Assessment Title <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="e.g. Unit 3 Division & Multiplication Check"
+                className="w-full rounded-xl border border-slate-200 p-2 text-xs font-semibold text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={assessmentDate}
+                onChange={(e) => setAssessmentDate(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 p-2 text-xs text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Classroom</label>
+              <select
+                value={classroomId}
+                onChange={(e) => setClassroomId(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 p-2 text-xs text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+              >
+                <option value="cls-3a">Class 3 - Section A</option>
+                <option value="cls-4a">Class 4 - Section A</option>
+                <option value="cls-5a">Class 5 - Section A</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Subject</label>
+              <select
+                value={subjectCode}
+                onChange={(e) => setSubjectCode(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 p-2 text-xs text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+              >
+                <option value="MATH">Mathematics</option>
+                <option value="ENG">English</option>
+                <option value="GUJ">Gujarati</option>
+                <option value="EVS">EVS</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Maximum Marks
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="100"
+                value={maxMarks}
+                onChange={(e) => setMaxMarks(Number(e.target.value))}
+                className="w-full rounded-xl border border-slate-200 p-2 text-xs font-semibold text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+              />
+            </div>
+          </div>
+
+          {/* Concepts Selector */}
+          <div className="pt-2">
+            <label className="block text-xs font-semibold text-slate-700 mb-2">
+              Select Concept(s) Evaluated <span className="text-rose-500">*</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {relevantConcepts.map((c) => {
+                const isSelected = selectedConcepts.includes(c.id);
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => toggleConcept(c.id)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                      isSelected
+                        ? "border-indigo-600 bg-indigo-50 text-indigo-700 shadow-2xs"
+                        : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                    }`}
+                  >
+                    {c.name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </Card>
+
+        {/* Student Marks Entry Grid */}
+        <Card className="space-y-4">
+          <CardHeader className="mb-0">
+            <div>
+              <CardTitle>Record Marks by Student</CardTitle>
+              <CardDescription>
+                Enter marks obtained out of {maxMarks}. Percentage and learning gap statuses will update automatically.
+              </CardDescription>
+            </div>
+          </CardHeader>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px]">
+                <tr>
+                  <th className="p-3">Student</th>
+                  <th className="p-3">Marks (0 - {maxMarks})</th>
+                  <th className="p-3">Calculated %</th>
+                  <th className="p-3">Mastery Status</th>
+                  <th className="p-3">Teacher Notes</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {students.map((std) => {
+                  const studentScore = scores[std.id]?.marks ?? 12;
+                  const pct = calculatePercentage(studentScore, maxMarks);
+                  const status =
+                    pct >= 80 ? "Mastered" : pct >= 60 ? "Developing" : "Needs Support";
+
+                  return (
+                    <tr key={std.id} className="hover:bg-slate-50/50">
+                      <td className="p-3">
+                        <div className="font-bold text-slate-900">{std.displayName}</div>
+                        <div className="text-[10px] font-mono text-slate-400">{std.studentCode}</div>
+                      </td>
+                      <td className="p-3">
+                        <input
+                          type="number"
+                          step="0.5"
+                          min="0"
+                          max={maxMarks}
+                          value={scores[std.id]?.marks ?? ""}
+                          onChange={(e) => handleScoreChange(std.id, e.target.value)}
+                          className="w-20 rounded-lg border border-slate-200 p-1.5 text-xs font-bold text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+                        />
+                      </td>
+                      <td className="p-3 font-bold text-slate-700">{pct}%</td>
+                      <td className="p-3">
+                        <Badge
+                          variant={
+                            status === "Mastered"
+                              ? "mastered"
+                              : status === "Developing"
+                              ? "developing"
+                              : "needsSupport"
+                          }
+                          size="sm"
+                        >
+                          {status}
+                        </Badge>
+                      </td>
+                      <td className="p-3">
+                        <input
+                          type="text"
+                          placeholder="Optional observations..."
+                          value={scores[std.id]?.notes ?? ""}
+                          onChange={(e) => handleNotesChange(std.id, e.target.value)}
+                          className="w-full rounded-lg border border-slate-200 p-1 text-xs text-slate-800 placeholder-slate-400 focus:border-indigo-500 outline-hidden"
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+
+        {error && (
+          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {/* Action buttons */}
+        <div className="flex items-center justify-end gap-3 pt-4">
+          <button
+            type="button"
+            disabled={isSubmitting}
+            onClick={() => handleSubmit(false)}
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 rounded-xl border border-slate-200 shadow-2xs transition-colors cursor-pointer"
+          >
+            <Save className="w-3.5 h-3.5" />
+            <span>Save Draft</span>
+          </button>
+          <button
+            type="button"
+            disabled={isSubmitting}
+            onClick={() => handleSubmit(true)}
+            className="inline-flex items-center gap-2 px-6 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md transition-colors cursor-pointer disabled:opacity-50"
+          >
+            <Send className="w-3.5 h-3.5" />
+            <span>{isSubmitting ? "Publishing & Recalculating..." : "Publish & Recalculate Gaps"}</span>
+          </button>
+        </div>
+      </div>
+    </AppLayout>
+  );
+}
