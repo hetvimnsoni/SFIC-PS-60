@@ -6,6 +6,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { useLanguage } from "@/context/LanguageContext";
+import { useFilter } from "@/context/FilterContext";
 import { StudentFormModal } from "@/components/student/StudentFormModal";
 import { StudentCsvModal } from "@/components/student/StudentCsvModal";
 import {
@@ -22,14 +23,13 @@ import {
 
 export default function StudentsPage() {
   const { t } = useLanguage();
+  const { searchTerm, setSearchTerm, selectedClass, setSelectedClass, gradeNumber } = useFilter();
 
   const [students, setStudents] = useState<any[]>([]);
   const [gaps, setGaps] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Filters & Modals
-  const [searchTerm, setSearchTerm] = useState("");
-  const [gradeFilter, setGradeFilter] = useState("all");
+  // Modals
   const [showAddModal, setShowAddModal] = useState(false);
   const [showCsvModal, setShowCsvModal] = useState(false);
 
@@ -54,8 +54,18 @@ export default function StudentsPage() {
     fetchStudents();
   }, []);
 
+  const activeGrade = gradeNumber ? String(gradeNumber) : "all";
+
+  const handleGradeFilterChange = (val: string) => {
+    if (val === "all") {
+      setSelectedClass("all");
+    } else {
+      setSelectedClass(`cls-${val}a`);
+    }
+  };
+
   const filteredStudents = students.filter((s) => {
-    if (gradeFilter !== "all" && s.grade !== Number(gradeFilter)) return false;
+    if (activeGrade !== "all" && s.grade !== Number(activeGrade)) return false;
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       return (
@@ -84,7 +94,7 @@ export default function StudentsPage() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `shikshasetu_students_class${gradeFilter}.csv`);
+    link.setAttribute("download", `shikshasetu_students_class${activeGrade}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -148,9 +158,9 @@ export default function StudentsPage() {
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <span className="text-xs font-semibold text-slate-500">Filter:</span>
             <select
-              value={gradeFilter}
+              value={activeGrade}
               aria-label="Filter students by class"
-              onChange={(e) => setGradeFilter(e.target.value)}
+              onChange={(e) => handleGradeFilterChange(e.target.value)}
               className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 outline-hidden cursor-pointer"
             >
               <option value="all">All Classes (1-5)</option>

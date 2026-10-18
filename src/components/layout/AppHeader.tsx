@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { useFilter } from "@/context/FilterContext";
 import { LanguageSelector } from "../shared/LanguageSelector";
 import {
   Bell,
@@ -23,17 +24,51 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({
-  currentClass = "all",
+  currentClass: propClass,
   onClassChange,
   onSearchChange,
 }: AppHeaderProps) {
   const { user, role, switchRole } = useAuth();
   const { t } = useLanguage();
+  const {
+    selectedClass: ctxClass,
+    setSelectedClass: setCtxClass,
+    searchTerm: ctxSearch,
+    setSearchTerm: setCtxSearch,
+  } = useFilter();
+
+  const currentClass = propClass !== undefined ? propClass : ctxClass;
+  const handleClassChange = (val: string) => {
+    setCtxClass(val);
+    if (onClassChange) onClassChange(val);
+  };
+
+  const handleSearchChange = (val: string) => {
+    setCtxSearch(val);
+    if (onSearchChange) onSearchChange(val);
+  };
+
   const [showRoleMenu, setShowRoleMenu] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [urgentGaps, setUrgentGaps] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function loadAlerts() {
+      try {
+        const res = await fetch("/api/learning-gaps?priority=High&status=Active");
+        const data = await res.json();
+        if (data.success) {
+          setUrgentGaps(data.gaps || []);
+        }
+      } catch {
+        // quiet fallback
+      }
+    }
+    loadAlerts();
+  }, []);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white/95 px-4 sm:px-6 backdrop-blur-sm">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white/95 px-4 sm:px-6 backdrop-blur-sm print:hidden">
       {/* Left section: School info & Class selector */}
       <div className="flex items-center gap-3 sm:gap-6">
         <div className="hidden md:flex items-center gap-2 text-slate-700">
@@ -52,7 +87,7 @@ export function AppHeader({
           <select
             value={currentClass}
             aria-label="Filter by class"
-            onChange={(e) => onClassChange && onClassChange(e.target.value)}
+            onChange={(e) => handleClassChange(e.target.value)}
             className="bg-transparent text-xs font-semibold text-slate-700 outline-hidden cursor-pointer"
           >
             <option value="all">{t.dashboard.allClasses}</option>
@@ -63,14 +98,15 @@ export function AppHeader({
         </div>
       </div>
 
-      {/* Center Search (Optional Quick Search) */}
+      {/* Center Search */}
       <div className="hidden lg:flex items-center flex-1 max-w-xs mx-4">
         <div className="relative w-full">
           <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
           <input
             type="text"
             placeholder={t.actions.search}
-            onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
+            value={ctxSearch}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className="w-full rounded-lg border border-slate-200 bg-slate-50 py-1.5 pl-9 pr-3 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden transition-all"
           />
         </div>
@@ -96,7 +132,9 @@ export function AppHeader({
             title="Learning Gap Notifications"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white animate-pulse" />
+            {urgentGaps.length > 0 && (
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white animate-pulse" />
+            )}
           </button>
 
           {notificationsOpen && (
@@ -104,30 +142,31 @@ export function AppHeader({
               <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                 <span className="font-semibold text-xs text-slate-800">Learning Gap Alerts</span>
                 <span className="text-[10px] bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded-full font-bold">
-                  2 Urgent
+                  {urgentGaps.length} Urgent
                 </span>
               </div>
               <div className="mt-2 space-y-2 text-xs">
-                <Link
-                  href="/students/std-aarav"
-                  onClick={() => setNotificationsOpen(false)}
-                  className="block p-2 rounded-lg bg-amber-50/70 hover:bg-amber-100/70 border border-amber-100 transition-colors"
-                >
-                  <p className="font-semibold text-slate-900">Aarav Patel (Class 4-A)</p>
-                  <p className="text-slate-600 text-[11px] mt-0.5">
-                    Needs Support in Division Basics (35%). Remedial Plan ready for review.
+                {urgentGaps.length === 0 ? (
+                  <p className="text-slate-500 text-center py-2 text-xs">
+                    No active high priority gaps detected!
                   </p>
-                </Link>
-                <Link
-                  href="/students/std-dev"
-                  onClick={() => setNotificationsOpen(false)}
-                  className="block p-2 rounded-lg bg-rose-50/70 hover:bg-rose-100/70 border border-rose-100 transition-colors"
-                >
-                  <p className="font-semibold text-slate-900">Dev Shah (Class 4-A)</p>
-                  <p className="text-slate-600 text-[11px] mt-0.5">
-                    Subject-Verb Agreement scored 45%. Review recommended.
-                  </p>
-                </Link>
+                ) : (
+                  urgentGaps.slice(0, 3).map((gap) => (
+                    <Link
+                      key={gap.id}
+                      href={`/students/${gap.studentId}`}
+                      onClick={() => setNotificationsOpen(false)}
+                      className="block p-2 rounded-lg bg-amber-50/70 hover:bg-amber-100/70 border border-amber-100 transition-colors"
+                    >
+                      <p className="font-semibold text-slate-900">
+                        {gap.studentName} (Class {gap.grade}-A)
+                      </p>
+                      <p className="text-slate-600 text-[11px] mt-0.5">
+                        Needs Support in {gap.conceptName} ({gap.latestPercentage}%).
+                      </p>
+                    </Link>
+                  ))
+                )}
               </div>
             </div>
           )}

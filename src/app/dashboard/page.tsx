@@ -6,6 +6,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { useLanguage } from "@/context/LanguageContext";
+import { useFilter } from "@/context/FilterContext";
 import { StudentFormModal } from "@/components/student/StudentFormModal";
 import {
   Users,
@@ -47,9 +48,10 @@ export default function DashboardPage() {
   const [progressData, setProgressData] = useState<any>(null);
 
   // Filters
-  const [selectedClass, setSelectedClass] = useState("all");
+  const { selectedClass, setSelectedClass } = useFilter();
   const [selectedSubject, setSelectedSubject] = useState("all");
   const [showAddStudentModal, setShowAddStudentModal] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const fetchDashboardData = async () => {
     setLoading(true);
@@ -83,6 +85,7 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
+    setIsMounted(true);
     fetchDashboardData();
   }, []);
 
@@ -283,18 +286,22 @@ export default function DashboardPage() {
               <Badge variant="outline" size="sm">Operational Data</Badge>
             </CardHeader>
             <div className="h-64 w-full pt-2">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={subjectChartData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                  <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                  <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} />
-                  <Tooltip
-                    formatter={(val: any) => [`${val}%`, "Average Score"]}
-                    contentStyle={{ borderRadius: "12px", border: "1px solid #CBD5E1", fontSize: "12px" }}
-                  />
-                  <Bar dataKey="average" fill="#312E81" radius={[6, 6, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+              {isMounted ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={subjectChartData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                    <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                    <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} />
+                    <Tooltip
+                      formatter={(val: any) => [`${val}%`, "Average Score"]}
+                      contentStyle={{ borderRadius: "12px", border: "1px solid #CBD5E1", fontSize: "12px" }}
+                    />
+                    <Bar dataKey="average" fill="#312E81" radius={[6, 6, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full w-full flex items-center justify-center text-xs text-slate-400">Loading chart...</div>
+              )}
             </div>
           </Card>
 
@@ -308,25 +315,29 @@ export default function DashboardPage() {
               <span className="text-xs font-bold text-emerald-600">+34 pp gain</span>
             </CardHeader>
             <div className="h-64 w-full pt-2">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={progressTrendData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                  <XAxis dataKey="period" tick={{ fontSize: 11 }} />
-                  <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} />
-                  <Tooltip
-                    formatter={(val: any) => [`${val}%`, "Average Score"]}
-                    contentStyle={{ borderRadius: "12px", border: "1px solid #CBD5E1", fontSize: "12px" }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="score"
-                    stroke="#059669"
-                    strokeWidth={3}
-                    dot={{ r: 5, fill: "#059669" }}
-                    activeDot={{ r: 7 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              {isMounted ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={progressTrendData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                    <XAxis dataKey="period" tick={{ fontSize: 11 }} />
+                    <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} />
+                    <Tooltip
+                      formatter={(val: any) => [`${val}%`, "Average Score"]}
+                      contentStyle={{ borderRadius: "12px", border: "1px solid #CBD5E1", fontSize: "12px" }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="score"
+                      stroke="#059669"
+                      strokeWidth={3}
+                      dot={{ r: 5, fill: "#059669" }}
+                      activeDot={{ r: 7 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full w-full flex items-center justify-center text-xs text-slate-400">Loading chart...</div>
+              )}
             </div>
           </Card>
         </div>

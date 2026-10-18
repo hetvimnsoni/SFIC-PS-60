@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog } from "../ui/Dialog";
 import { Badge } from "../ui/Badge";
 import { CheckCircle2, XCircle, ArrowRight, Sparkles, HelpCircle, Trophy } from "lucide-react";
@@ -30,14 +30,24 @@ export function ActivityPlayerModal({
   const [isSaving, setIsSaving] = useState(false);
   const [attemptResult, setAttemptResult] = useState<any>(null);
 
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentIdx(0);
+      setSelectedAnswers({});
+      setShowHint(false);
+      setIsSubmitted(false);
+      setAttemptResult(null);
+    }
+  }, [isOpen, activity?.id]);
+
   if (!activity) return null;
 
-  const currentQ: ActivityQuestion = activity.questions[currentIdx];
+  const currentQ: ActivityQuestion = activity.questions[currentIdx] || activity.questions[0];
   const totalQuestions = activity.questions.length;
-  const currentAnswer = selectedAnswers[currentQ?.id];
+  const currentAnswer = currentQ ? selectedAnswers[currentQ.id] : undefined;
 
   const handleSelectOption = (opt: string | number | boolean) => {
-    if (isSubmitted) return;
+    if (isSubmitted || !currentQ) return;
     setSelectedAnswers((prev) => ({ ...prev, [currentQ.id]: opt }));
   };
 

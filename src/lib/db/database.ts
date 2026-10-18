@@ -96,9 +96,25 @@ function loadStore(): DataStore {
 
 function saveStore(store: DataStore) {
   ensureDataDirectory();
-  const tempFile = `${STORE_FILE}.tmp.${Date.now()}`;
-  fs.writeFileSync(tempFile, JSON.stringify(store, null, 2), "utf-8");
-  fs.renameSync(tempFile, STORE_FILE);
+  const json = JSON.stringify(store, null, 2);
+  const tempFile = `${STORE_FILE}.tmp.${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+  try {
+    fs.writeFileSync(tempFile, json, "utf-8");
+    try {
+      fs.copyFileSync(tempFile, STORE_FILE);
+      try {
+        fs.unlinkSync(tempFile);
+      } catch {}
+    } catch {
+      // Fallback direct write
+      fs.writeFileSync(STORE_FILE, json, "utf-8");
+      try {
+        if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
+      } catch {}
+    }
+  } catch {
+    fs.writeFileSync(STORE_FILE, json, "utf-8");
+  }
   memoryStore = store;
 }
 
@@ -318,6 +334,15 @@ export const db = {
           deltaPercentagePoints: detection.deltaPercentagePoints,
           updatedAt: new Date().toISOString(),
         };
+
+        if (detection.masteryStatus === "Mastered") {
+          const relatedPlan = store.remedialPlans.find(
+            (p) => p.studentId === studentId && p.conceptId === conceptId
+          );
+          if (relatedPlan) {
+            relatedPlan.status = "Completed";
+          }
+        }
       } else if (detection.requiresRemediation) {
         // Create new gap
         const newGap: LearningGap = {
@@ -393,7 +418,15 @@ export const db = {
       customNotes
     );
 
-    store.remedialPlans.push(plan);
+    const existingPlanIndex = store.remedialPlans.findIndex(
+      (p) => p.studentId === student.id && p.conceptId === concept.id
+    );
+    if (existingPlanIndex !== -1) {
+      store.remedialPlans[existingPlanIndex] = plan;
+    } else {
+      store.remedialPlans.push(plan);
+    }
+
     // Link plan to gap
     gap.remedialPlanId = plan.id;
     gap.status = "Under Intervention";
@@ -435,11 +468,17 @@ export const db = {
     store.attempts.push(attempt);
 
     // If associated with a remedial plan, update plan status to 'In Progress' or 'Completed'
-    const relatedPlan = store.remedialPlans.find(
-      (p) => p.studentId === attempt.studentId && p.status === "Approved"
-    );
-    if (relatedPlan) {
-      relatedPlan.status = pct >= 80 ? "Completed" : "In Progress";
+    const activity = store.activities.find((a) => a.id === attempt.activityId);
+    if (activity) {
+      const relatedPlan = store.remedialPlans.find(
+        (p) =>
+          p.studentId === attempt.studentId &&
+          p.conceptId === activity.conceptId &&
+          (p.status === "Approved" || p.status === "In Progress" || p.status === "Suggested")
+      );
+      if (relatedPlan) {
+        relatedPlan.status = pct >= 80 ? "Completed" : "In Progress";
+      }
     }
 
     saveStore(store);

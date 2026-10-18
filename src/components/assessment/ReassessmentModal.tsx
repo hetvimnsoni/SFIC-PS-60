@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog } from "../ui/Dialog";
 import { Badge } from "../ui/Badge";
 import { calculatePercentage, calculatePercentagePointDelta } from "@/lib/engine/calculations";
@@ -29,9 +29,18 @@ export function ReassessmentModal({
 }: ReassessmentModalProps) {
   const [marksObtained, setMarksObtained] = useState<string>("17");
   const [maximumMarks, setMaximumMarks] = useState<string>("20");
-  const [notes, setNotes] = useState<string>("Post-remedial intervention reassessment after equal sharing activity.");
+  const [notes, setNotes] = useState<string>("Post-remedial intervention reassessment.");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setMarksObtained("17");
+      setMaximumMarks("20");
+      setNotes(`Post-remedial intervention reassessment for ${conceptName}.`);
+      setError(null);
+    }
+  }, [isOpen, conceptName]);
 
   const obtainedNum = parseFloat(marksObtained) || 0;
   const maxNum = parseFloat(maximumMarks) || 20;

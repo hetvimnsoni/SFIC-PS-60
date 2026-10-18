@@ -64,6 +64,15 @@ export default function NewAssessmentPage() {
     loadData();
   }, [classroomId]);
 
+  useEffect(() => {
+    if (concepts.length > 0) {
+      const match = concepts.filter((c) => c.subjectCode === subjectCode);
+      if (match.length > 0) {
+        setSelectedConcepts([match[0].id]);
+      }
+    }
+  }, [subjectCode, concepts]);
+
   const handleScoreChange = (studentId: string, marksVal: string) => {
     const num = Math.min(maxMarks, Math.max(0, parseFloat(marksVal) || 0));
     setScores((prev) => ({

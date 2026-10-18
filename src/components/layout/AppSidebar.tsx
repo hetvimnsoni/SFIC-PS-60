@@ -74,7 +74,7 @@ export function AppSidebar() {
       <button
         type="button"
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="fixed top-3 left-3 z-50 p-2 rounded-lg bg-white border border-slate-200 text-slate-700 shadow-sm lg:hidden cursor-pointer"
+        className="fixed top-3 left-3 z-50 p-2 rounded-lg bg-white border border-slate-200 text-slate-700 shadow-sm lg:hidden cursor-pointer print:hidden"
         aria-label="Toggle Navigation"
       >
         {isMobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -83,14 +83,14 @@ export function AppSidebar() {
       {/* Backdrop for mobile */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-xs lg:hidden"
+          className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-xs lg:hidden print:hidden"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
 
       {/* Sidebar container */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-slate-200 bg-white shadow-xs transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-slate-200 bg-white shadow-xs transition-transform duration-200 ease-in-out lg:translate-x-0 print:hidden ${
           isMobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
