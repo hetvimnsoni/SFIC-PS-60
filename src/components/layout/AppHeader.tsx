@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -21,6 +21,7 @@ import {
   LogOut,
   RotateCcw,
   HelpCircle,
+  X,
 } from "lucide-react";
 
 interface AppHeaderProps {
@@ -37,7 +38,10 @@ export function AppHeader({
   const router = useRouter();
   const pathname = usePathname();
   const { user, role, switchRole, logout } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
   const getPageTourKey = (path: string): string => {
     if (path === "/dashboard" || path === "/") return "dashboard";
@@ -66,6 +70,31 @@ export function AppHeader({
     if (onSearchChange) onSearchChange(val);
   };
 
+  const handleClearSearch = () => {
+    handleSearchChange("");
+    searchInputRef.current?.focus();
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && ctxSearch.trim()) {
+      if (!pathname.startsWith("/students")) {
+        router.push("/students");
+      }
+    }
+  };
+
+  // Keyboard shortcut: Ctrl+K or Cmd+K to focus search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   const [showRoleMenu, setShowRoleMenu] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [urgentGaps, setUrgentGaps] = useState<any[]>([]);
@@ -86,9 +115,43 @@ export function AppHeader({
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 px-4 sm:px-6 backdrop-blur-sm print:hidden transition-colors">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 px-4 sm:px-6 backdrop-blur-sm print:hidden transition-colors relative">
+      {/* Mobile Full-Width Search Overlay */}
+      {isMobileSearchOpen && (
+        <div className="sm:hidden absolute inset-0 z-50 bg-white dark:bg-slate-900 px-3 flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 shadow-md">
+          <div className="relative flex-1">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <input
+              autoFocus
+              type="text"
+              placeholder={language === "gu" ? "વિદ્યાર્થીઓ, ત્રુટિઓ શોધો..." : "Search students, gaps..."}
+              value={ctxSearch}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
+              className="w-full h-10 rounded-xl border border-amber-500 bg-slate-50 dark:bg-slate-800 py-2 pl-10 pr-8 text-xs text-slate-900 dark:text-white placeholder-slate-400 outline-hidden"
+            />
+            {ctxSearch && (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 cursor-pointer"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsMobileSearchOpen(false)}
+            className="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+          >
+            Close
+          </button>
+        </div>
+      )}
+
       {/* Left section: School info & Class selector */}
-      <div className="flex items-center gap-3 sm:gap-6">
+      <div className="flex items-center gap-2 sm:gap-4 shrink-0">
         <div className="hidden md:flex items-center gap-2 text-slate-700 dark:text-slate-300">
           <Building className="h-4 w-4 text-indigo-600 dark:text-cyan-400 shrink-0" />
           <span className="font-semibold text-xs lg:text-sm tracking-tight text-slate-800 dark:text-slate-100">
@@ -116,22 +179,53 @@ export function AppHeader({
         </div>
       </div>
 
-      {/* Center Search */}
-      <div className="hidden lg:flex items-center flex-1 max-w-xs mx-4">
+      {/* Center Search - Prominent, Large, and Accessible */}
+      <div className="hidden sm:flex items-center flex-1 max-w-sm md:max-w-md lg:max-w-xl mx-2 md:mx-4">
         <div className="relative w-full">
-          <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-slate-400 dark:text-slate-400 pointer-events-none" />
           <input
+            ref={searchInputRef}
             type="text"
-            placeholder={t.actions.search}
+            placeholder={
+              language === "gu"
+                ? "વિદ્યાર્થીઓ, લર્નિંગ ગેપ્સ અથવા વિષય શોધો..."
+                : "Search students, learning gaps, concepts..."
+            }
             value={ctxSearch}
             onChange={(e) => handleSearchChange(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 py-1.5 pl-9 pr-3 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:bg-white dark:focus:bg-slate-800 focus:border-indigo-500 dark:focus:border-cyan-400 outline-hidden transition-all"
+            onKeyDown={handleSearchKeyDown}
+            className="w-full h-10 rounded-2xl border-2 border-slate-300 dark:border-slate-700 bg-slate-100/90 dark:bg-slate-800/90 py-2 pl-10 pr-16 text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:bg-white dark:focus:bg-slate-900 focus:border-amber-500 dark:focus:border-amber-400 focus:ring-4 focus:ring-amber-500/20 outline-hidden transition-all shadow-xs"
           />
+          {ctxSearch ? (
+            <button
+              type="button"
+              onClick={handleClearSearch}
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+              title="Clear search"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          ) : (
+            <span className="hidden md:inline-flex items-center gap-0.5 absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded-md bg-slate-200 dark:bg-slate-700/80 border border-slate-300 dark:border-slate-600 text-[10px] font-mono font-semibold text-slate-500 dark:text-slate-400 pointer-events-none">
+              Ctrl K
+            </span>
+          )}
         </div>
       </div>
 
       {/* Right section: Demo tag, Language, Theme Toggle, Notifications, User Role */}
       <div className="flex items-center gap-2 sm:gap-3">
+        {/* Mobile Search Toggle Button */}
+        <button
+          type="button"
+          onClick={() => setIsMobileSearchOpen(true)}
+          className="sm:hidden p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white cursor-pointer"
+          aria-label="Open Search"
+          title="Search"
+        >
+          <Search className="w-4 h-4" />
+        </button>
+
         {/* AI Workspace Quick Launch */}
         <Link
           href="/ai"
@@ -150,22 +244,28 @@ export function AppHeader({
         {/* Replay Tour Button */}
         <button
           type="button"
-          onClick={() => triggerPageTour(getPageTourKey(pathname))}
-          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-amber-200 dark:border-amber-800/60 bg-amber-50/80 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/50 text-xs font-bold transition-all cursor-pointer shadow-2xs"
-          title={t.tutorial?.replayTour || "Replay Guided Tour"}
+          onClick={() => {
+            const pageKey = getPageTourKey(pathname);
+            if (typeof window !== "undefined") {
+              localStorage.removeItem(`shikshasetu_tour_completed_${pageKey}`);
+            }
+            triggerPageTour(pageKey);
+          }}
+          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-amber-300 dark:border-amber-700 bg-amber-100/90 dark:bg-amber-950/70 text-amber-950 dark:text-amber-200 hover:bg-amber-200 text-xs font-black transition-all cursor-pointer shadow-xs active:scale-95"
+          title={t.tutorial?.replayTour || "Start Page Guided Tour"}
         >
           <RotateCcw className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-          <span className="hidden md:inline">{t.tutorial?.replayTour || "Replay Tour"}</span>
+          <span className="hidden sm:inline">{t.tutorial?.replayTour || "Tour"}</span>
         </button>
 
         {/* Tutorial & Help Center Link */}
         <Link
           href="/tutorial"
-          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-semibold transition-all shadow-2xs"
+          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/90 dark:bg-indigo-950/70 text-indigo-900 dark:text-indigo-200 hover:bg-indigo-100 text-xs font-bold transition-all shadow-xs"
           title={t.tutorial?.pageTitle || "Help & Tutorial Center"}
         >
           <HelpCircle className="w-3.5 h-3.5 text-indigo-600 dark:text-cyan-400" />
-          <span className="hidden xl:inline">{t.nav?.tutorial || "Tutorial & Help"}</span>
+          <span className="hidden sm:inline">{t.nav?.tutorial || "Tutorial"}</span>
         </Link>
 
         {/* Language Selector */}

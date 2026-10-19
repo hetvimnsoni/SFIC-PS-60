@@ -189,9 +189,15 @@ export function GlobalShikshaBot() {
             <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#3DDBA9] animate-pulse" />
           </div>
 
+          {/* Persistent speech callout badge for new teachers */}
+          <div className="absolute right-full mr-3 top-2 px-3 py-1.5 rounded-2xl bg-[#14123D]/95 border border-amber-500/40 text-[11px] font-bold text-amber-200 shadow-xl whitespace-nowrap pointer-events-none hidden sm:flex items-center gap-1.5">
+            <span className="text-sm">💡</span>
+            <span>{language === "gu" ? "વેબસાઇટ ટૂર માટે અહીં ક્લિક કરો" : "New here? Click for website tour"}</span>
+          </div>
+
           {/* Hover tooltip label */}
           <span className="absolute right-full mr-3 px-3 py-1.5 rounded-xl bg-slate-900/90 text-white text-xs font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity border border-slate-700 pointer-events-none shadow-xl">
-            {language === "gu" ? "શિક્ષાબોટ સહાયક" : "ShikshaBot AI (Offline)"}
+            {language === "gu" ? "શિક્ષાબોટ સહાયક (ટૂર અને મદદ)" : "ShikshaBot AI (Tour & Help)"}
           </span>
         </button>
       )}

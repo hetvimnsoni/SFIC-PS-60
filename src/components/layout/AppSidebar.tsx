@@ -21,11 +21,12 @@ import {
   Sparkles,
   BookOpen,
 } from "lucide-react";
+import { triggerPageTour } from "@/components/tutorial/SpotlightTour";
 
 export function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
@@ -115,8 +116,49 @@ export function AppSidebar() {
           </Link>
         </div>
 
+        {/* Teacher Tutorial & How-To Card */}
+        <div className="mx-3 mt-3 p-3 rounded-2xl bg-gradient-to-br from-amber-500/15 via-slate-900 to-indigo-950/40 border border-amber-500/35 shadow-xs">
+          <div className="flex items-center justify-between text-amber-400 font-bold text-xs">
+            <span className="flex items-center gap-1.5">
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>{language === "gu" ? "શિક્ષક ટ્યુટોરિયલ" : "Teacher Tutorial"}</span>
+            </span>
+            <span className="px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-mono">
+              Guide
+            </span>
+          </div>
+          <p className="text-[11px] text-slate-300 mt-1 leading-snug">
+            {language === "gu"
+              ? "વેબસાઇટ વાપરવા માટે ૪ પગલાંનું સરળ માર્ગદર્શન."
+              : "Learn how to spot gaps, create 5-step plans & reassess."}
+          </p>
+          <div className="mt-2.5 flex items-center gap-1.5">
+            <Link
+              href="/tutorial"
+              onClick={() => setIsMobileOpen(false)}
+              className="flex-1 py-1.5 text-center bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-xl text-[11px] font-black transition-colors shadow-xs"
+            >
+              {language === "gu" ? "ટ્યુટોરિયલ જુઓ →" : "Open Tutorial →"}
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                setIsMobileOpen(false);
+                if (typeof window !== "undefined") {
+                  localStorage.removeItem("shikshasetu_tour_completed_dashboard");
+                }
+                triggerPageTour("dashboard");
+              }}
+              className="px-2 py-1.5 rounded-xl border border-white/20 hover:bg-white/10 text-slate-300 text-[11px] font-semibold cursor-pointer"
+              title="Start Guided Tour"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+
         {/* Guided Demo Shortcut Card */}
-        <div className="mx-3 mt-3 p-3 rounded-2xl bg-gradient-to-br from-indigo-50/80 to-indigo-100/40 dark:from-indigo-950/40 dark:to-indigo-900/20 border border-indigo-100 dark:border-indigo-800/50">
+        <div className="mx-3 mt-2.5 p-3 rounded-2xl bg-gradient-to-br from-indigo-50/80 to-indigo-100/40 dark:from-indigo-950/40 dark:to-indigo-900/20 border border-indigo-100 dark:border-indigo-800/50">
           <div className="flex items-center gap-1.5 text-indigo-900 dark:text-indigo-200 font-semibold text-xs">
             <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-cyan-400" />
             <span>Hackathon Guided Demo</span>

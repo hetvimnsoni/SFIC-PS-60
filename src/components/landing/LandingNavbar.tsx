@@ -7,7 +7,7 @@ import { LanguageSelector } from "@/components/shared/LanguageSelector";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/Button";
-import { Menu, X, ArrowRight, LogIn } from "lucide-react";
+import { Menu, X, ArrowRight, LogIn, BookOpen, Sparkles } from "lucide-react";
 
 export function LandingNavbar() {
   const { t, language } = useLanguage();
@@ -128,6 +128,18 @@ export function LandingNavbar() {
             <LanguageSelector />
             <ThemeToggle />
 
+            {/* New Teacher Tutorial Link */}
+            <Link href="/tutorial">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-full border-amber-500/50 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 text-xs font-bold shadow-[0_0_15px_rgba(255,138,61,0.25)] flex items-center gap-1.5"
+              >
+                <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+                <span>{language === "gu" ? "ટ્યુટોરિયલ" : "Tutorial & Guide"}</span>
+              </Button>
+            </Link>
+
             <Link href="/login">
               <Button
                 variant="outline"
@@ -153,6 +165,10 @@ export function LandingNavbar() {
 
           {/* Mobile Hamburger Toggle Button */}
           <div className="flex items-center gap-2 lg:hidden">
+            <Link href="/tutorial" className="p-1.5 rounded-xl border border-amber-500/40 bg-amber-500/10 text-amber-300 text-xs font-bold flex items-center gap-1">
+              <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+              <span className="text-[11px]">{language === "gu" ? "ટ્યુટોરિયલ" : "Guide"}</span>
+            </Link>
             <LanguageSelector />
             <ThemeToggle />
             <button
@@ -169,6 +185,26 @@ export function LandingNavbar() {
         {/* Mobile Drawer Menu */}
         {isMobileMenuOpen && (
           <div className="lg:hidden fixed inset-x-0 top-full bg-[#14123D]/98 backdrop-blur-2xl border-b border-white/10 shadow-2xl px-5 py-6 space-y-4 animate-in slide-in-from-top-2 duration-200">
+            {/* Mobile Tutorial Feature Card */}
+            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/20 to-indigo-900/40 border border-amber-500/40 flex items-center justify-between">
+              <div>
+                <p className="text-xs font-bold text-white flex items-center gap-1.5">
+                  <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+                  <span>{language === "gu" ? "નવા શિક્ષક માટે ટ્યુટોરિયલ" : "New User? Tutorial & Guide"}</span>
+                </p>
+                <p className="text-[10px] text-slate-300 mt-0.5">
+                  {language === "gu" ? "વેબસાઇટ કેવી રીતે વાપરવી તે 3 મિનિટમાં જાણો" : "Learn how to use this website in 3 mins"}
+                </p>
+              </div>
+              <Link
+                href="/tutorial"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-black shrink-0 ml-2"
+              >
+                {language === "gu" ? "શરૂ કરો" : "Open Guide"}
+              </Link>
+            </div>
+
             <div className="flex flex-col space-y-1">
               {navLinks.map((item) => {
                 if (item.href.startsWith("/")) {

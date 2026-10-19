@@ -13,7 +13,7 @@ import { fireCelebrationConfetti } from "@/lib/confetti";
 import { useLanguage } from "@/context/LanguageContext";
 import { useFilter } from "@/context/FilterContext";
 import { StudentFormModal } from "@/components/student/StudentFormModal";
-import { SpotlightTour } from "@/components/tutorial/SpotlightTour";
+import { SpotlightTour, triggerPageTour } from "@/components/tutorial/SpotlightTour";
 import { ChecklistWidget } from "@/components/tutorial/ChecklistWidget";
 import { ContextualHelp } from "@/components/shared/ContextualHelp";
 import {
@@ -33,6 +33,7 @@ import {
   Bot,
   PartyPopper,
   Flame,
+  RotateCcw,
 } from "lucide-react";
 import { AiWorkspaceView, AiTab } from "@/components/ai/AiWorkspaceView";
 import {
@@ -253,6 +254,73 @@ export default function DashboardPage() {
           </div>
         ) : (
           <>
+            {/* New Teacher Onboarding & Tutorial Welcome Banner */}
+            <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-[#14123D] via-[#2B2A6B] to-slate-900 border border-amber-500/40 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="flex items-start gap-3.5 z-10">
+                <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-bold text-xl shrink-0 shadow-lg shadow-amber-500/30">
+                  👋
+                </div>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-heading text-sm sm:text-base font-bold text-white">
+                      {language === "gu"
+                        ? "નવા શિક્ષક છો? શિક્ષાસેતુ AI કેવી રીતે વાપરવું તે જાણો"
+                        : "New Teacher? Learn How to Handle ShikshaSetu AI"}
+                    </h3>
+                    <Badge variant="saffron" size="sm">
+                      {language === "gu" ? "માર્ગદર્શિત ટૂર" : "Interactive Tour"}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
+                    {language === "gu"
+                      ? "પ્રાથમિક શાળાના શિક્ષકો માટે તૈયાર કરેલી ૧ મિનિટની ઇન્ટરેક્ટિવ ટૂર જુઓ અથવા સંપૂર્ણ માર્ગદર્શિકા કેન્દ્ર અને પ્રિન્ટેબલ ડેસ્ક શીટ ખોલો."
+                      : "Designed for Gujarat primary teachers: spot gaps early (<60%), deploy 5-step concrete manipulatives, and verify student mastery."}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2.5 shrink-0 w-full md:w-auto z-10">
+                <Button
+                  variant="saffron"
+                  size="sm"
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      localStorage.removeItem("shikshasetu_tour_completed_dashboard");
+                    }
+                    triggerPageTour("dashboard");
+                  }}
+                  className="rounded-xl text-xs font-black shadow-lg shadow-amber-500/25 flex-1 md:flex-initial cursor-pointer"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
+                  <span>{language === "gu" ? "ટૂર શરૂ કરો (૧ મિનિટ)" : "Start Interactive Tour"}</span>
+                </Button>
+
+                <Link href="/tutorial" className="flex-1 md:flex-initial">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-xl text-xs border-amber-500/40 text-amber-300 hover:bg-amber-500/10 w-full cursor-pointer"
+                  >
+                    <BookOpen className="w-3.5 h-3.5 mr-1.5" />
+                    <span>{language === "gu" ? "ટ્યુટોરિયલ કેન્દ્ર" : "Tutorial Center"}</span>
+                  </Button>
+                </Link>
+
+                <Link href="/tutorial/print" target="_blank" className="hidden sm:inline-block">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-xl text-xs border-white/20 text-slate-300 hover:text-white hover:bg-white/10 cursor-pointer"
+                    title="Print Desk Reference Sheet"
+                  >
+                    <FileSpreadsheet className="w-3.5 h-3.5 mr-1 text-emerald-400" />
+                    <span>{language === "gu" ? "પ્રિન્ટ ગાઈડ" : "Print Guide"}</span>
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
             {/* 1. KPI Stat Tiles Row with Sparklines */}
             <div data-tour="kpi-tiles" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <StatTile

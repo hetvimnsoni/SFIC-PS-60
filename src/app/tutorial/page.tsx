@@ -42,6 +42,7 @@ import {
   Lightbulb,
   ExternalLink,
   Check,
+  X,
 } from "lucide-react";
 
 export default function TutorialPage() {
@@ -248,22 +249,32 @@ export default function TutorialPage() {
         {/* ============================================================== */}
         {/* SEARCH BOX & NAVIGATION TABS BAR                                */}
         {/* ============================================================== */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          {/* Instant Search Box */}
-          <div className="relative w-full md:max-w-sm">
-            <Search className="absolute left-3.5 top-2.5 h-3.5 w-3.5 text-slate-400" />
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          {/* Instant Search Box - Big, Prominent & Showable */}
+          <div className="relative w-full lg:max-w-xl">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-amber-400 pointer-events-none" />
             <input
               type="text"
               placeholder={
                 t.tutorial?.searchPlaceholder ||
                 (language === "gu"
                   ? "ટ્યુટોરિયલ, વિષય, નિયમો અને પ્રશ્નો શોધો..."
-                  : "Search tutorials, guides, and FAQs...")
+                  : "Search tutorials, classroom TLM, benchmarks, and FAQs...")
               }
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-full border border-slate-700 bg-slate-900 py-2 pl-9 pr-4 text-xs text-white placeholder-slate-400 focus:border-amber-500 outline-hidden"
+              className="w-full h-12 rounded-2xl border-2 border-slate-700 bg-slate-900/90 py-2.5 pl-12 pr-10 text-sm text-white placeholder-slate-400 focus:border-amber-500 focus:bg-slate-900 focus:ring-4 focus:ring-amber-500/20 outline-hidden transition-all shadow-inner"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                title="Clear search"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
 
           {/* Section Tabs */}

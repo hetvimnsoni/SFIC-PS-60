@@ -13,6 +13,7 @@ import {
   AlertTriangle,
   ClipboardList,
   FileText,
+  BookOpen,
 } from "lucide-react";
 
 interface AppLayoutProps {
@@ -30,7 +31,7 @@ export function AppLayout({ children, showDemoBanner = true }: AppLayoutProps) {
     { href: "/students", label: "Students", icon: Users },
     { href: "/learning-gaps", label: "Gaps", icon: AlertTriangle },
     { href: "/remedial-plans", label: "Plans", icon: ClipboardList },
-    { href: "/reports", label: "Reports", icon: FileText },
+    { href: "/tutorial", label: "Tutorial", icon: BookOpen },
   ];
 
   return (

@@ -162,6 +162,17 @@ export default function HomePage() {
               </Button>
             </Link>
 
+            <Link href="/tutorial">
+              <Button
+                variant="outline"
+                size="lg"
+                className="rounded-full border-amber-500/60 bg-amber-500/15 text-amber-300 hover:bg-amber-500/25 hover:border-amber-400 text-sm font-bold shadow-[0_0_20px_rgba(255,138,61,0.3)] flex items-center gap-2"
+              >
+                <BookOpen className="w-4 h-4 text-amber-400" />
+                <span>{language === "gu" ? "નવા શિક્ષક માટે ટ્યુટોરિયલ" : "New User? Tutorial & Guide"}</span>
+              </Button>
+            </Link>
+
             <a
               href="#solution"
               onClick={(e) => handleSmoothScroll(e, "#solution")}
@@ -175,6 +186,42 @@ export default function HomePage() {
                 <span>{language === "gu" ? "કેવી રીતે કાર્ય કરે છે?" : "See How It Works"}</span>
               </Button>
             </a>
+          </div>
+
+          {/* New User Welcome Quick-Start Box */}
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-indigo-950/60 to-purple-950/40 border border-amber-500/35 backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-base shrink-0">
+                📖
+              </div>
+              <div>
+                <p className="text-xs font-bold text-white flex items-center gap-1.5">
+                  <span>{language === "gu" ? "નવા વપરાશકર્તા છો? વેબસાઇટ કેવી રીતે વાપરવી તે જાણો" : "New user? Learn how to handle this website"}</span>
+                  <span className="px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-mono">
+                    {language === "gu" ? "માર્ગદર્શિકા" : "Tutorial"}
+                  </span>
+                </p>
+                <p className="text-[11px] text-slate-300">
+                  {language === "gu"
+                    ? "૩ મિનિટમાં ૪ સરળ પગલાં, આરવ પટેલનો કેસ સ્ટડી અને પ્રિન્ટેબલ ગાઈડ જુઓ."
+                    : "Complete 3-min visual guide, Aarav's case study, and teacher desk reference sheet."}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Link
+                href="/tutorial"
+                className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-black transition-colors shadow-xs"
+              >
+                {language === "gu" ? "ટ્યુટોરિયલ ખોલો →" : "Open Tutorial →"}
+              </Link>
+              <Link
+                href="/tutorial/print"
+                className="px-3 py-1.5 rounded-xl border border-white/20 hover:bg-white/10 text-white text-xs font-semibold transition-colors"
+              >
+                {language === "gu" ? "પ્રિન્ટ ગાઈડ" : "Print Sheet"}
+              </Link>
+            </div>
           </div>
         </div>
 
