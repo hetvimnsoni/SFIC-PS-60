@@ -1,0 +1,45 @@
+export type UserRole = "teacher" | "admin";
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  schoolId: string;
+}
+
+export interface School {
+  id: string;
+  name: string;
+  code: string;
+  preferredLanguage: "en" | "gu";
+}
+
+export interface Classroom {
+  id: string;
+  schoolId: string;
+  grade: number; // 1 to 5
+  section: string; // "A", "B", "C"
+  academicYear: string;
+}
+
+export interface Student {
+  id: string;
+  studentCode: string;
+  displayName: string;
+  classroomId: string;
+  grade: number;
+  section: string;
+  enrollmentStatus: "active" | "transferred" | "graduated";
+  notes?: string;
+  createdAt: string;
+}
+
+export interface SchoolSettings {
+  id: string;
+  schoolId: string;
+  masteryThreshold: number; // default: 80%
+  developingThreshold: number; // default: 60%
+  preferredLanguage: "en" | "gu";
+  enableAiAssist: boolean;
+}

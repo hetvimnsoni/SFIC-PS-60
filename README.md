@@ -2,13 +2,14 @@
 
 > **"Every Gap Identified. Every Child Supported."**  
 > *Smart Tracking and Remedial Action System for Student Learning Gaps in Primary Schools.*  
-> **SFIC Gujarat Hackathon 2026 • Problem Statement: PS-60**
+> **SFIC Gujarat Hackathon 2026 • Problem Statement: PS-60**  
+> **Live Website**: [https://shikshasetu-ai-iota.vercel.app](https://shikshasetu-ai-iota.vercel.app)
 
 ---
 
 ## 1. Executive Summary & Product Vision
 
-**ShikshaSetu AI** is a modern, responsive, accessible web application designed to empower primary-school teachers, headmasters, and parents in identifying individual student learning gaps, understanding underlying conceptual bottlenecks, executing targeted 5-step remedial plans, and measuring empirical growth over time.
+**ShikshaSetu AI** is a modern, responsive, accessible web application designed to empower primary-school teachers, headmasters, and parents across Gujarat in identifying individual student learning gaps, diagnosing underlying conceptual bottlenecks, executing targeted 5-step concrete remedial plans, and measuring empirical growth over time.
 
 ### Core Workflow:
 ```
@@ -20,7 +21,7 @@ Concept-Level Analysis
   ↓
 Learning-Gap Detection Engine (Rule-based & Explainable)
   ↓
-Personalized Remedial Plan (5 Steps + Concrete Manipulatives)
+Personalized Remedial Plan (5 Steps + Concrete Low-Cost Manipulatives)
   ↓
 Practice Activities (Digital Interactive Quiz & Printable Worksheets)
   ↓
@@ -33,167 +34,222 @@ Teacher Intervention & Parent Partnership
 
 ---
 
-## 2. Hackathon 2-Minute Judge Walkthrough
+## 2. Project Folder Structure
 
-To experience the complete problem-solving flow during judging:
+The project code is organized into clean, dedicated modules separating presentation, business logic, contracts, database persistence, and documentation:
 
-1. **Open the Application**: Navigate to `http://localhost:3000`. Notice the SFIC Hackathon banner and overview.
-2. **Access Dashboard**: Click **"Explore Teacher Dashboard"** (or `/dashboard`). Review the 5 top metric cards, the subject performance chart, and the urgent attention list.
-3. **Switch Language**: Use the language switcher in the header to toggle between **English** and **ગુજરાતી (Gujarati)** to see all navigation, badges, and metrics translate seamlessly.
-4. **Launch Aarav Patel's Case**:
-   - In the top banner or sidebar, click **"Launch Aarav's Case"** (or navigate to `/students/std-aarav`).
-   - Observe the **"Division Basics & Equal Sharing"** learning gap card showing **"Needs Support — High Priority"** with a baseline score of **35%** (attempts: 40% on Sep 10, 35% on Sep 24).
-   - Read the **Transparent AI Detection Reasoning**:
-     > *"Recent assessment performance (35%) is below the configured support threshold (60%), and previous result (40%) also showed persistent difficulty."*
-5. **Review Prescribed Remedial Plan**:
-   - Review the 5-step concrete sequence using physical counters, equal sharing circles, guided practice, and formative checks.
-6. **Launch Student Practice**:
-   - Click **"Launch Practice Activity"** to open the interactive student quiz.
-   - Answer the division question (e.g. 12 laddus shared among 3 friends = 4 laddus). Instant scoring and feedback are saved.
-7. **Record Reassessment & Measure Growth**:
-   - Click **"Record Reassessment"**. Enter **17 out of 20 marks (85%)**.
-   - Notice the live preview showing a **+50 percentage-point (pp)** gain and status shifting to **"Mastered"**!
-   - Click **"Save & Recalculate Gaps"**. The database automatically updates, marks the gap as **"Resolved"**, and recalculates mastery ledger.
-8. **View Reports & Worksheets**:
-   - Open `/reports` to view the **Parent-Friendly Summary**, print official progress reports, or export CSV data.
+```
+shikshasetu-ai/
+|
+|-- apps/
+|   |
+|   |-- frontend/                       # Frontend application metadata & client module
+|   |   |-- src/                        # Modular frontend architecture
+|   |   |-- package.json
+|   |   |-- tsconfig.json
+|   |   |-- README.md
+|   |
+|   |-- backend/                        # Standalone Node.js & TypeScript Express REST API
+|       |-- src/
+|       |   |-- routes/                 # Express REST routes (/api/v1/*)
+|       |   |-- controllers/            # Route controllers formatting responses
+|       |   |-- services/               # Pedagogical, gap analysis, and AI services
+|       |   |-- repositories/           # Data access repository layer
+|       |   |-- middleware/             # Auth RBAC, rate limiting, CORS, error handling
+|       |   |-- validators/             # Request body & parameter validators
+|       |   |-- config/                 # Typed environment configuration
+|       |   |-- app.ts                  # Express application factory
+|       |   |-- server.ts               # Standalone server startup (port 5000)
+|       |-- tests/                      # Standalone backend integration tests
+|       |-- package.json
+|       |-- tsconfig.json
+|
+|-- packages/
+|   |-- shared/                         # Contract specifications shared by frontend & backend
+|       |-- src/
+|       |   |-- types/                  # Single source of truth for domain types
+|       |   |-- schemas/                # Shared validation schemas & rules
+|       |   |-- constants/              # Thresholds, subject codes, demo users
+|       |   |-- index.ts
+|       |-- package.json
+|
+|-- database/                           # Persistence layer, migrations, and seeds
+|   |-- migrations/                     # PostgreSQL schema DDL (001_initial_schema.sql, 002_add_indexes.sql)
+|   |-- seeds/                          # SQL seed statements & JSON fixtures
+|   |-- README.md                       # Migration and persistence guide
+|
+|-- src/                                # Next.js Fullstack & UI Layer (Vercel-native)
+|   |-- app/
+|   |   |-- api/v1/                     # REST API v1 endpoints (Next.js serverless functions)
+|   |   |-- dashboard/                  # Teacher & Principal dashboard
+|   |   |-- students/                   # Student directory & profile views
+|   |   |-- assessments/                # Formative assessment manager & mark entry
+|   |   |-- learning-gaps/              # Gap detection & analytics workspace
+|   |   |-- remedial-plans/             # 5-step remedial intervention plans
+|   |   |-- ai/                         # AI Tutor, Gap Analyzer, Worksheet Generator
+|   |   |-- reports/                    # School overview & parent-friendly reports
+|   |   |-- page.tsx                    # Landing page with 3D Cinematic ShikshaBot
+|   |-- components/                     # Reusable UI & 3D Three.js components
+|   |-- services/
+|   |   |-- apiClient.ts                # Centralized typed API client
+|   |-- context/                        # Auth, Language (EN/GU), Theme, Filter contexts
+|   |-- lib/                            # Engines: calculations, gap detection, remedial, AI
+|
+|-- tests/                              # Root integration test suites
+|-- docs/
+|   |-- ARCHITECTURE.md                 # 5-tier architecture & request flow
+|   |-- API.md                          # Comprehensive REST API v1 reference
+|   |-- DEPLOYMENT.md                   # Vercel & standalone cloud deployment guide
+|
+|-- data/                               # Local persistent demonstration data store
+|-- .env.example                        # Documented environment variables template
+|-- package.json                        # Root commands (dev, dev:frontend, dev:backend, build, test, lint, typecheck)
+|-- tsconfig.json                       # Path aliases (@/*, @backend/*, @shared/*)
+|-- README.md
+```
 
 ---
 
 ## 3. Technology Stack
 
 * **Frontend**: Next.js 16 (App Router), React 19, TypeScript.
-* **Styling & Design System**: Tailwind CSS v4, custom pedagogical tokens, accessible contrast, and print-friendly CSS (`@media print`).
-* **Icons & Visualization**: Lucide React icons, Recharts for responsive bar and line charts.
-* **Data Storage**: File-backed persistent SQLite/JSON store (`data/shikshasetu_store.json`) with atomic writes, surviving server restarts and page refreshes.
-* **Engines**:
-  - Deterministic Pedagogical Learning-Gap Detection Engine (`src/lib/engine/gapDetection.ts`).
-  - Targeted Remedial Action Recommendation Engine (`src/lib/engine/remedialEngine.ts`).
-  - Score & True Percentage-Point Calculation Engine (`src/lib/engine/calculations.ts`).
-* **Test Runner**: Node test runner with `tsx` (`npm test`).
-* **Offline-First & Privacy Conscious**: Works 100% offline with zero paid API keys required.
+* **3D & Graphics**: Three.js, React Three Fiber (`@react-three/fiber`), Drei (`@react-three/drei`), GSAP for cinematic animations.
+* **Styling**: Tailwind CSS v4, accessible color contrast tokens, dark/light theme toggle, and print CSS.
+* **Backend**:
+  - Unified Serverless API: Next.js Route Handlers (`/api/v1/*`)
+  - Standalone API: Node.js, Express, TypeScript (`apps/backend`)
+* **Layered Architecture**: Route -> Controller -> Service -> Repository -> Database.
+* **Database**:
+  - Demo/Dev: In-memory store with file-backed JSON (`data/shikshasetu_store.json`)
+  - Production: PostgreSQL 14+ (Supabase, Neon, AWS RDS, Vercel Postgres) with migrations in `database/migrations/`
+* **Real AI Provider**: Google Gemini (`gemini-1.5-flash`) with child-privacy sanitization, fallback to deterministic pedagogical rule engine when API keys are absent.
+* **Test Runner**: Native Node.js test runner via `tsx` (`npm test`).
 
 ---
 
-## 4. Installation & Startup Instructions
+## 4. Installation & Local Development
 
 ### Prerequisites:
 - Node.js version 20+ (Node 24 supported)
 - npm version 10+
 
-### Steps:
-
-1. **Clone or Open the Repository**:
-   ```bash
-   cd "SFIC PS-60"
-   ```
-
-2. **Install Dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Run Unit Tests**:
-   ```bash
-   npm test
-   ```
-   *Expected Output: 16 passing unit tests across 4 test suites.*
-
-4. **Build Production Bundle**:
-   ```bash
-   npm run build
-   ```
-
-5. **Start Development Server**:
-   ```bash
-   npm run dev
-   ```
-
-6. **Open in Browser**:
-   Open [http://localhost:3000](http://localhost:3000)
-
----
-
-## 5. Application Routes & Architecture
-
-| Route | Purpose |
-|---|---|
-| `/` | Landing page, problem statement overview, and 1-click demo case launcher. |
-| `/login` | Authentication page with 1-click **Demo Teacher** and **Demo Admin** roles. |
-| `/dashboard` | Teacher Overview: 5 metric cards, Recharts visualizations, attention list, quick actions. |
-| `/students` | Student management directory with class filters, search, CSV import, and CSV export. |
-| `/students/[id]` | Comprehensive student profile: concept mastery, assessment history, gaps, practice quiz launcher, reassessment recording. |
-| `/assessments` | Assessment registry with subject filters and concept mappings. |
-| `/assessments/new` | Assessment creator with interactive multi-student score entry grid and instant gap recalculation. |
-| `/learning-gaps` | Learning-gap detection view with transparent reasoning, priority filters, and 1-click remedial plan generator. |
-| `/remedial-plans` | Remedial plans management: step-by-step curriculum, materials list, status workflow (Suggested → Approved → In Progress → Completed). |
-| `/activities` | Curated practice bank (Math, English, Gujarati, EVS) with interactive player and printable paper worksheets. |
-| `/progress` | Progress dashboard: before-and-after bar charts, percentage-point (pp) delta audit ledger. |
-| `/reports` | Printable official report cards, parent-friendly summaries, and CSV data export. |
-| `/settings` | Configurable operational thresholds (80% / 60%), language preferences, privacy standards, and demo reset. |
-
----
-
-## 6. Testing & Quality Verification
-
-All 16 unit tests were executed and passed successfully:
+### Step 1: Install Dependencies
+```bash
+npm install
 ```
-> shikshasetu-ai@0.1.0 test
-> tsx --test "src/**/*.test.ts"
 
-▶ Database & Learning Gap Integration Flow
-  ✔ loads seeded classrooms, students, and learning gaps
-  ✔ executes the end-to-end reassessment workflow: Aarav improves from 35% to 85%
-  ✔ resets to pristine demo state upon confirmation
-✔ Database & Learning Gap Integration Flow
+### Step 2: Configure Environment Variables
+Copy `.env.example` to `.env.local`:
+```bash
+cp .env.example .env.local
+```
+*(Optional)* Add your free Google Gemini API key from [https://aistudio.google.com](https://aistudio.google.com) to enable live generative AI responses. If omitted, the built-in pedagogical rule engine runs transparently.
 
-▶ Calculations Engine
-  ✔ calculates percentage accurately with rounding
-  ✔ handles invalid or zero maximum marks gracefully
-  ✔ calculates true percentage point delta (Latest % - Initial %)
-  ✔ validates assessment marks correctly
-  ✔ determines trends with clear explainability and handles insufficient data
-  ✔ calculates average safely
-✔ Calculations Engine
+---
 
-▶ Learning Gap Detection Engine
-  ✔ detects High Priority 'Needs Support' for repeated low performance (Aarav Division case)
-  ✔ detects 'Developing' with Medium priority when student is between 60% and 79%
-  ✔ detects Mastered and records positive percentage-point improvement upon reassessment
-  ✔ identifies single observation limitation responsibly
-  ✔ respects custom administrative thresholds
-✔ Learning Gap Detection Engine
+## 5. Development Commands
 
-▶ Remedial Action Recommendation Engine
-  ✔ generates a complete, structured remedial plan for Division Basics (Aarav case)
-  ✔ provides fallback template for any undefined concept smoothly
-✔ Remedial Action Recommendation Engine
+| Command | Description | Local URL |
+|---|---|---|
+| `npm run dev` | Runs the unified Next.js fullstack dev server (UI + `/api/v1` APIs) | `http://localhost:3000` |
+| `npm run dev:frontend` | Runs the Next.js frontend application | `http://localhost:3000` |
+| `npm run dev:backend` | Runs the standalone Express backend server | `http://localhost:5000` |
+| `npm run build` | Builds the optimized production bundle with Next.js Turbopack | - |
+| `npm run test` | Executes all 50 unit and integration tests across backend, engine, and APIs | - |
+| `npm run typecheck` | Validates TypeScript across all workspaces (`tsc --noEmit`) | - |
+| `npm run lint` | Runs ESLint | - |
 
-ℹ tests 16
-ℹ pass 16
-ℹ fail 0
+---
+
+## 6. Standalone Backend Startup
+
+To run the standalone Express backend independently:
+```bash
+npm run dev:backend
+```
+The server will start on port 5000:
+- Server: `http://localhost:5000`
+- Health check: `http://localhost:5000/api/v1/health`
+- Student list: `http://localhost:5000/api/v1/students`
+
+To point the Next.js frontend to the standalone backend, set in `.env.local`:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
 ```
 
 ---
 
-## 7. Child Privacy & Ethical Design
+## 7. REST API Documentation (v1)
 
-- **Zero Sensitive Data**: Does not collect biometric data, facial recognition, home addresses, or parental financial status.
-- **Supportive Phrasing**: Students are never labeled as "weak" or "incapable." Phrasing strictly uses constructive educational terms like *"Needs Support,"* *"Developing,"* and *"Ready for the Next Step."*
-- **No Public Shaming**: Class rank ladders or public score boards are strictly avoided.
-- **Offline Telemetry**: All data remains on the local institution server without unauthorized external AI transmission.
+All endpoints use the prefix `/api/v1`. A comprehensive guide is available in [`docs/API.md`](docs/API.md).
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/v1/health` | System health, uptime, and AI provider status |
+| `POST` | `/api/v1/auth/login` | Teacher / Principal login |
+| `POST` | `/api/v1/auth/logout` | Session logout |
+| `GET` | `/api/v1/auth/me` | Current session user |
+| `GET` | `/api/v1/students` | List students with classroom and grade filters |
+| `GET` | `/api/v1/students/:id` | Student profile details |
+| `POST` | `/api/v1/students` | Enroll a new student |
+| `PUT` | `/api/v1/students/:id` | Update student profile |
+| `DELETE` | `/api/v1/students/:id` | Delete student record (Admin only) |
+| `GET` | `/api/v1/students/:id/learning-gaps` | Learning gaps for a specific student |
+| `GET` | `/api/v1/students/:id/remedial-plans` | Remedial plans for a specific student |
+| `GET` | `/api/v1/assessments` | Formative assessments list |
+| `POST` | `/api/v1/assessments` | Create assessment |
+| `POST` | `/api/v1/assessments/results` | Submit marks / record post-remediation reassessment |
+| `GET` | `/api/v1/learning-gaps` | List learning gaps |
+| `POST` | `/api/v1/learning-gaps/analyze` | AI & deterministic learning-gap diagnosis |
+| `GET` | `/api/v1/remedial-plans` | List remedial plans |
+| `POST` | `/api/v1/remedial-plans/generate` | Generate 5-step concrete remedial action plan |
+| `POST` | `/api/v1/worksheets/generate` | Generate printable worksheet with answer key |
+| `POST` | `/api/v1/ai/tutor` | Primary pedagogical concept tutor (EN & GU) |
+| `POST` | `/api/v1/ai/chat` | Teacher assistant based on real-time classroom telemetry |
+| `GET` | `/api/v1/reports/overview` | School-wide mastery distribution and telemetry |
 
 ---
 
-## 8. Reset Demo Data
+## 8. Database Configuration & Migrations
 
-Judges can restore the demonstration database back to its pristine 15-student seed state at any time:
-- In the application sidebar or `/settings`, click **"Reset Demo Data"** and confirm.
-- Or send an HTTP POST request to `/api/reset-demo`.
+For detailed persistence architecture and PostgreSQL setup, see [`database/README.md`](database/README.md).
+
+To connect PostgreSQL in production:
+1. Run migrations in order:
+   ```bash
+   psql $DATABASE_URL -f database/migrations/001_initial_schema.sql
+   psql $DATABASE_URL -f database/migrations/002_add_indexes.sql
+   psql $DATABASE_URL -f database/seeds/001_seed_data.sql
+   ```
+2. Set `DATABASE_URL` in your production environment variables:
+   ```env
+   DATABASE_URL=postgres://user:password@hostname:5432/shikshasetu_db?sslmode=require
+   ```
 
 ---
 
-## 9. Known Limitations & Future Roadmap
+## 9. Vercel Deployment
 
-- **Audio/Speech Reading Support**: Adding Gujarati and English voice synthesis for early Class 1-2 students who cannot yet read instructions.
-- **Optical Mark Recognition (OMR)**: Mobile camera scanning for physical paper assessment sheets in remote rural schools with zero device availability.
-- **Multi-School Cluster Sync**: Automatic synchronization from offline school instances to District Primary Education Office (DPEO) servers when internet connectivity is intermittently available.
+The live website is deployed at:
+[https://shikshasetu-ai-iota.vercel.app](https://shikshasetu-ai-iota.vercel.app)
+
+Deploying updates to Vercel requires **zero special configuration**:
+1. Commit and push your code to your GitHub repository:
+   ```bash
+   git add .
+   git commit -m "Organize architecture into frontend, backend, api, database, and shared"
+   git push origin main
+   ```
+2. Vercel automatically detects Next.js at the root, installs dependencies, and runs `npm run build`.
+3. All `/api/v1` endpoints and existing features deploy automatically as serverless functions.
+4. For details on hosting the standalone Express backend separately on Render or Railway, refer to [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
+
+---
+
+## 10. Troubleshooting
+
+| Issue | Cause | Resolution |
+|---|---|---|
+| `No AI key configured` note in response | `GEMINI_API_KEY` is not defined in `.env.local` | Add `GEMINI_API_KEY=...` to `.env.local` for live AI, or use the transparent built-in pedagogical fallback. |
+| Port 5000 in use | Another service is using port 5000 | Set `PORT=5001` in your environment or kill the conflicting process. |
+| Reassessment marks not saving | Missing student or concept ID in result payload | Verify payload format in `POST /api/v1/assessments/results` matches `{ results: [{ assessmentId, studentId, conceptId, marksObtained, maximumMarks }] }`. |

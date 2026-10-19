@@ -1,0 +1,11 @@
+{
+  "name": "@shikshasetu/shared",
+  "version": "1.0.0",
+  "description": "Shared TypeScript types, validation schemas, and constants for ShikshaSetu AI",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "private": true
+}

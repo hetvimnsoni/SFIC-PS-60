@@ -19,7 +19,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@backend/*": ["./apps/backend/src/*"],
+      "@shared/*": ["./packages/shared/src/*"]
     }
   },
   "include": [

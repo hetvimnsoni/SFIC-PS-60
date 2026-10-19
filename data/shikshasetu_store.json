@@ -592,13 +592,13 @@
       "priority": "High",
       "masteryStatus": "Needs Support",
       "reason": "Recent assessment performance (35%) is below the configured support threshold (60%), and previous result (40%) also showed persistent difficulty.",
-      "status": "Active",
+      "status": "Under Intervention",
       "attemptsCount": 2,
       "latestPercentage": 35,
       "previousPercentage": 40,
       "deltaPercentagePoints": -5,
-      "updatedAt": "2026-09-24T12:00:00Z",
-      "remedialPlanId": "plan-aarav-div-01"
+      "updatedAt": "2026-10-19T07:32:04.739Z",
+      "remedialPlanId": "plan-std-aarav-c-div-01-1792395124739"
     },
     {
       "id": "gap-dev-verb",
@@ -666,6 +666,67 @@
     }
   ],
   "remedialPlans": [
+    {
+      "id": "plan-std-aarav-c-div-01-1792395124739",
+      "studentId": "std-aarav",
+      "studentName": "Aarav Patel",
+      "conceptId": "c-div-01",
+      "conceptName": "Division Basics & Equal Sharing",
+      "subjectCode": "MATH",
+      "learningObjective": "Understand division as the inverse of multiplication, equal grouping, and repeated subtraction.",
+      "recommendationReason": "Scored below mastery threshold",
+      "status": "Suggested",
+      "estimatedMinutes": 20,
+      "difficulty": "Beginner",
+      "requiredMaterials": [
+        "20 physical counting tokens, pebbles, or bottle caps",
+        "Equal grouping circular mats or drawing sheet",
+        "Multiplication table 1-10 reference card"
+      ],
+      "steps": [
+        {
+          "stepNumber": 1,
+          "title": "Review Multiplication Link",
+          "description": "Review times tables for 2, 3, 4, and 5. Demonstrate that 4 × 3 = 12 means 12 ÷ 3 = 4.",
+          "durationMinutes": 4,
+          "activityType": "discussion"
+        },
+        {
+          "stepNumber": 2,
+          "title": "Concrete Equal Sharing Demonstration",
+          "description": "Have the student physically distribute 12 counters into 3 equal cups or circles.",
+          "durationMinutes": 5,
+          "activityType": "hands_on"
+        },
+        {
+          "stepNumber": 3,
+          "title": "Guided Problem Solving",
+          "description": "Solve 3 basic division problems together on the board/notebook with step-by-step reasoning.",
+          "durationMinutes": 4,
+          "activityType": "guided_practice"
+        },
+        {
+          "stepNumber": 4,
+          "title": "Targeted Practice Worksheet",
+          "description": "Student independently completes 5 division questions using visual grouping diagrams.",
+          "durationMinutes": 5,
+          "activityType": "independent_practice"
+        },
+        {
+          "stepNumber": 5,
+          "title": "Mini Diagnostic Check",
+          "description": "Quick 2-question exit ticket to verify understanding before concluding the session.",
+          "durationMinutes": 2,
+          "activityType": "check_for_understanding"
+        }
+      ],
+      "practiceQuestionsSummary": "5 structured remedial steps with targeted practice exercises.",
+      "reassessmentCriteria": "Student must achieve at least 80% on a 5-question parallel assessment without teacher hints.",
+      "teacherInstructions": "Avoid rushing to long-division algorithms immediately. Reinforce equal grouping and real-world sharing (e.g. sharing 15 laddus among 5 friends).",
+      "teacherNotes": "",
+      "createdAt": "2026-10-19T07:32:04.739Z",
+      "reviewDate": "2026-10-26T07:32:04.739Z"
+    },
     {
       "id": "plan-aarav-div-01",
       "studentId": "std-aarav",
