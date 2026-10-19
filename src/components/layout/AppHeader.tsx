@@ -223,11 +223,10 @@ export function AppHeader({
                   switchRole("teacher");
                   setShowRoleMenu(false);
                 }}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-xl text-left transition-colors cursor-pointer ${
-                  role === "teacher"
+                className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-xl text-left transition-colors cursor-pointer ${role === "teacher"
                     ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-semibold"
                     : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
-                }`}
+                  }`}
               >
                 <UserCheck className="w-4 h-4 text-indigo-600 dark:text-cyan-400" />
                 <div>
@@ -241,11 +240,10 @@ export function AppHeader({
                   switchRole("admin");
                   setShowRoleMenu(false);
                 }}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-xl text-left transition-colors mt-1 cursor-pointer ${
-                  role === "admin"
+                className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-xl text-left transition-colors mt-1 cursor-pointer ${role === "admin"
                     ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-semibold"
                     : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
-                }`}
+                  }`}
               >
                 <ShieldAlert className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                 <div>

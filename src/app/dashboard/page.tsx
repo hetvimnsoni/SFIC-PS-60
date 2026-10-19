@@ -13,6 +13,7 @@ import { fireCelebrationConfetti } from "@/lib/confetti";
 import { useLanguage } from "@/context/LanguageContext";
 import { useFilter } from "@/context/FilterContext";
 import { StudentFormModal } from "@/components/student/StudentFormModal";
+import { SpotlightTour } from "@/components/tutorial/SpotlightTour";
 import {
   Users,
   AlertTriangle,
@@ -251,7 +252,7 @@ export default function DashboardPage() {
         ) : (
           <>
             {/* 1. KPI Stat Tiles Row with Sparklines */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div data-tour="kpi-tiles" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <StatTile
                 label="Total Enrolled"
                 value={totalStudents}
@@ -372,7 +373,8 @@ export default function DashboardPage() {
               </div>
 
               {/* Curriculum Proficiency Chart */}
-              <Card variant="glass" className="p-5 flex flex-col justify-between">
+              <div data-tour="curriculum-chart" className="flex flex-col">
+                <Card variant="glass" className="p-5 flex flex-col justify-between h-full">
                 <div>
                   <h3 className="font-heading text-base font-bold text-slate-900 dark:text-white">
                     Subject Proficiency
@@ -416,10 +418,11 @@ export default function DashboardPage() {
                   </Link>
                 </div>
               </Card>
+              </div>
             </div>
 
             {/* 4. Immediate Attention Student List */}
-            <div className="space-y-3">
+            <div data-tour="immediate-attention" className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-heading text-base font-bold text-slate-900 dark:text-white">
@@ -547,6 +550,9 @@ export default function DashboardPage() {
           }}
         />
       )}
+
+      {/* Interactive Guided Tour */}
+      <SpotlightTour page="dashboard" />
     </AppLayout>
   );
 }

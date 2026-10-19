@@ -2,6 +2,9 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { usePathname } from "next/navigation";
+import { triggerPageTour } from "@/components/tutorial/SpotlightTour";
+import { TUTORIAL_FAQS } from "@/config/tutorialData";
 import {
   MessageSquare,
   X,
@@ -24,10 +27,27 @@ interface ChatMessage {
 }
 
 export function GlobalShikshaBot() {
+  const pathname = usePathname();
   const { language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const getPageTourKey = (path: string): string => {
+    if (path === "/dashboard" || path === "/") return "dashboard";
+    if (path.startsWith("/students/") && path !== "/students") return "studentDetail";
+    if (path.startsWith("/students")) return "students";
+    if (path.startsWith("/learning-gaps")) return "learningGaps";
+    if (path.startsWith("/remedial-plans")) return "remedialPlans";
+    if (path.startsWith("/reports")) return "reports";
+    return "dashboard";
+  };
+
+  const handleStartPageTour = () => {
+    setIsOpen(false);
+    const tourKey = getPageTourKey(pathname);
+    triggerPageTour(tourKey);
+  };
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "welcome",
@@ -82,6 +102,29 @@ export function GlobalShikshaBot() {
     setInputValue("");
     setIsLoading(true);
 
+    // 1. Instant offline keyword match against TUTORIAL_FAQS
+    const lower = text.toLowerCase();
+    const matchedFaq = TUTORIAL_FAQS.find((faq) =>
+      faq.keywords.some((kw) => lower.includes(kw.toLowerCase()))
+    );
+
+    if (matchedFaq) {
+      const answer = language === "gu" ? matchedFaq.answerGu : matchedFaq.answerEn;
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Math.random().toString(36).substring(7),
+            sender: "bot",
+            text: `💡 [${language === "gu" ? "ઑફલાઇન સહાયક" : "Offline Knowledge"}]: ${answer}`,
+            time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          },
+        ]);
+        setIsLoading(false);
+      }, 250);
+      return;
+    }
+
     try {
       const res = await fetch("/api/v1/ai/chat", {
         method: "POST",
@@ -134,6 +177,7 @@ export function GlobalShikshaBot() {
       {!isOpen && (
         <button
           type="button"
+          data-tour="shikshabot-trigger"
           onClick={() => setIsOpen(true)}
           className="group relative flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-tr from-[#14123D] via-[#2B2A6B] to-[#FF8A3D] p-0.5 shadow-[0_0_25px_rgba(255,138,61,0.4)] hover:shadow-[0_0_35px_rgba(255,138,61,0.6)] transition-all duration-300 transform hover:scale-105 cursor-pointer"
           aria-label="Open ShikshaBot AI Assistant"
@@ -224,6 +268,15 @@ export function GlobalShikshaBot() {
 
           {/* Suggested Prompts Pills */}
           <div className="px-3 py-2 border-t border-slate-800/80 bg-slate-950/40 flex items-center gap-1.5 overflow-x-auto">
+            {/* Quick-chip: Show me how to use this page */}
+            <button
+              type="button"
+              onClick={handleStartPageTour}
+              className="shrink-0 text-[11px] font-bold text-slate-950 bg-gradient-to-r from-[#FF8A3D] to-amber-400 hover:from-amber-400 hover:to-amber-300 px-3 py-1 rounded-full transition-all flex items-center gap-1 cursor-pointer shadow-xs active:scale-95"
+            >
+              <Sparkles className="w-3 h-3 text-slate-950" />
+              <span>{language === "gu" ? "આ પેજ કેવી રીતે વાપરવું? (ટૂર)" : "Show me how to use this page"}</span>
+            </button>
             {suggestedPrompts.map((p, idx) => (
               <button
                 key={idx}
