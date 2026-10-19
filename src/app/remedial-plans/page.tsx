@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { useLanguage } from "@/context/LanguageContext";
 import { ActivityPlayerModal } from "@/components/activities/ActivityPlayerModal";
+import { SpotlightTour } from "@/components/tutorial/SpotlightTour";
+import { ContextualHelp } from "@/components/shared/ContextualHelp";
 import {
   ClipboardList,
   CheckCircle,
@@ -204,15 +206,17 @@ export default function RemedialPlansPage() {
           </div>
 
           <div className="flex items-center gap-2.5">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handlePrintPlan}
-              className="rounded-full text-xs font-semibold print:hidden"
-            >
-              <Printer className="w-3.5 h-3.5 mr-1 text-slate-400" />
-              <span>Print A4 Plans</span>
-            </Button>
+            <div data-tour="plan-print">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handlePrintPlan}
+                className="rounded-full text-xs font-semibold print:hidden"
+              >
+                <Printer className="w-3.5 h-3.5 mr-1 text-slate-400" />
+                <span>Print A4 Plans</span>
+              </Button>
+            </div>
 
             <Link href="/ai?tab=remedial" className="print:hidden">
               <Button variant="saffron" size="sm" className="rounded-full text-xs font-bold">
@@ -384,9 +388,12 @@ export default function RemedialPlansPage() {
                 </div>
 
                 {/* 5-STEP VERTICAL STEPPER WITH MATERIAL ICONS & CHECKBOXES */}
-                <div className="space-y-3 pt-1">
+                <div data-tour="plan-5steps" className="space-y-3 pt-1">
                   <div className="flex items-center justify-between text-xs font-bold text-slate-400 uppercase tracking-wider">
-                    <span>5-Step Remedial Sequence</span>
+                    <span className="flex items-center gap-1">
+                      <span>5-Step Remedial Sequence</span>
+                      <ContextualHelp termKey="remedialPlan" />
+                    </span>
                     <span className="text-[11px] font-normal lowercase">Click checkbox to mark step done</span>
                   </div>
 
@@ -397,6 +404,7 @@ export default function RemedialPlansPage() {
                       return (
                         <div
                           key={step.stepNumber}
+                          data-tour={step.stepNumber === 1 ? "plan-mark-done" : undefined}
                           onClick={() => toggleStepCompleted(plan.id, step.stepNumber)}
                           className={`relative p-3.5 rounded-2xl border transition-all cursor-pointer group ${
                             isDone
@@ -492,6 +500,8 @@ export default function RemedialPlansPage() {
           }}
         />
       )}
+      {/* Guided Tour */}
+      <SpotlightTour page="remedialPlans" />
     </AppLayout>
   );
 }

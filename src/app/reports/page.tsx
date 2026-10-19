@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { BridgeProgress } from "@/components/ui/BridgeProgress";
+import { SpotlightTour } from "@/components/tutorial/SpotlightTour";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   FileText,
@@ -119,15 +120,17 @@ export default function ReportsPage() {
               <Download className="w-3.5 h-3.5 mr-1 text-slate-400" />
               <span>{t.actions.exportCsv}</span>
             </Button>
-            <Button
-              variant="saffron"
-              size="sm"
-              onClick={handlePrint}
-              className="rounded-full text-xs font-bold shadow-md shadow-amber-500/20"
-            >
-              <Printer className="w-3.5 h-3.5 mr-1" />
-              <span>{t.actions.printReport}</span>
-            </Button>
+            <div data-tour="report-print">
+              <Button
+                variant="saffron"
+                size="sm"
+                onClick={handlePrint}
+                className="rounded-full text-xs font-bold shadow-md shadow-amber-500/20"
+              >
+                <Printer className="w-3.5 h-3.5 mr-1" />
+                <span>{t.actions.printReport}</span>
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -191,7 +194,7 @@ export default function ReportsPage() {
         {/* ============================================================== */}
         {/* REPORT CANVAS (PRINT READY A4 FORMAT)                           */}
         {/* ============================================================== */}
-        <div className="rounded-3xl border border-slate-800 bg-[#FFF8EC] text-slate-900 p-8 sm:p-12 shadow-2xl print:border-none print:shadow-none print:p-0 print:bg-white print:text-black">
+        <div data-tour="report-card" className="rounded-3xl border border-slate-800 bg-[#FFF8EC] text-slate-900 p-8 sm:p-12 shadow-2xl print:border-none print:shadow-none print:p-0 print:bg-white print:text-black">
           {/* Official Gujarat Primary Education Letterhead */}
           <div className="border-b-2 border-slate-900 pb-5 mb-6 flex items-start justify-between">
             <div className="flex items-center gap-3.5">
@@ -474,6 +477,8 @@ export default function ReportsPage() {
           </div>
         </div>
       </div>
+      {/* Guided Tour */}
+      <SpotlightTour page="reports" />
     </AppLayout>
   );
 }

@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useFilter } from "@/context/FilterContext";
 import { LanguageSelector } from "../shared/LanguageSelector";
 import { ThemeToggle } from "../shared/ThemeToggle";
+import { triggerPageTour } from "@/components/tutorial/SpotlightTour";
 import {
   Bell,
   Search,
@@ -18,6 +19,8 @@ import {
   ChevronDown,
   ShieldAlert,
   LogOut,
+  RotateCcw,
+  HelpCircle,
 } from "lucide-react";
 
 interface AppHeaderProps {
@@ -32,8 +35,19 @@ export function AppHeader({
   onSearchChange,
 }: AppHeaderProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, role, switchRole, logout } = useAuth();
   const { t } = useLanguage();
+
+  const getPageTourKey = (path: string): string => {
+    if (path === "/dashboard" || path === "/") return "dashboard";
+    if (path.startsWith("/students/") && path !== "/students") return "studentDetail";
+    if (path.startsWith("/students")) return "students";
+    if (path.startsWith("/learning-gaps")) return "learningGaps";
+    if (path.startsWith("/remedial-plans")) return "remedialPlans";
+    if (path.startsWith("/reports")) return "reports";
+    return "dashboard";
+  };
   const {
     selectedClass: ctxClass,
     setSelectedClass: setCtxClass,
@@ -132,6 +146,27 @@ export function AppHeader({
           <Sparkles className="w-3 h-3 text-amber-600 dark:text-amber-400" />
           <span>SFIC Gujarat Hackathon Demo</span>
         </div>
+
+        {/* Replay Tour Button */}
+        <button
+          type="button"
+          onClick={() => triggerPageTour(getPageTourKey(pathname))}
+          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-amber-200 dark:border-amber-800/60 bg-amber-50/80 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/50 text-xs font-bold transition-all cursor-pointer shadow-2xs"
+          title={t.tutorial?.replayTour || "Replay Guided Tour"}
+        >
+          <RotateCcw className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+          <span className="hidden md:inline">{t.tutorial?.replayTour || "Replay Tour"}</span>
+        </button>
+
+        {/* Tutorial & Help Center Link */}
+        <Link
+          href="/tutorial"
+          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-semibold transition-all shadow-2xs"
+          title={t.tutorial?.pageTitle || "Help & Tutorial Center"}
+        >
+          <HelpCircle className="w-3.5 h-3.5 text-indigo-600 dark:text-cyan-400" />
+          <span className="hidden xl:inline">{t.nav?.tutorial || "Tutorial & Help"}</span>
+        </Link>
 
         {/* Language Selector */}
         <LanguageSelector />

@@ -13,6 +13,8 @@ import { useLanguage } from "@/context/LanguageContext";
 import { ReassessmentModal } from "@/components/assessment/ReassessmentModal";
 import { ActivityPlayerModal } from "@/components/activities/ActivityPlayerModal";
 import { StudentFormModal } from "@/components/student/StudentFormModal";
+import { SpotlightTour } from "@/components/tutorial/SpotlightTour";
+import { ContextualHelp } from "@/components/shared/ContextualHelp";
 import {
   Users,
   AlertTriangle,
@@ -98,6 +100,9 @@ export default function StudentDetailPage({
 
   useEffect(() => {
     fetchStudentData();
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("shikshasetu_step_student_opened"));
+    }
   }, [id]);
 
   if (loading && !student) {
@@ -272,26 +277,28 @@ export default function StudentDetailPage({
               </Button>
             )}
 
-            <Button
-              variant="saffron"
-              size="sm"
-              onClick={() =>
-                openReassessment(
-                  divisionGap?.conceptId || "c-div-01",
-                  divisionGap?.conceptName || "Division Basics",
-                  divisionGap?.previousPercentage || 35
-                )
-              }
-              className="rounded-full text-xs font-black shadow-md shadow-amber-500/30"
-            >
-              <RotateCcw className="w-3.5 h-3.5 mr-1" />
-              <span>Record Reassessment</span>
-            </Button>
+            <div data-tour="student-reassess-form">
+              <Button
+                variant="saffron"
+                size="sm"
+                onClick={() =>
+                  openReassessment(
+                    divisionGap?.conceptId || "c-div-01",
+                    divisionGap?.conceptName || "Division Basics",
+                    divisionGap?.previousPercentage || 35
+                  )
+                }
+                className="rounded-full text-xs font-black shadow-md shadow-amber-500/30"
+              >
+                <RotateCcw className="w-3.5 h-3.5 mr-1" />
+                <span>Record Reassessment</span>
+              </Button>
+            </div>
           </div>
         </Card>
 
         {/* 4 Summary Stat Tiles */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div data-tour="student-scores" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <StatTile
             label="Average Performance"
             value={avgScore}
@@ -450,11 +457,20 @@ export default function StudentDetailPage({
                         <span>Reassess Delta</span>
                       </Button>
 
-                      <Link href="/remedial-plans">
+                      <Link
+                        href="/remedial-plans"
+                        data-tour="student-remedial-btn"
+                        onClick={() => {
+                          if (typeof window !== "undefined") {
+                            window.dispatchEvent(new CustomEvent("shikshasetu_step_plan_generated"));
+                          }
+                        }}
+                      >
                         <Button variant="outline" size="sm" className="rounded-full text-xs">
                           <span>5-Step Plan &rarr;</span>
                         </Button>
                       </Link>
+                      <ContextualHelp termKey="remedialPlan" />
                     </div>
                   </div>
 
@@ -468,11 +484,14 @@ export default function StudentDetailPage({
 
                   {/* Explainable AI Diagnosis */}
                   {gap.reason && (
-                    <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs space-y-1">
-                      <span className="text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1">
-                        <BrainCircuit className="w-3.5 h-3.5 text-amber-400" />
-                        Algorithmic Explanation:
-                      </span>
+                    <div data-tour="student-gap-reason" className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs space-y-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1">
+                          <BrainCircuit className="w-3.5 h-3.5 text-amber-400" />
+                          Algorithmic Explanation:
+                        </span>
+                        <ContextualHelp termKey="gapDetection" />
+                      </div>
                       <p className="text-slate-300 leading-relaxed">{gap.reason}</p>
                     </div>
                   )}
@@ -610,7 +629,12 @@ export default function StudentDetailPage({
           conceptId={selectedConceptForReassessment?.conceptId || "c-div-01"}
           conceptName={selectedConceptForReassessment?.conceptName || "Division Basics"}
           previousPercentage={selectedConceptForReassessment?.prevPct || 35}
-          onSuccess={() => fetchStudentData()}
+          onSuccess={() => {
+            fetchStudentData();
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(new CustomEvent("shikshasetu_step_reassessed"));
+            }
+          }}
         />
       )}
 
@@ -633,6 +657,9 @@ export default function StudentDetailPage({
           onSuccess={() => fetchStudentData()}
         />
       )}
+
+      {/* Guided Tour */}
+      <SpotlightTour page="studentDetail" />
     </AppLayout>
   );
 }

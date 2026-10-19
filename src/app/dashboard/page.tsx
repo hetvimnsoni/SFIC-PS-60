@@ -14,6 +14,8 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useFilter } from "@/context/FilterContext";
 import { StudentFormModal } from "@/components/student/StudentFormModal";
 import { SpotlightTour } from "@/components/tutorial/SpotlightTour";
+import { ChecklistWidget } from "@/components/tutorial/ChecklistWidget";
+import { ContextualHelp } from "@/components/shared/ContextualHelp";
 import {
   Users,
   AlertTriangle,
@@ -425,9 +427,12 @@ export default function DashboardPage() {
             <div data-tour="immediate-attention" className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-heading text-base font-bold text-slate-900 dark:text-white">
-                    Immediate Attention Required
-                  </h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-heading text-base font-bold text-slate-900 dark:text-white">
+                      Immediate Attention Required
+                    </h3>
+                    <ContextualHelp termKey="masteryThreshold" />
+                  </div>
                   <p className="text-xs text-slate-400">
                     Students flagged below the 60% developing threshold needing active intervention
                   </p>
@@ -553,6 +558,9 @@ export default function DashboardPage() {
 
       {/* Interactive Guided Tour */}
       <SpotlightTour page="dashboard" />
+
+      {/* Onboarding Checklist Widget */}
+      <ChecklistWidget />
     </AppLayout>
   );
 }

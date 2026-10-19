@@ -746,6 +746,7 @@ export default function HomePage() {
                 <li><Link href="/learning-gaps" className="hover:text-amber-400 transition-colors">Gap Detection Engine</Link></li>
                 <li><Link href="/remedial-plans" className="hover:text-amber-400 transition-colors">5-Step Remedial Plans</Link></li>
                 <li><Link href="/reports" className="hover:text-amber-400 transition-colors">Printable A4 Reports</Link></li>
+                <li><Link href="/tutorial" className="hover:text-amber-400 transition-colors font-bold text-amber-300">Tutorial &amp; Help Center</Link></li>
               </ul>
             </div>
 

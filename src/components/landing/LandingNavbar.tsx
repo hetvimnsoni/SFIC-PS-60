@@ -50,6 +50,7 @@ export function LandingNavbar() {
     { label: language === "gu" ? "સુવિધાઓ" : "Features", href: "#features" },
     { label: language === "gu" ? "લાઈવ પ્રિવ્યૂ" : "Live Preview", href: "#preview" },
     { label: language === "gu" ? "પરિણામો" : "Impact", href: "#impact" },
+    { label: language === "gu" ? "માર્ગદર્શિકા" : "Tutorial", href: "/tutorial" },
   ];
 
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -94,6 +95,17 @@ export function LandingNavbar() {
           <nav className="hidden lg:flex items-center gap-1 xl:gap-2 px-3 py-1.5 rounded-full bg-slate-900/40 border border-white/10 backdrop-blur-md">
             {navLinks.map((item) => {
               const isActive = activeSection === item.href;
+              if (item.href.startsWith("/")) {
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+                  >
+                    {item.label}
+                  </Link>
+                );
+              }
               return (
                 <a
                   key={item.href}
@@ -158,20 +170,34 @@ export function LandingNavbar() {
         {isMobileMenuOpen && (
           <div className="lg:hidden fixed inset-x-0 top-full bg-[#14123D]/98 backdrop-blur-2xl border-b border-white/10 shadow-2xl px-5 py-6 space-y-4 animate-in slide-in-from-top-2 duration-200">
             <div className="flex flex-col space-y-1">
-              {navLinks.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  onClick={(e) => handleSmoothScroll(e, item.href)}
-                  className={`px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                    activeSection === item.href
-                      ? "text-amber-400 bg-amber-500/10 font-bold"
-                      : "text-slate-300 hover:text-white hover:bg-slate-800/60"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              ))}
+              {navLinks.map((item) => {
+                if (item.href.startsWith("/")) {
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                }
+                return (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    onClick={(e) => handleSmoothScroll(e, item.href)}
+                    className={`px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                      activeSection === item.href
+                        ? "text-amber-400 bg-amber-500/10 font-bold"
+                        : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+                    }`}
+                  >
+                    {item.label}
+                  </a>
+                );
+              })}
             </div>
 
             <div className="pt-3 border-t border-slate-800 flex flex-col gap-2.5">

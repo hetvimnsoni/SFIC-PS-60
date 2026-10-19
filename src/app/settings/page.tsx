@@ -37,6 +37,26 @@ export default function SettingsPage() {
   // Reset modal
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [tutorialResetSuccess, setTutorialResetSuccess] = useState(false);
+
+  const handleResetTutorial = () => {
+    if (typeof window !== "undefined") {
+      const keys = [
+        "shikshasetu_tour_completed_dashboard",
+        "shikshasetu_tour_completed_students",
+        "shikshasetu_tour_completed_studentDetail",
+        "shikshasetu_tour_completed_learningGaps",
+        "shikshasetu_tour_completed_remedialPlans",
+        "shikshasetu_tour_completed_reports",
+        "shikshasetu_checklist_completed",
+        "shikshasetu_checklist_steps",
+        "shikshasetu_checklist_dismissed",
+      ];
+      keys.forEach((k) => localStorage.removeItem(k));
+      setTutorialResetSuccess(true);
+      setTimeout(() => setTutorialResetSuccess(false), 4000);
+    }
+  };
 
   useEffect(() => {
     async function loadSettings() {
@@ -408,15 +428,33 @@ export default function SettingsPage() {
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-2">
-            <button
-              type="button"
-              onClick={() => setShowResetConfirm(true)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 border border-rose-200 dark:border-rose-900/60 transition-colors cursor-pointer"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset Demo Database</span>
-            </button>
+          {tutorialResetSuccess && (
+            <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-900/60 text-xs text-amber-800 dark:text-amber-300 flex items-center gap-2 font-medium">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
+              <span>Tutorial &amp; guided walkthrough progress reset! You will see the guided tour on your next visit to any page.</span>
+            </div>
+          )}
+
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <button
+                type="button"
+                onClick={() => setShowResetConfirm(true)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 border border-rose-200 dark:border-rose-900/60 transition-colors cursor-pointer"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Reset Demo Database</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleResetTutorial}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-amber-700 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 transition-colors cursor-pointer"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Reset Tutorial &amp; Onboarding</span>
+              </button>
+            </div>
 
             <button
               type="submit"

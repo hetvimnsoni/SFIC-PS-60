@@ -10,6 +10,8 @@ import { BridgeProgress } from "@/components/ui/BridgeProgress";
 import { StatTile } from "@/components/ui/StatTile";
 import { useLanguage } from "@/context/LanguageContext";
 import { ReassessmentModal } from "@/components/assessment/ReassessmentModal";
+import { SpotlightTour } from "@/components/tutorial/SpotlightTour";
+import { ContextualHelp } from "@/components/shared/ContextualHelp";
 import {
   AlertTriangle,
   ClipboardList,
@@ -125,7 +127,7 @@ export default function LearningGapsPage() {
         </div>
 
         {/* 1. THRESHOLD SLIDER SANDBOX DEMO (Signature Feature) */}
-        <Card variant="glass" className="p-5 border-amber-500/40 bg-gradient-to-r from-slate-900/90 via-[#14123D]/90 to-slate-900/90 shadow-xl space-y-4">
+        <Card data-tour="gaps-threshold" variant="glass" className="p-5 border-amber-500/40 bg-gradient-to-r from-slate-900/90 via-[#14123D]/90 to-slate-900/90 shadow-xl space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <Sliders className="w-5 h-5 text-amber-400" />
@@ -147,7 +149,8 @@ export default function LearningGapsPage() {
               <div className="flex items-center justify-between text-xs">
                 <span className="font-semibold text-rose-300 flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-                  Developing / Support Threshold:
+                  <span>Developing / Support Threshold:</span>
+                  <ContextualHelp termKey="masteryThreshold" />
                 </span>
                 <span className="font-heading font-black text-rose-400 text-sm">
                   {supportThreshold}% Benchmark
@@ -343,10 +346,11 @@ export default function LearningGapsPage() {
                 {/* Explainable AI Diagnosis Card */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 text-xs">
                   {/* "Why Flagged" in Plain Language */}
-                  <div className="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-1.5">
+                  <div data-tour="gaps-why-flagged" className="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-1.5">
                     <span className="font-bold uppercase tracking-wider text-rose-400 text-[10px] flex items-center gap-1.5">
                       <BrainCircuit className="w-3.5 h-3.5" />
-                      Why Flagged (Cognitive Obstacle)
+                      <span>Why Flagged (Cognitive Obstacle)</span>
+                      <ContextualHelp termKey="gapDetection" />
                     </span>
                     <p className="text-slate-300 leading-relaxed">
                       {gap.reason || "Performance dropped below 60% developing benchmark across consecutive classroom observations."}
@@ -357,7 +361,7 @@ export default function LearningGapsPage() {
                   </div>
 
                   {/* Actionable Next Step */}
-                  <div className="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-1.5">
+                  <div data-tour="gaps-action-plan" className="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-1.5">
                     <span className="font-bold uppercase tracking-wider text-amber-400 text-[10px] flex items-center gap-1.5">
                       <ClipboardList className="w-3.5 h-3.5" />
                       Pedagogical Prescription
@@ -390,6 +394,8 @@ export default function LearningGapsPage() {
           onSuccess={() => fetchGaps()}
         />
       )}
+      {/* Guided Tour */}
+      <SpotlightTour page="learningGaps" />
     </AppLayout>
   );
 }

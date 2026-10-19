@@ -10,6 +10,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useFilter } from "@/context/FilterContext";
 import { StudentFormModal } from "@/components/student/StudentFormModal";
 import { StudentCsvModal } from "@/components/student/StudentCsvModal";
+import { SpotlightTour } from "@/components/tutorial/SpotlightTour";
 import {
   Users,
   Search,
@@ -140,21 +141,23 @@ export default function StudentsPage() {
               <Upload className="w-3.5 h-3.5 mr-1 text-slate-400" />
               <span>{t.actions.importCsv}</span>
             </Button>
-            <Button
-              variant="saffron"
-              size="sm"
-              onClick={() => setShowAddModal(true)}
-              className="rounded-full text-xs font-bold"
-            >
-              <PlusCircle className="w-3.5 h-3.5 mr-1" />
-              <span>{t.actions.addStudent}</span>
-            </Button>
+            <div data-tour="students-add">
+              <Button
+                variant="saffron"
+                size="sm"
+                onClick={() => setShowAddModal(true)}
+                className="rounded-full text-xs font-bold"
+              >
+                <PlusCircle className="w-3.5 h-3.5 mr-1" />
+                <span>{t.actions.addStudent}</span>
+              </Button>
+            </div>
           </div>
         </div>
 
         {/* Filter & Search Bar */}
         <Card variant="glass" className="p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 border-slate-800">
-          <div className="relative w-full sm:max-w-xs">
+          <div data-tour="students-search" className="relative w-full sm:max-w-xs">
             <Search className="absolute left-3.5 top-2.5 h-3.5 w-3.5 text-slate-400" />
             <input
               type="text"
@@ -165,7 +168,7 @@ export default function StudentsPage() {
             />
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div data-tour="students-filter" className="flex items-center gap-2 w-full sm:w-auto">
             <span className="text-xs font-semibold text-slate-400">Class:</span>
             <select
               value={activeGrade}
@@ -185,7 +188,7 @@ export default function StudentsPage() {
         </Card>
 
         {/* Student Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div data-tour="students-table" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredStudents.map((std) => {
             const gapCount = getStudentGapCount(std.id);
             const isDemoCase = std.id === "std-aarav";
@@ -278,6 +281,8 @@ export default function StudentsPage() {
         existingCodes={students.map((s) => s.studentCode)}
         onSuccess={fetchStudents}
       />
+      {/* Guided Tour */}
+      <SpotlightTour page="students" />
     </AppLayout>
   );
 }

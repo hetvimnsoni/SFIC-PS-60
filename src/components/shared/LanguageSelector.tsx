@@ -8,7 +8,10 @@ export function LanguageSelector({ className = "" }: { className?: string }) {
   const { language, setLanguage } = useLanguage();
 
   return (
-    <div className={`inline-flex items-center rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-0.5 shadow-2xs ${className}`}>
+    <div
+      data-tour="language-toggle"
+      className={`inline-flex items-center rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-0.5 shadow-2xs ${className}`}
+    >
       <div className="flex items-center px-2 py-1 text-xs font-medium text-slate-500 dark:text-slate-400">
         <Languages className="w-3.5 h-3.5 mr-1 text-slate-400 dark:text-slate-500" />
         <span className="hidden sm:inline">Lang:</span>

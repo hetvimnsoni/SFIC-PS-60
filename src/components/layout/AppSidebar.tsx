@@ -19,6 +19,7 @@ import {
   Menu,
   X,
   Sparkles,
+  BookOpen,
 } from "lucide-react";
 
 export function AppSidebar() {
@@ -51,6 +52,13 @@ export function AppSidebar() {
     { href: "/activities", label: t.nav.activities, icon: Gamepad2 },
     { href: "/progress", label: t.nav.progress, icon: TrendingUp },
     { href: "/reports", label: t.nav.reports, icon: FileText },
+    {
+      href: "/tutorial",
+      label: t.nav.tutorial || "Tutorial & Help",
+      icon: BookOpen,
+      badge: "5 Min",
+      badgeColor: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300",
+    },
     { href: "/settings", label: t.nav.settings, icon: Settings },
   ];
 
@@ -126,7 +134,7 @@ export function AppSidebar() {
         </div>
 
         {/* Navigation links */}
-        <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-1">
+        <nav data-tour="sidebar-nav" className="flex-1 overflow-y-auto px-3 py-3 space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
