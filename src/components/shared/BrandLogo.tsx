@@ -1,7 +1,9 @@
+"use client";
+
 import React from "react";
 
 export function BrandLogo({
-  size = 36,
+  size = 38,
   showText = true,
   className = "",
 }: {
@@ -10,58 +12,55 @@ export function BrandLogo({
   className?: string;
 }) {
   return (
-    <div className={`flex items-center gap-2.5 select-none ${className}`}>
-      {/* Connected Bridge + Book Knowledge SVG Logo */}
-      <svg
-        width={size}
-        height={size}
-        viewBox="0 0 48 48"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="shrink-0 drop-shadow-sm"
+    <div className={`flex items-center gap-3 select-none ${className}`}>
+      {/* Glowing Bridge Glyph + Gujarati "શ" Icon */}
+      <div
+        className="relative shrink-0 flex items-center justify-center rounded-2xl bg-gradient-to-br from-[#2B2A6B] via-[#14123D] to-[#0A0923] border border-amber-500/30 shadow-[0_0_20px_rgba(255,138,61,0.25)] overflow-hidden"
+        style={{ width: size, height: size }}
       >
-        <rect width="48" height="48" rx="12" fill="#312E81" />
-        {/* Subtle background glow */}
-        <circle cx="24" cy="24" r="18" fill="#4338CA" fillOpacity="0.3" />
-        {/* Bridge Arch */}
-        <path
-          d="M8 34C14 26 34 26 40 34"
-          stroke="#38BDF8"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-        {/* Vertical suspension bridges */}
-        <path d="M16 29V34M24 27V34M32 29V34" stroke="#7DD3FC" strokeWidth="2" strokeLinecap="round" />
-        {/* Open Book Wings (Shiksha) */}
-        <path
-          d="M12 18C16 16 20 17 24 20C28 17 32 16 36 18V28C32 26 28 27 24 30C20 27 16 26 12 28V18Z"
-          fill="#FFFFFF"
-          fillOpacity="0.95"
-        />
-        {/* Center spine */}
-        <path d="M24 20V30" stroke="#312E81" strokeWidth="2" strokeLinecap="round" />
-        {/* AI Sparkle */}
-        <circle cx="36" cy="12" r="3" fill="#F59E0B" />
-        <path
-          d="M36 6V8M36 16V18M30 12H32M40 12H42"
-          stroke="#FCD34D"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-      </svg>
+        {/* Glowing arch behind letter */}
+        <svg
+          className="absolute inset-0 w-full h-full opacity-60"
+          viewBox="0 0 48 48"
+          fill="none"
+        >
+          {/* Bridge cable arch */}
+          <path
+            d="M6 36 C18 18, 30 18, 42 36"
+            stroke="#FF8A3D"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+          {/* Bridge vertical suspenders */}
+          <line x1="15" y1="26" x2="15" y2="36" stroke="#3DDBA9" strokeWidth="1.5" strokeDasharray="2 2" />
+          <line x1="24" y1="21" x2="24" y2="36" stroke="#FF8A3D" strokeWidth="1.5" />
+          <line x1="33" y1="26" x2="33" y2="36" stroke="#3DDBA9" strokeWidth="1.5" strokeDasharray="2 2" />
+        </svg>
+
+        {/* Center Gujarati "શ" Character */}
+        <span
+          className="relative font-gujarati font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-amber-200 to-amber-400 drop-shadow-[0_2px_8px_rgba(255,138,61,0.6)]"
+          style={{ fontSize: `${Math.round(size * 0.48)}px` }}
+        >
+          શ
+        </span>
+
+        {/* Inner glow dot */}
+        <div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#3DDBA9]" />
+      </div>
 
       {showText && (
         <div className="flex flex-col">
           <div className="flex items-center gap-1.5">
-            <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white leading-none">
-              Shiksha<span className="text-indigo-600 dark:text-indigo-400">Setu</span>
+            <span className="font-heading font-extrabold text-base tracking-tight text-white leading-none">
+              Shiksha<span className="text-amber-400">Setu</span>
             </span>
-            <span className="bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
+            <span className="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-[10px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-wider shadow-xs shadow-amber-500/30">
               AI
             </span>
           </div>
-          <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 tracking-tight mt-0.5">
-            Smart Gap & Remedial Engine
+          <span className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase mt-1">
+            Learning Gap Bridge
           </span>
         </div>
       )}

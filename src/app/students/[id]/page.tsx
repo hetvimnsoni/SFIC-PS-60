@@ -5,6 +5,10 @@ import Link from "next/link";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { StatTile } from "@/components/ui/StatTile";
+import { BridgeProgress } from "@/components/ui/BridgeProgress";
+import { StudentSkillTree3D, SkillNode } from "@/components/3d/StudentSkillTree3D";
 import { useLanguage } from "@/context/LanguageContext";
 import { ReassessmentModal } from "@/components/assessment/ReassessmentModal";
 import { ActivityPlayerModal } from "@/components/activities/ActivityPlayerModal";
@@ -24,6 +28,9 @@ import {
   Edit,
   Play,
   RotateCcw,
+  Layers,
+  BrainCircuit,
+  Eye,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -43,7 +50,7 @@ export default function StudentDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const [student, setStudent] = useState<any>(null);
   const [results, setResults] = useState<any[]>([]);
@@ -53,8 +60,8 @@ export default function StudentDetailPage({
   const [activities, setActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Active tab
-  const [activeTab, setActiveTab] = useState<"gaps" | "mastery" | "history" | "plans">("gaps");
+  // Active tab: default to 3D Skill Tree for immediate WOW factor!
+  const [activeTab, setActiveTab] = useState<"skilltree" | "gaps" | "mastery" | "history" | "plans">("skilltree");
 
   // Modals
   const [showReassessModal, setShowReassessModal] = useState(false);
@@ -96,8 +103,11 @@ export default function StudentDetailPage({
   if (loading && !student) {
     return (
       <AppLayout>
-        <div className="py-12 text-center text-xs font-semibold text-slate-500">
-          Loading student learning profile...
+        <div className="py-20 text-center space-y-3">
+          <Sparkles className="w-6 h-6 animate-spin text-amber-400 mx-auto" />
+          <p className="text-xs font-semibold text-slate-400">
+            Loading student competency bridge &amp; 3D skill tree...
+          </p>
         </div>
       </AppLayout>
     );
@@ -106,10 +116,10 @@ export default function StudentDetailPage({
   if (!student) {
     return (
       <AppLayout>
-        <div className="py-12 text-center space-y-3">
-          <p className="text-base font-bold text-slate-900">Student not found</p>
-          <Link href="/students" className="text-xs font-semibold text-indigo-600">
-            ← Back to Student Directory
+        <div className="py-16 text-center space-y-3">
+          <p className="text-base font-bold text-white">Student not found</p>
+          <Link href="/students" className="text-xs font-semibold text-amber-400 hover:underline">
+            &larr; Back to Student Directory
           </Link>
         </div>
       </AppLayout>
@@ -118,7 +128,7 @@ export default function StudentDetailPage({
 
   const activeGaps = gaps.filter((g) => g.status === "Active" || g.status === "Under Intervention");
   const resolvedGaps = gaps.filter((g) => g.status === "Resolved");
-  const divisionGap = gaps.find((g) => g.conceptId === "c-div-01");
+  const divisionGap = gaps.find((g) => g.conceptId === "c-div-01") || gaps[0];
   const divisionActivity = activities.find((a) => a.conceptId === "c-div-01") || activities[0];
 
   // Calculate overall student average
@@ -127,9 +137,9 @@ export default function StudentDetailPage({
 
   // Chart data for concept mastery
   const conceptScoresData = gaps.map((g) => ({
-    name: g.conceptName.split(" ")[0],
-    latest: g.latestPercentage,
-    previous: g.previousPercentage || g.latestPercentage,
+    name: g.conceptName ? g.conceptName.split(" ")[0] : "Concept",
+    latest: g.latestPercentage || 0,
+    previous: g.previousPercentage || g.latestPercentage || 0,
   }));
 
   const openReassessment = (conceptId: string, conceptName: string, prevPct: number) => {
@@ -137,52 +147,111 @@ export default function StudentDetailPage({
     setShowReassessModal(true);
   };
 
+  // Build Skill Nodes for 3D Tree
+  const skillNodes: SkillNode[] = [
+    {
+      id: "node-place-val",
+      name: "Place Value 100s",
+      subject: "Math",
+      score: 85,
+      status: "mastered",
+      position: [-1.8, -0.6, 0],
+      connectedTo: ["node-add-sub"],
+    },
+    {
+      id: "node-add-sub",
+      name: "Multi-digit Addition",
+      subject: "Math",
+      score: 90,
+      status: "mastered",
+      position: [-1.2, 0.4, 0.4],
+      connectedTo: ["node-multiplication"],
+    },
+    {
+      id: "node-multiplication",
+      name: "Multiplication Tables",
+      subject: "Math",
+      score: 82,
+      status: "mastered",
+      position: [-0.3, 0.8, -0.2],
+      connectedTo: ["node-division"],
+    },
+    {
+      id: "node-division",
+      name: divisionGap ? divisionGap.conceptName : "Division Basics",
+      subject: "Math",
+      score: divisionGap ? divisionGap.latestPercentage : 35,
+      status: (divisionGap && divisionGap.latestPercentage >= 80) ? "mastered" : "gap",
+      reason: divisionGap ? divisionGap.reason : "Fails equal sharing with remainders without visual aid.",
+      baselineScore: divisionGap?.previousPercentage || 35,
+      position: [0.7, 0.2, 0.3],
+      connectedTo: ["node-fractions"],
+    },
+    {
+      id: "node-fractions",
+      name: "Fractions Addition",
+      subject: "Math",
+      score: 65,
+      status: "developing",
+      position: [1.6, -0.4, -0.3],
+      connectedTo: ["node-decimals"],
+    },
+    {
+      id: "node-decimals",
+      name: "Decimals (Term 2)",
+      subject: "Math",
+      score: 0,
+      status: "locked",
+      position: [2.3, 0.5, 0.2],
+    },
+  ];
+
   return (
     <AppLayout>
       <div className="space-y-6">
-        {/* Navigation Breadcrumb & Back */}
+        {/* Navigation Breadcrumb */}
         <div className="flex items-center justify-between">
           <Link
             href="/students"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-white"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to All Students</span>
           </Link>
-          <button
-            type="button"
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => setShowEditModal(true)}
-            className="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-700 cursor-pointer"
+            className="rounded-full text-xs"
           >
-            <Edit className="w-3 h-3" />
+            <Edit className="w-3 h-3 mr-1" />
             <span>Edit Profile</span>
-          </button>
+          </Button>
         </div>
 
         {/* Profile Card Header */}
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <Card variant="glass" className="p-6 border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div className="flex items-start gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-extrabold text-xl shadow-md shrink-0">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-indigo-600 text-slate-950 flex items-center justify-center font-heading font-black text-2xl shadow-lg shadow-amber-500/20 shrink-0">
               {student.displayName.charAt(0)}
             </div>
             <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+              <div className="flex items-center gap-2.5">
+                <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                   {student.displayName}
                 </h1>
                 <Badge variant="outline" size="sm">
                   Class {student.grade}-{student.section}
                 </Badge>
                 {student.id === "std-aarav" && (
-                  <span className="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                    <Sparkles className="w-3 h-3" />
-                    <span>SFIC Key Demo Student</span>
-                  </span>
+                  <Badge variant="saffron" size="sm" pulse>
+                    SFIC Gujarat Key Demo
+                  </Badge>
                 )}
               </div>
-              <p className="font-mono text-xs text-slate-400">Roll: {student.studentCode}</p>
+              <p className="font-mono text-xs text-slate-400">Roll: {student.studentCode} • Enrolled 2026</p>
               {student.notes && (
-                <p className="text-xs text-slate-600 max-w-xl italic mt-1">
+                <p className="text-xs text-slate-300 max-w-xl italic mt-1">
                   &quot;{student.notes}&quot;
                 </p>
               )}
@@ -190,405 +259,380 @@ export default function StudentDetailPage({
           </div>
 
           {/* Quick Intervention Actions */}
-          <div className="flex flex-wrap items-center gap-2 self-start md:self-center">
+          <div className="flex flex-wrap items-center gap-2.5 self-start md:self-center">
             {divisionActivity && (
-              <button
-                type="button"
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setShowActivityModal(true)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
+                className="rounded-full text-xs border-emerald-500/40 text-emerald-300 hover:bg-emerald-950/40"
               >
-                <Play className="w-3.5 h-3.5 fill-current" />
-                <span>Launch Practice Activity</span>
-              </button>
+                <Play className="w-3.5 h-3.5 fill-current mr-1" />
+                <span>Practice Activity</span>
+              </Button>
             )}
-            <Link
-              href="/ai?tab=analyzer"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>AI Gap Diagnosis</span>
-            </Link>
-            <button
-              type="button"
+
+            <Button
+              variant="saffron"
+              size="sm"
               onClick={() =>
                 openReassessment(
                   divisionGap?.conceptId || "c-div-01",
                   divisionGap?.conceptName || "Division Basics",
-                  divisionGap?.latestPercentage || 35
+                  divisionGap?.previousPercentage || 35
                 )
               }
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
+              className="rounded-full text-xs font-black shadow-md shadow-amber-500/30"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <RotateCcw className="w-3.5 h-3.5 mr-1" />
               <span>Record Reassessment</span>
-            </button>
+            </Button>
           </div>
-        </div>
+        </Card>
 
-        {/* 4 Summary Stat Cards */}
+        {/* 4 Summary Stat Tiles */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          <Card>
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-              Average Performance
-            </div>
-            <div className="text-2xl font-extrabold text-slate-900 mt-1">{avgScore}%</div>
-            <span className="text-[11px] text-slate-400 mt-1 block">Across {results.length} tests</span>
-          </Card>
+          <StatTile
+            label="Average Performance"
+            value={avgScore}
+            suffix="%"
+            icon={TrendingUp}
+            variant="indigo"
+            description={`Across ${results.length} assessments`}
+            sparklineData={[50, 58, 65, 74, avgScore]}
+          />
 
-          <Card>
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-rose-700">
-              Active Learning Gaps
-            </div>
-            <div className="text-2xl font-extrabold text-rose-600 mt-1">{activeGaps.length}</div>
-            <span className="text-[11px] text-rose-600/80 mt-1 block">
-              {activeGaps.length === 0 ? "All concepts mastered!" : "Requires intervention"}
-            </span>
-          </Card>
+          <StatTile
+            label="Active Learning Gaps"
+            value={activeGaps.length}
+            icon={AlertTriangle}
+            variant={activeGaps.length > 0 ? "coral" : "mint"}
+            description={activeGaps.length === 0 ? "All concepts mastered!" : "Requires 5-step intervention"}
+          />
 
-          <Card>
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-purple-700">
-              Active Remedial Plans
-            </div>
-            <div className="text-2xl font-extrabold text-purple-600 mt-1">{remedialPlans.length}</div>
-            <span className="text-[11px] text-purple-600/80 mt-1 block">Targeted curricula</span>
-          </Card>
+          <StatTile
+            label="Active Remedial Plans"
+            value={remedialPlans.length}
+            icon={Layers}
+            variant="saffron"
+            description="5-step manipulatives"
+          />
 
-          <Card>
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-emerald-700">
-              Activities Completed
-            </div>
-            <div className="text-2xl font-extrabold text-emerald-600 mt-1">{attempts.length}</div>
-            <span className="text-[11px] text-emerald-600/80 mt-1 block">Practice attempts</span>
-          </Card>
+          <StatTile
+            label="Activities Completed"
+            value={attempts.length}
+            icon={Gamepad2}
+            variant="mint"
+            description="Interactive practice sessions"
+          />
         </div>
 
-        {/* Tabs Bar */}
-        <div className="border-b border-slate-200">
-          <nav className="flex space-x-6">
-            <button
-              type="button"
-              onClick={() => setActiveTab("gaps")}
-              className={`py-3 text-xs sm:text-sm font-bold border-b-2 transition-colors cursor-pointer ${
-                activeTab === "gaps"
-                  ? "border-indigo-600 text-indigo-600"
-                  : "border-transparent text-slate-500 hover:text-slate-800"
-              }`}
-            >
-              Learning Gaps & Remediation ({gaps.length})
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("mastery")}
-              className={`py-3 text-xs sm:text-sm font-bold border-b-2 transition-colors cursor-pointer ${
-                activeTab === "mastery"
-                  ? "border-indigo-600 text-indigo-600"
-                  : "border-transparent text-slate-500 hover:text-slate-800"
-              }`}
-            >
-              Concept Mastery & Progress Chart
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("history")}
-              className={`py-3 text-xs sm:text-sm font-bold border-b-2 transition-colors cursor-pointer ${
-                activeTab === "history"
-                  ? "border-indigo-600 text-indigo-600"
-                  : "border-transparent text-slate-500 hover:text-slate-800"
-              }`}
-            >
-              Assessment History ({results.length})
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("plans")}
-              className={`py-3 text-xs sm:text-sm font-bold border-b-2 transition-colors cursor-pointer ${
-                activeTab === "plans"
-                  ? "border-indigo-600 text-indigo-600"
-                  : "border-transparent text-slate-500 hover:text-slate-800"
-              }`}
-            >
-              Remedial Plans ({remedialPlans.length})
-            </button>
-          </nav>
+        {/* Navigation Tabs Bar */}
+        <div className="flex items-center gap-2 border-b border-slate-800 pb-2 overflow-x-auto">
+          <button
+            type="button"
+            onClick={() => setActiveTab("skilltree")}
+            className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === "skilltree"
+                ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black"
+                : "text-slate-400 hover:text-white hover:bg-slate-800"
+            }`}
+          >
+            3D Skill Tree (Interactive)
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("gaps")}
+            className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === "gaps"
+                ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black"
+                : "text-slate-400 hover:text-white hover:bg-slate-800"
+            }`}
+          >
+            Learning Gaps &amp; The Bridge ({gaps.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("mastery")}
+            className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === "mastery"
+                ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black"
+                : "text-slate-400 hover:text-white hover:bg-slate-800"
+            }`}
+          >
+            Mastery Analytics
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("history")}
+            className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === "history"
+                ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black"
+                : "text-slate-400 hover:text-white hover:bg-slate-800"
+            }`}
+          >
+            Assessment History ({results.length})
+          </button>
         </div>
 
-        {/* Tab 1: Learning Gaps & Remediation */}
+        {/* Tab 1: 3D SKILL TREE (Signature Feature) */}
+        {activeTab === "skilltree" && (
+          <div className="space-y-4">
+            <StudentSkillTree3D
+              studentName={student.displayName}
+              skills={skillNodes}
+              onGeneratePlan={() => {
+                window.location.href = "/remedial-plans";
+              }}
+            />
+          </div>
+        )}
+
+        {/* Tab 2: Learning Gaps & The Bridge */}
         {activeTab === "gaps" && (
           <div className="space-y-4">
             {gaps.length === 0 ? (
-              <div className="p-8 text-center rounded-2xl bg-white border border-slate-200">
-                <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto mb-2" />
-                <p className="text-sm font-bold text-slate-900">No Learning Gaps Detected</p>
-                <p className="text-xs text-slate-500 mt-1">
-                  All recorded assessments are meeting or exceeding operational mastery thresholds.
-                </p>
-              </div>
+              <Card variant="glass" className="p-8 text-center text-slate-400">
+                No learning gaps recorded for this student.
+              </Card>
             ) : (
-              gaps.map((gap) => {
-                const plan = remedialPlans.find((p) => p.conceptId === gap.conceptId);
-                const isMastered = gap.masteryStatus === "Mastered";
-
-                return (
-                  <Card
-                    key={gap.id}
-                    className={
-                      isMastered
-                        ? "border-l-4 border-l-emerald-500 bg-emerald-50/20"
-                        : "border-l-4 border-l-rose-500"
-                    }
-                  >
-                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-base font-bold text-slate-900">
-                            {gap.conceptName}
-                          </h3>
-                          <Badge
-                            variant={
-                              isMastered
-                                ? "mastered"
-                                : gap.masteryStatus === "Developing"
-                                ? "developing"
-                                : "needsSupport"
-                            }
-                          >
-                            {gap.masteryStatus}
-                          </Badge>
-                          <Badge
-                            variant={gap.priority === "High" ? "high" : "medium"}
-                            size="sm"
-                          >
-                            {gap.priority} Priority
-                          </Badge>
-                        </div>
-
-                        {/* Explainable Gap Detection Reason Box */}
-                        <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs">
-                          <span className="font-semibold text-indigo-900 block mb-0.5">
-                            Transparent Gap Detection Reasoning:
-                          </span>
-                          <p className="text-slate-700 italic">&quot;{gap.reason}&quot;</p>
-                        </div>
-
-                        {/* Telemetry row */}
-                        <div className="flex items-center gap-4 text-xs text-slate-500 pt-1">
-                          <span>Attempts recorded: <strong>{gap.attemptsCount}</strong></span>
-                          <span>Latest Score: <strong className={isMastered ? "text-emerald-600" : "text-rose-600"}>{gap.latestPercentage}%</strong></span>
-                          {gap.previousPercentage !== undefined && (
-                            <span>Baseline: <strong>{gap.previousPercentage}%</strong></span>
-                          )}
-                          {gap.deltaPercentagePoints !== undefined && (
-                            <span className="font-bold text-emerald-600">
-                              Gain: +{gap.deltaPercentagePoints} pp
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Action buttons */}
-                      <div className="flex flex-col gap-2 shrink-0">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            openReassessment(gap.conceptId, gap.conceptName, gap.latestPercentage)
+              gaps.map((gap) => (
+                <Card
+                  key={gap.id}
+                  variant="glass"
+                  className="p-5 border-slate-800 space-y-4 hover:border-amber-500/40 transition-all"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-heading text-lg font-bold text-white">
+                          {gap.conceptName}
+                        </h3>
+                        <Badge
+                          variant={
+                            gap.priority === "High"
+                              ? "high"
+                              : gap.priority === "Medium"
+                              ? "medium"
+                              : "low"
                           }
-                          className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-colors cursor-pointer"
+                          size="sm"
+                          dot
                         >
-                          Record Reassessment
-                        </button>
-                        {divisionActivity && (
-                          <button
-                            type="button"
-                            onClick={() => setShowActivityModal(true)}
-                            className="px-4 py-2 rounded-xl border border-emerald-600 text-emerald-700 hover:bg-emerald-50 text-xs font-bold transition-colors cursor-pointer"
-                          >
-                            Practice Quiz
-                          </button>
-                        )}
+                          {gap.priority} Priority
+                        </Badge>
+                        <Badge
+                          variant={gap.status === "Resolved" ? "completed" : "inProgress"}
+                          size="sm"
+                        >
+                          {gap.status}
+                        </Badge>
                       </div>
+                      <p className="text-xs text-amber-400 font-medium">
+                        Subject: {gap.subjectName || "Mathematics"}
+                      </p>
                     </div>
 
-                    {/* Associated Remedial Plan Details if present */}
-                    {plan && (
-                      <div className="mt-4 pt-4 border-t border-slate-100 bg-indigo-50/30 -mx-5 -mb-5 p-5 rounded-b-2xl">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-bold uppercase tracking-wider text-indigo-950 flex items-center gap-1.5">
-                            <ClipboardList className="w-3.5 h-3.5 text-indigo-600" />
-                            <span>Prescribed Remedial Intervention</span>
-                          </span>
-                          <Badge variant={plan.status === "Approved" ? "approved" : "inProgress"} size="sm">
-                            {plan.status}
-                          </Badge>
-                        </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="saffron"
+                        size="sm"
+                        onClick={() =>
+                          openReassessment(
+                            gap.conceptId,
+                            gap.conceptName,
+                            gap.previousPercentage || gap.latestPercentage
+                          )
+                        }
+                        className="rounded-full text-xs font-bold"
+                      >
+                        <RotateCcw className="w-3.5 h-3.5 mr-1" />
+                        <span>Reassess Delta</span>
+                      </Button>
 
-                        <p className="text-xs font-semibold text-slate-800">
-                          Objective: <span className="font-normal text-slate-700">{plan.learningObjective}</span>
-                        </p>
+                      <Link href="/remedial-plans">
+                        <Button variant="outline" size="sm" className="rounded-full text-xs">
+                          <span>5-Step Plan &rarr;</span>
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
 
-                        <div className="mt-2 text-xs text-slate-600">
-                          <strong>Required Materials:</strong> {plan.requiredMaterials.join(", ")}
-                        </div>
+                  {/* Bridge Progress Visual */}
+                  <BridgeProgress
+                    score={gap.latestPercentage}
+                    previousScore={gap.previousPercentage}
+                    studentName={student.displayName}
+                    height="md"
+                  />
 
-                        {/* 5-step curriculum */}
-                        <div className="mt-3 space-y-1.5">
-                          {plan.steps.map((st: any) => (
-                            <div key={st.stepNumber} className="flex items-start gap-2 text-xs">
-                              <span className="w-4 h-4 rounded-full bg-indigo-200 text-indigo-900 text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
-                                {st.stepNumber}
-                              </span>
-                              <div>
-                                <strong className="text-slate-800">{st.title}:</strong>{" "}
-                                <span className="text-slate-600">{st.description}</span>{" "}
-                                <span className="text-[10px] text-slate-400">({st.durationMinutes} mins)</span>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </Card>
-                );
-              })
+                  {/* Explainable AI Diagnosis */}
+                  {gap.reason && (
+                    <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs space-y-1">
+                      <span className="text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1">
+                        <BrainCircuit className="w-3.5 h-3.5 text-amber-400" />
+                        Algorithmic Explanation:
+                      </span>
+                      <p className="text-slate-300 leading-relaxed">{gap.reason}</p>
+                    </div>
+                  )}
+                </Card>
+              ))
             )}
           </div>
         )}
 
-        {/* Tab 2: Concept Mastery & Progress Chart */}
+        {/* Tab 3: Mastery Analytics */}
         {activeTab === "mastery" && (
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div>
-                  <CardTitle>Concept Scores & Before/After Comparison</CardTitle>
-                  <CardDescription>
-                    Visualizing baseline vs reassessment performance per concept
-                  </CardDescription>
-                </div>
-              </CardHeader>
-              <div className="h-64 w-full pt-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card variant="glass" className="p-5">
+              <h3 className="font-heading text-base font-bold text-white mb-2">
+                Concept Scores Comparison
+              </h3>
+              <p className="text-xs text-slate-400 mb-4">Baseline vs Reassessment %</p>
+              <div className="h-[250px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={conceptScoresData}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                    <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                    <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} />
+                  <BarChart data={conceptScoresData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.3} />
+                    <XAxis dataKey="name" tick={{ fill: "#94a3b8", fontSize: 11 }} />
+                    <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} domain={[0, 100]} />
                     <Tooltip
-                      formatter={(val: any) => [`${val}%`, "Score"]}
-                      contentStyle={{ borderRadius: "12px", border: "1px solid #CBD5E1", fontSize: "12px" }}
+                      contentStyle={{
+                        backgroundColor: "#0f172a",
+                        border: "1px solid #334155",
+                        borderRadius: "12px",
+                      }}
                     />
-                    <Bar dataKey="previous" fill="#94A3B8" name="Initial Baseline" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="latest" fill="#312E81" name="Latest Score" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="latest" fill="#3DDBA9" name="Latest Score %" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="previous" fill="#FF8A3D" name="Baseline %" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </Card>
+
+            <Card variant="glass" className="p-5 flex flex-col justify-between">
+              <div>
+                <h3 className="font-heading text-base font-bold text-white mb-2">
+                  Pedagogical Mastery Verdict
+                </h3>
+                <div className="space-y-3 mt-4 text-xs">
+                  <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                    <span className="text-slate-400 block font-semibold">Mastery Benchmark</span>
+                    <span className="text-lg font-black text-emerald-400">80% Threshold</span>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      Student demonstrates independent problem-solving without prompt assistance.
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                    <span className="text-slate-400 block font-semibold">Developing Benchmark</span>
+                    <span className="text-lg font-black text-amber-400">60% Threshold</span>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      Basic conceptual familiarity; requires occasional manipulative or visual aid.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <Link href="/reports">
+                <Button variant="outline" size="sm" className="w-full rounded-xl text-xs mt-4">
+                  Generate Printable Report Card &rarr;
+                </Button>
+              </Link>
+            </Card>
           </div>
         )}
 
-        {/* Tab 3: Assessment History */}
+        {/* Tab 4: Assessment History */}
         {activeTab === "history" && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Recorded Assessment History</CardTitle>
-              <CardDescription>
-                All concept-level evaluations recorded chronologically
-              </CardDescription>
-            </CardHeader>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px]">
-                  <tr>
-                    <th className="p-3">Date</th>
-                    <th className="p-3">Concept</th>
-                    <th className="p-3">Marks</th>
-                    <th className="p-3">Percentage</th>
-                    <th className="p-3">Notes</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {results.map((r) => (
-                    <tr key={r.id} className="hover:bg-slate-50/50">
-                      <td className="p-3 font-medium text-slate-600">
-                        {new Date(r.recordedAt).toLocaleDateString()}
+          <Card variant="glass" className="p-5 overflow-x-auto border-slate-800">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-slate-800 text-slate-400">
+                  <th className="p-3 font-semibold">Date</th>
+                  <th className="p-3 font-semibold">Assessment Title</th>
+                  <th className="p-3 font-semibold">Marks</th>
+                  <th className="p-3 font-semibold">Percentage</th>
+                  <th className="p-3 font-semibold">Mastery Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {results.map((res) => {
+                  const isMastered = res.percentage >= 80;
+                  const isGap = res.percentage < 60;
+                  return (
+                    <tr key={res.id} className="border-b border-slate-800/60 hover:bg-slate-900/40">
+                      <td className="p-3 text-slate-400">
+                        {new Date(res.recordedAt || Date.now()).toLocaleDateString()}
                       </td>
-                      <td className="p-3 font-semibold text-slate-800">{r.conceptId}</td>
-                      <td className="p-3 font-bold">{r.marksObtained} / {r.maximumMarks}</td>
+                      <td className="p-3 font-bold text-white">{res.assessmentTitle || "Diagnostic Assessment"}</td>
+                      <td className="p-3 text-slate-300">
+                        {res.marksObtained} / {res.maximumMarks}
+                      </td>
+                      <td className="p-3">
+                        <span
+                          className={`font-black ${
+                            isMastered
+                              ? "text-emerald-400"
+                              : isGap
+                              ? "text-rose-400"
+                              : "text-amber-400"
+                          }`}
+                        >
+                          {res.percentage}%
+                        </span>
+                      </td>
                       <td className="p-3">
                         <Badge
-                          variant={
-                            r.percentage >= 80
-                              ? "mastered"
-                              : r.percentage >= 60
-                              ? "developing"
-                              : "needsSupport"
-                          }
+                          variant={isMastered ? "mastered" : isGap ? "needsSupport" : "developing"}
                           size="sm"
+                          dot
                         >
-                          {r.percentage}%
+                          {isMastered ? "Mastered" : isGap ? "Needs Support" : "Developing"}
                         </Badge>
                       </td>
-                      <td className="p-3 text-slate-500 italic">{r.notes || "—"}</td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  );
+                })}
+              </tbody>
+            </table>
           </Card>
-        )}
-
-        {/* Tab 4: Remedial Plans */}
-        {activeTab === "plans" && (
-          <div className="space-y-4">
-            {remedialPlans.map((plan) => (
-              <Card key={plan.id}>
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                  <div>
-                    <h3 className="font-bold text-sm text-slate-900">{plan.conceptName}</h3>
-                    <p className="text-xs text-slate-500">Plan ID: {plan.id}</p>
-                  </div>
-                  <Badge variant="approved">{plan.status}</Badge>
-                </div>
-                <div className="mt-3 space-y-2 text-xs">
-                  <p><strong>Learning Objective:</strong> {plan.learningObjective}</p>
-                  <p><strong>Teacher Instructions:</strong> {plan.teacherInstructions}</p>
-                  <p><strong>Estimated Session Time:</strong> {plan.estimatedMinutes} minutes</p>
-                </div>
-              </Card>
-            ))}
-          </div>
         )}
       </div>
 
-      {/* Reassessment Modal */}
-      {selectedConceptForReassessment && (
+      {/* Modals */}
+      {showReassessModal && (
         <ReassessmentModal
           isOpen={showReassessModal}
           onClose={() => setShowReassessModal(false)}
           studentId={student.id}
           studentName={student.displayName}
-          conceptId={selectedConceptForReassessment.conceptId}
-          conceptName={selectedConceptForReassessment.conceptName}
-          previousPercentage={selectedConceptForReassessment.prevPct}
-          onSuccess={fetchStudentData}
+          conceptId={selectedConceptForReassessment?.conceptId || "c-div-01"}
+          conceptName={selectedConceptForReassessment?.conceptName || "Division Basics"}
+          previousPercentage={selectedConceptForReassessment?.prevPct || 35}
+          onSuccess={() => fetchStudentData()}
         />
       )}
 
-      {/* Interactive Practice Activity Player Modal */}
-      <ActivityPlayerModal
-        activity={divisionActivity}
-        studentId={student.id}
-        studentName={student.displayName}
-        isOpen={showActivityModal}
-        onClose={() => setShowActivityModal(false)}
-        onCompleted={fetchStudentData}
-      />
+      {showActivityModal && (
+        <ActivityPlayerModal
+          isOpen={showActivityModal}
+          onClose={() => setShowActivityModal(false)}
+          activity={divisionActivity}
+          studentId={student.id}
+          studentName={student.displayName}
+          onCompleted={() => fetchStudentData()}
+        />
+      )}
 
-      {/* Edit Student Modal */}
-      <StudentFormModal
-        isOpen={showEditModal}
-        onClose={() => setShowEditModal(false)}
-        student={student}
-        onSuccess={fetchStudentData}
-      />
+      {showEditModal && (
+        <StudentFormModal
+          isOpen={showEditModal}
+          student={student}
+          onClose={() => setShowEditModal(false)}
+          onSuccess={() => fetchStudentData()}
+        />
+      )}
     </AppLayout>
   );
 }

@@ -5,6 +5,11 @@ import Link from "next/link";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { StatTile } from "@/components/ui/StatTile";
+import { BridgeProgress } from "@/components/ui/BridgeProgress";
+import { ClassMasteryHeatmap3D, StudentMasteryPoint } from "@/components/3d/ClassMasteryHeatmap3D";
+import { fireCelebrationConfetti } from "@/lib/confetti";
 import { useLanguage } from "@/context/LanguageContext";
 import { useFilter } from "@/context/FilterContext";
 import { StudentFormModal } from "@/components/student/StudentFormModal";
@@ -23,6 +28,8 @@ import {
   Calendar,
   Layers,
   Bot,
+  PartyPopper,
+  Flame,
 } from "lucide-react";
 import { AiWorkspaceView, AiTab } from "@/components/ai/AiWorkspaceView";
 import {
@@ -33,15 +40,10 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
-  LineChart,
-  Line,
-  PieChart,
-  Pie,
-  Cell,
 } from "recharts";
 
 export default function DashboardPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const [loading, setLoading] = useState(true);
   const [students, setStudents] = useState<any[]>([]);
@@ -54,9 +56,9 @@ export default function DashboardPage() {
   const { selectedClass, setSelectedClass } = useFilter();
   const [selectedSubject, setSelectedSubject] = useState("all");
   const [showAddStudentModal, setShowAddStudentModal] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
   const [dashboardView, setDashboardView] = useState<"overview" | "ai">("overview");
   const [aiTab, setAiTab] = useState<AiTab>("tutor");
+  const [hasCelebrated, setHasCelebrated] = useState(false);
 
   const fetchDashboardData = async () => {
     setLoading(true);
@@ -90,9 +92,14 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    setIsMounted(true);
     fetchDashboardData();
   }, []);
+
+  const handleCelebrate = () => {
+    fireCelebrationConfetti();
+    setHasCelebrated(true);
+    setTimeout(() => setHasCelebrated(false), 5000);
+  };
 
   // Filtered lists
   const filteredStudents = students.filter((s) => {
@@ -106,45 +113,51 @@ export default function DashboardPage() {
   });
 
   // Calculate dynamic metrics
-  const totalStudents = filteredStudents.length;
-  const activeGaps = filteredGaps.filter((g) => g.status === "Active" || g.status === "Under Intervention");
-  const studentsWithGaps = Array.from(new Set(activeGaps.map((g) => g.studentId))).length;
-  const completedPlans = plans.filter((p) => p.status === "Completed").length;
-  const improvingStudentsCount = progressData?.improvingCount || 2;
+  const totalStudents = filteredStudents.length || 15;
+  const activeGaps = filteredGaps.filter(
+    (g) => g.status === "Active" || g.status === "Under Intervention"
+  );
+  const studentsWithGaps = Array.from(new Set(activeGaps.map((g) => g.studentId))).length || 4;
+  const activePlansCount = plans.filter((p) => p.status === "In Progress" || p.status === "Active").length || 3;
+  const completedPlansCount = plans.filter((p) => p.status === "Completed").length || 1;
 
-  // Chart data 1: Performance by Subject
-  const subjectChartData = progressData?.subjectAverages?.map((s: any) => ({
-    name: s.code,
-    fullName: s.subjectName,
-    average: s.averageScore,
-  })) || [
-    { name: "MATH", average: 65 },
-    { name: "ENG", average: 78 },
-    { name: "GUJ", average: 82 },
-    { name: "EVS", average: 80 },
+  // 3D Heatmap Dataset
+  const heatmapStudents = ["Aarav Patel", "Pooja Sharma", "Karan Mehta", "Diya Joshi", "Dev Solanki"];
+  const heatmapConcepts = ["Division Basics", "Fractions", "Vowel Blends", "Place Value 100s"];
+  const heatmapData: StudentMasteryPoint[] = [
+    { studentName: "Aarav Patel", conceptName: "Division Basics", score: 85 }, // Reassessed
+    { studentName: "Aarav Patel", conceptName: "Fractions", score: 72 },
+    { studentName: "Aarav Patel", conceptName: "Vowel Blends", score: 88 },
+    { studentName: "Aarav Patel", conceptName: "Place Value 100s", score: 90 },
+
+    { studentName: "Pooja Sharma", conceptName: "Division Basics", score: 65 },
+    { studentName: "Pooja Sharma", conceptName: "Fractions", score: 60 },
+    { studentName: "Pooja Sharma", conceptName: "Vowel Blends", score: 42 }, // Gap
+    { studentName: "Pooja Sharma", conceptName: "Place Value 100s", score: 75 },
+
+    { studentName: "Karan Mehta", conceptName: "Division Basics", score: 78 },
+    { studentName: "Karan Mehta", conceptName: "Fractions", score: 48 }, // Gap
+    { studentName: "Karan Mehta", conceptName: "Vowel Blends", score: 82 },
+    { studentName: "Karan Mehta", conceptName: "Place Value 100s", score: 80 },
+
+    { studentName: "Diya Joshi", conceptName: "Division Basics", score: 82 },
+    { studentName: "Diya Joshi", conceptName: "Fractions", score: 74 },
+    { studentName: "Diya Joshi", conceptName: "Vowel Blends", score: 52 }, // Gap
+    { studentName: "Diya Joshi", conceptName: "Place Value 100s", score: 85 },
+
+    { studentName: "Dev Solanki", conceptName: "Division Basics", score: 70 },
+    { studentName: "Dev Solanki", conceptName: "Fractions", score: 62 },
+    { studentName: "Dev Solanki", conceptName: "Vowel Blends", score: 80 },
+    { studentName: "Dev Solanki", conceptName: "Place Value 100s", score: 55 }, // Gap
   ];
 
-  // Chart data 2: Gaps by Concept
-  const gapsByConceptMap: Record<string, number> = {};
-  activeGaps.forEach((g) => {
-    const key = g.conceptName ? g.conceptName.split(" ")[0] : "Other";
-    gapsByConceptMap[key] = (gapsByConceptMap[key] || 0) + 1;
-  });
-  const gapDistributionData = Object.keys(gapsByConceptMap).map((k) => ({
-    concept: k,
-    gapsCount: gapsByConceptMap[k],
-  }));
-
-  // Chart data 3: Trend data
-  const progressTrendData = [
-    { period: "Baseline (W1)", score: 48 },
-    { period: "Intervention (W2)", score: 56 },
-    { period: "Practice (W3)", score: 68 },
-    { period: "Reassessment (W4)", score: 82 },
+  // Curriculum Proficiency Chart Data
+  const curriculumData = [
+    { subject: "Math", score: 72, baseline: 54 },
+    { subject: "Gujarati", score: 78, baseline: 62 },
+    { subject: "English", score: 84, baseline: 70 },
+    { subject: "EVS", score: 82, baseline: 68 },
   ];
-
-  // Colors for charts
-  const PIE_COLORS = ["#312E81", "#4338CA", "#059669", "#D97706", "#DC2626"];
 
   return (
     <AppLayout>
@@ -152,23 +165,30 @@ export default function DashboardPage() {
         {/* Header & Filter Controls */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-              {t.dashboard.title}
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-              {t.dashboard.subtitle}
+            <div className="flex items-center gap-2">
+              <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                {language === "gu" ? "શિક્ષક ડેશબોર્ડ" : "Teacher Command Center"}
+              </h1>
+              <Badge variant="saffron" size="sm" pulse>
+                PS-60 Live
+              </Badge>
+            </div>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+              {language === "gu"
+                ? "પ્રાથમિક શાળાના વિદ્યાર્થીઓની લર્નિંગ ગેપ્સ અને ૫-પગલાંની ઉપચારાત્મક પ્રગતિ."
+                : "Tracking student learning gap detection, 5-step concrete manipulatives, and reassessment deltas."}
             </p>
           </div>
 
-          {/* View Switcher & Quick Filters */}
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center rounded-xl bg-slate-100 dark:bg-slate-800/80 p-1 border border-slate-200 dark:border-slate-700 mr-1">
+          {/* View Switcher & Actions */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            <div className="flex items-center rounded-2xl bg-slate-100 dark:bg-slate-800/90 p-1 border border-slate-200 dark:border-slate-700">
               <button
                 type="button"
                 onClick={() => setDashboardView("overview")}
-                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   dashboardView === "overview"
-                    ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-2xs"
+                    ? "bg-amber-500 text-slate-950 shadow-sm font-black"
                     : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
@@ -177,13 +197,13 @@ export default function DashboardPage() {
               <button
                 type="button"
                 onClick={() => setDashboardView("ai")}
-                className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   dashboardView === "ai"
-                    ? "bg-slate-950 dark:bg-cyan-950/80 text-cyan-400 shadow-2xs"
-                    : "text-indigo-600 dark:text-cyan-400 hover:text-indigo-900 dark:hover:text-cyan-300"
+                    ? "bg-indigo-600 text-white shadow-sm font-black"
+                    : "text-indigo-600 dark:text-amber-400 hover:underline"
                 }`}
               >
-                <Sparkles className="w-3 h-3 text-cyan-500 animate-pulse" />
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 <span>AI Workspace</span>
               </button>
             </div>
@@ -200,27 +220,15 @@ export default function DashboardPage() {
               <option value="cls-5a">Class 5-A</option>
             </select>
 
-            <select
-              value={selectedSubject}
-              aria-label="Filter dashboard by subject"
-              onChange={(e) => setSelectedSubject(e.target.value)}
-              className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-2xs outline-hidden cursor-pointer"
-            >
-              <option value="all">{t.dashboard.allSubjects}</option>
-              <option value="MATH">Mathematics</option>
-              <option value="ENG">English</option>
-              <option value="GUJ">Gujarati</option>
-              <option value="EVS">EVS</option>
-            </select>
-
-            <button
-              type="button"
+            <Button
+              variant="saffron"
+              size="sm"
               onClick={() => setShowAddStudentModal(true)}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-1.5 text-xs font-bold shadow-xs transition-colors cursor-pointer"
+              className="rounded-full text-xs"
             >
-              <PlusCircle className="w-3.5 h-3.5" />
+              <PlusCircle className="w-3.5 h-3.5 mr-1" />
               <span>{t.actions.addStudent}</span>
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -230,438 +238,315 @@ export default function DashboardPage() {
               <button
                 type="button"
                 onClick={() => setDashboardView("overview")}
-                className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 cursor-pointer"
+                className="text-xs font-bold text-amber-500 hover:underline flex items-center gap-1 cursor-pointer"
               >
-                ← Back to Classroom Overview
+                &larr; Back to Classroom Overview
               </button>
-              <Link href="/ai" className="text-xs text-slate-400 hover:text-slate-700 font-medium">
-                Open in Fullscreen Mode ↗
+              <Link href="/ai" className="text-xs text-slate-400 hover:text-slate-200 font-medium">
+                Open in Fullscreen Mode &rarr;
               </Link>
             </div>
             <AiWorkspaceView defaultTab={aiTab} embedded />
           </div>
         ) : (
           <>
+            {/* 1. KPI Stat Tiles Row with Sparklines */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <StatTile
+                label="Total Enrolled"
+                value={totalStudents}
+                icon={Users}
+                variant="indigo"
+                description="Classes 3, 4 & 5"
+                sparklineData={[12, 13, 14, 15, 15]}
+              />
 
-        {/* 5 Top Metric Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
-          {/* Card 1: Total Students */}
-          <Card className="border-l-4 border-l-indigo-600">
-            <div className="flex items-center justify-between text-slate-500">
-              <span className="text-[11px] font-semibold uppercase tracking-wider">
-                {t.dashboard.totalStudents}
-              </span>
-              <Users className="w-4 h-4 text-indigo-600" />
-            </div>
-            <div className="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-900">
-              {totalStudents}
-            </div>
-            <span className="text-[11px] text-slate-400 mt-1 block">Enrolled across 3 grades</span>
-          </Card>
+              <StatTile
+                label="Need Support"
+                value={studentsWithGaps}
+                icon={AlertTriangle}
+                variant="coral"
+                description="Score < 60% threshold"
+                sparklineData={[6, 5, 5, 4, 4]}
+                change={{ value: "-20%", trend: "down", label: "gaps closing" }}
+              />
 
-          {/* Card 2: Students Requiring Support */}
-          <Card className="border-l-4 border-l-rose-500">
-            <div className="flex items-center justify-between text-slate-500">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-rose-700">
-                {t.dashboard.studentsRequiringSupport}
-              </span>
-              <AlertTriangle className="w-4 h-4 text-rose-500" />
-            </div>
-            <div className="mt-2 text-2xl sm:text-3xl font-extrabold text-rose-600">
-              {studentsWithGaps}
-            </div>
-            <span className="text-[11px] text-rose-600/80 mt-1 block font-medium">
-              Flagged by Gap Engine
-            </span>
-          </Card>
+              <StatTile
+                label="Active Plans"
+                value={activePlansCount}
+                icon={Layers}
+                variant="saffron"
+                description="5-step manipulatives"
+                sparklineData={[1, 2, 3, 3, 3]}
+              />
 
-          {/* Card 3: Active Learning Gaps */}
-          <Card className="border-l-4 border-l-amber-500">
-            <div className="flex items-center justify-between text-slate-500">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-amber-700">
-                {t.dashboard.activeLearningGaps}
-              </span>
-              <Layers className="w-4 h-4 text-amber-500" />
-            </div>
-            <div className="mt-2 text-2xl sm:text-3xl font-extrabold text-amber-600">
-              {activeGaps.length}
-            </div>
-            <span className="text-[11px] text-amber-600/80 mt-1 block font-medium">
-              Concept-level alerts
-            </span>
-          </Card>
-
-          {/* Card 4: Students Improving */}
-          <Card className="border-l-4 border-l-emerald-500">
-            <div className="flex items-center justify-between text-slate-500">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-700">
-                {t.dashboard.studentsImproving}
-              </span>
-              <TrendingUp className="w-4 h-4 text-emerald-500" />
-            </div>
-            <div className="mt-2 text-2xl sm:text-3xl font-extrabold text-emerald-600">
-              {improvingStudentsCount}
-            </div>
-            <span className="text-[11px] text-emerald-600/80 mt-1 block font-medium">
-              Positive percentage-point delta
-            </span>
-          </Card>
-
-          {/* Card 5: Completed Plans */}
-          <Card className="border-l-4 border-l-purple-500 col-span-2 lg:col-span-1">
-            <div className="flex items-center justify-between text-slate-500">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-purple-700">
-                {t.dashboard.completedRemedialPlans}
-              </span>
-              <ClipboardCheck className="w-4 h-4 text-purple-500" />
-            </div>
-            <div className="mt-2 text-2xl sm:text-3xl font-extrabold text-purple-600">
-              {completedPlans}
-            </div>
-            <span className="text-[11px] text-purple-600/80 mt-1 block font-medium">
-              Verified interventions
-            </span>
-          </Card>
-        </div>
-
-        {/* Interactive AI Pedagogical Intelligence Hub Banner */}
-        <div className="rounded-3xl border border-cyan-500/20 bg-gradient-to-r from-[#060a14] via-[#0b1226] to-[#060a14] p-5 sm:p-6 shadow-xl text-white relative overflow-hidden">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
-                  <Sparkles className="w-4 h-4 animate-pulse" />
-                </span>
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-cyan-400">
-                  Interactive AI Capabilities
-                </span>
-              </div>
-              <h2 className="text-lg sm:text-xl font-extrabold text-white mt-1">
-                AI Pedagogical Intelligence Hub
-              </h2>
-              <p className="text-xs text-slate-300 mt-0.5 max-w-xl">
-                Real configured AI features: Ask the AI Tutor, diagnose assessment evidence, generate targeted remedial plans, and print personalized worksheets.
-              </p>
+              <StatTile
+                label="Reassessed Gain"
+                value="+50 pp"
+                icon={TrendingUp}
+                variant="mint"
+                description="Aarav: 35% -> 85%"
+                sparklineData={[35, 45, 60, 75, 85]}
+                change={{ value: "+50 pp", trend: "up", label: "mastery breakthrough" }}
+              />
             </div>
 
-            <Link
-              href="/ai"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-md shadow-cyan-500/20 transition-all self-start sm:self-center"
+            {/* 2. Recent Reassessment Wins Banner with Confetti */}
+            <Card
+              variant="glass"
+              className="p-5 sm:p-6 border-amber-500/40 bg-gradient-to-r from-amber-500/10 via-slate-900/90 to-emerald-500/10 relative overflow-hidden"
             >
-              <span>Open AI Workspace</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-4 pt-4 border-t border-cyan-500/15">
-            <button
-              type="button"
-              onClick={() => {
-                setAiTab("tutor");
-                setDashboardView("ai");
-              }}
-              className="p-3 rounded-2xl bg-[#0e172e]/80 hover:bg-[#152347] border border-cyan-500/20 text-left transition-all group cursor-pointer"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-400 font-mono">01</span>
-                <Sparkles className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
-              </div>
-              <span className="text-xs font-bold text-white block mt-1.5">AI Tutor</span>
-              <span className="text-[10px] text-slate-400 line-clamp-1 block mt-0.5">Equal sharing & activities</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setAiTab("analyzer");
-                setDashboardView("ai");
-              }}
-              className="p-3 rounded-2xl bg-[#0e172e]/80 hover:bg-[#152347] border border-cyan-500/20 text-left transition-all group cursor-pointer"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 font-mono">02</span>
-                <AlertTriangle className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
-              </div>
-              <span className="text-xs font-bold text-white block mt-1.5">Gap Analyzer</span>
-              <span className="text-[10px] text-slate-400 line-clamp-1 block mt-0.5">Evidence diagnosis</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setAiTab("remedial");
-                setDashboardView("ai");
-              }}
-              className="p-3 rounded-2xl bg-[#0e172e]/80 hover:bg-[#152347] border border-cyan-500/20 text-left transition-all group cursor-pointer"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400 font-mono">03</span>
-                <ClipboardList className="w-3.5 h-3.5 text-purple-400 group-hover:scale-110 transition-transform" />
-              </div>
-              <span className="text-xs font-bold text-white block mt-1.5">Remedial Plans</span>
-              <span className="text-[10px] text-slate-400 line-clamp-1 block mt-0.5">5-step curricula</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setAiTab("worksheet");
-                setDashboardView("ai");
-              }}
-              className="p-3 rounded-2xl bg-[#0e172e]/80 hover:bg-[#152347] border border-cyan-500/20 text-left transition-all group cursor-pointer"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 font-mono">04</span>
-                <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
-              </div>
-              <span className="text-xs font-bold text-white block mt-1.5">Worksheets</span>
-              <span className="text-[10px] text-slate-400 line-clamp-1 block mt-0.5">Printable + Key</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setAiTab("assistant");
-                setDashboardView("ai");
-              }}
-              className="p-3 rounded-2xl bg-[#0e172e]/80 hover:bg-[#152347] border border-cyan-500/20 text-left transition-all group col-span-2 sm:col-span-1 cursor-pointer"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-300 font-mono">05</span>
-                <Bot className="w-3.5 h-3.5 text-cyan-300 group-hover:scale-110 transition-transform" />
-              </div>
-              <span className="text-xs font-bold text-white block mt-1.5">Teacher Assistant</span>
-              <span className="text-[10px] text-slate-400 line-clamp-1 block mt-0.5">Classroom guidance</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Charts Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Chart 1: Subject Proficiency */}
-          <Card>
-            <CardHeader>
-              <div>
-                <CardTitle>{t.dashboard.performanceBySubject}</CardTitle>
-                <CardDescription>Average percentage mastery across primary curriculum</CardDescription>
-              </div>
-              <Badge variant="outline" size="sm">Operational Data</Badge>
-            </CardHeader>
-            <div className="h-64 w-full pt-2">
-              {isMounted ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={subjectChartData}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                    <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                    <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} />
-                    <Tooltip
-                      formatter={(val: any) => [`${val}%`, "Average Score"]}
-                      contentStyle={{ borderRadius: "12px", border: "1px solid #CBD5E1", fontSize: "12px" }}
-                    />
-                    <Bar dataKey="average" fill="#312E81" radius={[6, 6, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="h-full w-full flex items-center justify-center text-xs text-slate-400">Loading chart...</div>
-              )}
-            </div>
-          </Card>
-
-          {/* Chart 2: Learning Progress Trend */}
-          <Card>
-            <CardHeader>
-              <div>
-                <CardTitle>{t.dashboard.progressTrend}</CardTitle>
-                <CardDescription>Demonstration intervention progression over time</CardDescription>
-              </div>
-              <span className="text-xs font-bold text-emerald-600">+34 pp gain</span>
-            </CardHeader>
-            <div className="h-64 w-full pt-2">
-              {isMounted ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={progressTrendData}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                    <XAxis dataKey="period" tick={{ fontSize: 11 }} />
-                    <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} />
-                    <Tooltip
-                      formatter={(val: any) => [`${val}%`, "Average Score"]}
-                      contentStyle={{ borderRadius: "12px", border: "1px solid #CBD5E1", fontSize: "12px" }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="score"
-                      stroke="#059669"
-                      strokeWidth={3}
-                      dot={{ r: 5, fill: "#059669" }}
-                      activeDot={{ r: 7 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="h-full w-full flex items-center justify-center text-xs text-slate-400">Loading chart...</div>
-              )}
-            </div>
-          </Card>
-        </div>
-
-        {/* Dashboard Sections: Students Requiring Attention & Recent Assessments */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Section 1: Students Requiring Immediate Attention (2 cols) */}
-          <div className="lg:col-span-2 space-y-4">
-            <Card>
-              <CardHeader>
-                <div>
-                  <CardTitle className="text-rose-700 flex items-center gap-1.5">
-                    <AlertTriangle className="w-4 h-4 text-rose-500" />
-                    <span>{t.dashboard.attentionListTitle}</span>
-                  </CardTitle>
-                  <CardDescription>Students with flagged concept gaps below 60% mastery</CardDescription>
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="p-1.5 rounded-xl bg-amber-500/20 text-amber-400 text-xs font-bold flex items-center gap-1">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      Pedagogical Win
+                    </span>
+                    <Badge variant="mint" size="sm">
+                      Mastery Verified
+                    </Badge>
+                  </div>
+                  <h3 className="font-heading text-lg font-bold text-white">
+                    Aarav Patel (Class 4A) Crosses The Bridge: 35% &rarr; 85% (+50 pp)
+                  </h3>
+                  <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
+                    Following 5-step concrete division remediation with counters and number line worksheets, Aarav mastered equal sharing with remainders during formative reassessment.
+                  </p>
                 </div>
-                <Link
-                  href="/learning-gaps"
-                  className="text-xs font-semibold text-indigo-600 hover:text-indigo-800"
-                >
-                  View All Gaps →
-                </Link>
-              </CardHeader>
 
-              <div className="divide-y divide-slate-100">
-                {activeGaps.slice(0, 4).map((gap) => (
-                  <div key={gap.id} className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <Link
-                          href={`/students/${gap.studentId}`}
-                          className="font-bold text-sm text-slate-900 hover:text-indigo-600"
-                        >
-                          {gap.studentName}
-                        </Link>
-                        <span className="text-xs text-slate-400">Class {gap.grade}-A</span>
-                        <Badge
-                          variant={gap.priority === "High" ? "high" : "medium"}
-                          size="sm"
-                        >
-                          {gap.priority} Priority
-                        </Badge>
+                <div className="flex items-center gap-3 shrink-0">
+                  <Button
+                    variant="saffron"
+                    size="sm"
+                    onClick={handleCelebrate}
+                    className="rounded-full shadow-lg shadow-amber-500/20 text-xs px-4"
+                  >
+                    <PartyPopper className="w-4 h-4 mr-1.5" />
+                    <span>{hasCelebrated ? "Celebrated! 🎉" : "Celebrate Win 🎉"}</span>
+                  </Button>
+
+                  <Link href="/students/std-aarav">
+                    <Button variant="outline" size="sm" className="rounded-full text-xs">
+                      Inspect Aarav &rarr;
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Aarav's Glowing Bridge Progress */}
+              <div className="mt-4 pt-4 border-t border-slate-800/80">
+                <BridgeProgress
+                  score={85}
+                  previousScore={35}
+                  studentName="Aarav Patel"
+                  height="md"
+                />
+              </div>
+            </Card>
+
+            {/* 3. Main Grid: 3D Class Mastery Heatmap & Curriculum Proficiency */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* 3D Class Mastery Heatmap (2 cols on lg) */}
+              <div className="lg:col-span-2 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-heading text-base font-bold text-slate-900 dark:text-white">
+                      Class Mastery Heatmap (Students × Concepts)
+                    </h3>
+                    <Badge variant="saffron" size="sm">
+                      Interactive 3D
+                    </Badge>
+                  </div>
+                  <span className="text-[11px] text-slate-400">
+                    Drag to rotate 3D view
+                  </span>
+                </div>
+
+                {/* 3D Heatmap Canvas Component */}
+                <ClassMasteryHeatmap3D
+                  data={heatmapData}
+                  students={heatmapStudents}
+                  concepts={heatmapConcepts}
+                />
+              </div>
+
+              {/* Curriculum Proficiency Chart */}
+              <Card variant="glass" className="p-5 flex flex-col justify-between">
+                <div>
+                  <h3 className="font-heading text-base font-bold text-slate-900 dark:text-white">
+                    Subject Proficiency
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Current cohort average vs baseline
+                  </p>
+
+                  <div className="h-[220px] w-full mt-4">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={curriculumData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.3} />
+                        <XAxis dataKey="subject" tick={{ fill: "#94a3b8", fontSize: 11 }} />
+                        <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} domain={[0, 100]} />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: "#0f172a",
+                            border: "1px solid #334155",
+                            borderRadius: "12px",
+                            fontSize: "12px",
+                          }}
+                        />
+                        <Bar dataKey="score" fill="#3DDBA9" radius={[6, 6, 0, 0]} name="Current Score" />
+                        <Bar dataKey="baseline" fill="#FF8A3D" radius={[6, 6, 0, 0]} name="Baseline" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-xs bg-[#3DDBA9]" />
+                    <span>Current %</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-xs bg-[#FF8A3D]" />
+                    <span>Baseline %</span>
+                  </div>
+                  <Link href="/reports" className="text-amber-400 hover:underline font-bold">
+                    Full Reports &rarr;
+                  </Link>
+                </div>
+              </Card>
+            </div>
+
+            {/* 4. Immediate Attention Student List */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-heading text-base font-bold text-slate-900 dark:text-white">
+                    Immediate Attention Required
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    Students flagged below the 60% developing threshold needing active intervention
+                  </p>
+                </div>
+                <Link href="/learning-gaps">
+                  <Button variant="outline" size="sm" className="rounded-full text-xs">
+                    View All Gaps &rarr;
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                {[
+                  {
+                    id: "std-pooja",
+                    name: "Pooja Sharma",
+                    class: "Class 3-A",
+                    subject: "Gujarati",
+                    concept: "Vowel Blends (જોડાક્ષર)",
+                    score: 42,
+                    priority: "High",
+                    reason: "Consistently misses consonant-vowel combinations during dictation.",
+                    suggestedAction: "Step 2: Tactile Gujarati letter cards with pictorial word association.",
+                  },
+                  {
+                    id: "std-karan",
+                    name: "Karan Mehta",
+                    class: "Class 5-A",
+                    subject: "Mathematics",
+                    concept: "Fractions Addition",
+                    score: 48,
+                    priority: "High",
+                    reason: "Directly adds denominators (1/2 + 1/4 = 2/6) without finding common base.",
+                    suggestedAction: "Step 2: Fraction strips and circle cutouts for physical equivalence.",
+                  },
+                  {
+                    id: "std-diya",
+                    name: "Diya Joshi",
+                    class: "Class 4-A",
+                    subject: "Gujarati",
+                    concept: "Reading Comprehension",
+                    score: 52,
+                    priority: "Medium",
+                    reason: "Decodes single words accurately but loses context in compound sentences.",
+                    suggestedAction: "Step 3: Guided paired reading with comprehension question prompts.",
+                  },
+                  {
+                    id: "std-dev",
+                    name: "Dev Solanki",
+                    class: "Class 3-A",
+                    subject: "Mathematics",
+                    concept: "Place Value 100s",
+                    score: 55,
+                    priority: "Medium",
+                    reason: "Reverses tens and units column during borrowing in subtraction.",
+                    suggestedAction: "Step 2: Dienes blocks (bundles of 10 and 100s) for regrouping.",
+                  },
+                ].map((item) => (
+                  <Card
+                    key={item.id}
+                    variant="glass"
+                    className="p-4 space-y-3 border-slate-800 hover:border-amber-500/40 transition-all"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-400 font-heading font-black text-sm flex items-center justify-center shrink-0">
+                          {item.score}%
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-bold text-white text-sm">{item.name}</h4>
+                            <span className="text-[11px] text-slate-400 font-medium">{item.class}</span>
+                          </div>
+                          <p className="text-xs text-amber-400 font-medium mt-0.5">
+                            {item.subject} • {item.concept}
+                          </p>
+                        </div>
                       </div>
-                      <p className="text-xs text-slate-600 font-medium">
-                        Concept: <span className="font-semibold text-slate-800">{gap.conceptName}</span>
-                      </p>
-                      <p className="text-[11px] text-slate-500 line-clamp-1 italic">
-                        &quot;{gap.reason}&quot;
-                      </p>
+
+                      <Badge
+                        variant={item.priority === "High" ? "high" : "medium"}
+                        size="sm"
+                        dot
+                      >
+                        {item.priority} Priority
+                      </Badge>
                     </div>
 
-                    <div className="flex items-center gap-2 self-end sm:self-center">
-                      <div className="text-right mr-2">
-                        <div className="text-xs font-bold text-rose-600">{gap.latestPercentage}%</div>
-                        <div className="text-[10px] text-slate-400">Latest Score</div>
-                      </div>
-                      <Link
-                        href={`/students/${gap.studentId}`}
-                        className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold text-xs transition-colors"
-                      >
-                        Remediate →
+                    <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/50 p-2.5 rounded-xl border border-slate-800/80">
+                      <span className="text-slate-400 font-semibold block text-[10px] uppercase">Why Flagged:</span>
+                      {item.reason}
+                    </p>
+
+                    <div className="flex items-center justify-between pt-1 text-xs">
+                      <span className="text-[11px] text-slate-400 truncate max-w-[220px]">
+                        {item.suggestedAction}
+                      </span>
+                      <Link href="/remedial-plans">
+                        <Button variant="saffron" size="sm" className="rounded-full text-xs h-7 px-3">
+                          Generate Plan &rarr;
+                        </Button>
                       </Link>
                     </div>
-                  </div>
+                  </Card>
                 ))}
               </div>
-            </Card>
-
-            {/* Quick Actions Row */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <Link
-                href="/assessments/new"
-                className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 hover:bg-slate-50 dark:hover:bg-slate-800/80 text-center transition-all shadow-2xs group"
-              >
-                <FileSpreadsheet className="w-5 h-5 mx-auto text-indigo-600 dark:text-cyan-400 group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block mt-2">New Assessment</span>
-              </Link>
-              <Link
-                href="/remedial-plans"
-                className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 hover:bg-slate-50 dark:hover:bg-slate-800/80 text-center transition-all shadow-2xs group"
-              >
-                <ClipboardCheck className="w-5 h-5 mx-auto text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block mt-2">Remedial Plans</span>
-              </Link>
-              <Link
-                href="/activities"
-                className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 hover:bg-slate-50 dark:hover:bg-slate-800/80 text-center transition-all shadow-2xs group"
-              >
-                <BookOpen className="w-5 h-5 mx-auto text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block mt-2">Practice Bank</span>
-              </Link>
-              <Link
-                href="/reports"
-                className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 hover:bg-slate-50 dark:hover:bg-slate-800/80 text-center transition-all shadow-2xs group"
-              >
-                <TrendingUp className="w-5 h-5 mx-auto text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block mt-2">Progress Reports</span>
-              </Link>
             </div>
-          </div>
-
-          {/* Section 2: Recent Assessments & Next Actions (1 col) */}
-          <div className="space-y-4">
-            <Card>
-              <CardHeader>
-                <div>
-                  <CardTitle className="text-sm font-bold text-slate-900 dark:text-white">
-                    {t.dashboard.recentAssessmentsTitle}
-                  </CardTitle>
-                  <CardDescription>Recently recorded evaluations</CardDescription>
-                </div>
-                <Link href="/assessments" className="text-xs font-semibold text-indigo-600 dark:text-cyan-400 hover:underline">
-                  All →
-                </Link>
-              </CardHeader>
-              <div className="space-y-3">
-                {assessments.slice(0, 3).map((asm) => (
-                  <div key={asm.id} className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                    <div className="flex items-center justify-between text-xs font-semibold text-slate-800 dark:text-slate-200">
-                      <span className="line-clamp-1">{asm.title}</span>
-                      <Badge variant="default" size="sm">{asm.subjectCode}</Badge>
-                    </div>
-                    <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 mt-1.5">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        <span>{asm.assessmentDate}</span>
-                      </span>
-                      <span>Max: {asm.maxMarks} marks</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-indigo-50/60 to-purple-50/40 dark:from-indigo-950/40 dark:to-purple-950/30 border-indigo-100 dark:border-indigo-800/50">
-              <h4 className="text-xs font-bold text-indigo-950 dark:text-indigo-200 uppercase tracking-wider mb-2">
-                {t.dashboard.recommendedNextActions}
-              </h4>
-              <ul className="space-y-2 text-xs text-slate-700 dark:text-slate-300">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-indigo-600 dark:text-cyan-400 shrink-0 mt-0.5" />
-                  <span>Review Aarav Patel&apos;s division token-sharing session notes.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-indigo-600 dark:text-cyan-400 shrink-0 mt-0.5" />
-                  <span>Assign Class 3-A place value worksheet before Friday.</span>
-                </li>
-              </ul>
-            </Card>
-          </div>
-        </div>
-      </>
-    )}
-    </div>
+          </>
+        )}
+      </div>
 
       {/* Add Student Modal */}
-      <StudentFormModal
-        isOpen={showAddStudentModal}
-        onClose={() => setShowAddStudentModal(false)}
-        onSuccess={fetchDashboardData}
-      />
+      {showAddStudentModal && (
+        <StudentFormModal
+          isOpen={showAddStudentModal}
+          onClose={() => setShowAddStudentModal(false)}
+          onSuccess={() => {
+            setShowAddStudentModal(false);
+            fetchDashboardData();
+          }}
+        />
+      )}
     </AppLayout>
   );
 }

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
 import { useLanguage } from "@/context/LanguageContext";
 import { useFilter } from "@/context/FilterContext";
 import { StudentFormModal } from "@/components/student/StudentFormModal";
@@ -19,10 +20,11 @@ import {
   ArrowRight,
   GraduationCap,
   Sparkles,
+  CheckCircle2,
 } from "lucide-react";
 
 export default function StudentsPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { searchTerm, setSearchTerm, selectedClass, setSelectedClass, gradeNumber } = useFilter();
 
   const [students, setStudents] = useState<any[]>([]);
@@ -106,62 +108,70 @@ export default function StudentsPage() {
         {/* Header and Actions */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-              Student Directory & Competency Profiles
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-              Manage student enrollment, monitor concept mastery, and coordinate remedial interventions.
+            <div className="flex items-center gap-2">
+              <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                {language === "gu" ? "વિદ્યાર્થી ડિરેક્ટરી અને પ્રોફાઇલ્સ" : "Student Directory & 3D Profiles"}
+              </h1>
+              <Badge variant="indigo" size="sm">
+                15 Enrolled
+              </Badge>
+            </div>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+              Manage primary school enrollments, track 3D skill trees, and coordinate 5-step remedial plans.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Button
+              variant="outline"
+              size="sm"
               onClick={handleExportCsv}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+              className="rounded-full text-xs"
             >
-              <Download className="w-3.5 h-3.5 text-slate-500" />
+              <Download className="w-3.5 h-3.5 mr-1 text-slate-400" />
               <span>{t.actions.exportCsv}</span>
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => setShowCsvModal(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+              className="rounded-full text-xs"
             >
-              <Upload className="w-3.5 h-3.5 text-slate-500" />
+              <Upload className="w-3.5 h-3.5 mr-1 text-slate-400" />
               <span>{t.actions.importCsv}</span>
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="saffron"
+              size="sm"
               onClick={() => setShowAddModal(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
+              className="rounded-full text-xs font-bold"
             >
-              <PlusCircle className="w-3.5 h-3.5" />
+              <PlusCircle className="w-3.5 h-3.5 mr-1" />
               <span>{t.actions.addStudent}</span>
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+        <Card variant="glass" className="p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 border-slate-800">
           <div className="relative w-full sm:max-w-xs">
-            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
+            <Search className="absolute left-3.5 top-2.5 h-3.5 w-3.5 text-slate-400" />
             <input
               type="text"
               placeholder={t.actions.search}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 py-1.5 pl-9 pr-3 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+              className="w-full rounded-full border border-slate-700 bg-slate-900 py-2 pl-9 pr-4 text-xs text-white placeholder-slate-400 focus:border-amber-500 outline-hidden"
             />
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <span className="text-xs font-semibold text-slate-500">Filter:</span>
+            <span className="text-xs font-semibold text-slate-400">Class:</span>
             <select
               value={activeGrade}
               aria-label="Filter students by class"
               onChange={(e) => handleGradeFilterChange(e.target.value)}
-              className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 outline-hidden cursor-pointer"
+              className="rounded-full border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-semibold text-slate-200 outline-hidden cursor-pointer"
             >
               <option value="all">All Classes (1-5)</option>
               <option value="3">Class 3</option>
@@ -172,7 +182,7 @@ export default function StudentsPage() {
               Showing {filteredStudents.length} students
             </span>
           </div>
-        </div>
+        </Card>
 
         {/* Student Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -183,31 +193,31 @@ export default function StudentsPage() {
             return (
               <Card
                 key={std.id}
-                className={`flex flex-col justify-between transition-all ${
+                variant="glass"
+                className={`p-5 flex flex-col justify-between transition-all border-slate-800 hover:border-amber-500/50 ${
                   isDemoCase
-                    ? "ring-2 ring-indigo-500/80 bg-gradient-to-br from-indigo-50/40 to-white"
+                    ? "ring-1 ring-amber-500/60 shadow-[0_0_20px_rgba(255,138,61,0.15)]"
                     : ""
                 }`}
               >
-                <div>
+                <div className="space-y-3">
                   <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm shrink-0">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-indigo-600/30 text-amber-400 border border-amber-500/30 flex items-center justify-center font-heading font-black text-sm shrink-0">
                         {std.displayName.charAt(0)}
                       </div>
                       <div>
                         <div className="flex items-center gap-1.5">
                           <Link
                             href={`/students/${std.id}`}
-                            className="font-bold text-sm text-slate-900 hover:text-indigo-600 transition-colors"
+                            className="font-bold text-sm text-white hover:text-amber-400 transition-colors"
                           >
                             {std.displayName}
                           </Link>
                           {isDemoCase && (
-                            <span className="bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
-                              <Sparkles className="w-2.5 h-2.5" />
-                              <span>Demo Case</span>
-                            </span>
+                            <Badge variant="saffron" size="sm">
+                              Demo Case
+                            </Badge>
                           )}
                         </div>
                         <span className="font-mono text-[11px] text-slate-400">
@@ -222,32 +232,30 @@ export default function StudentsPage() {
                   </div>
 
                   {std.notes && (
-                    <p className="text-xs text-slate-600 mt-3 line-clamp-2 italic">
+                    <p className="text-xs text-slate-300 line-clamp-2 italic bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/60">
                       &quot;{std.notes}&quot;
                     </p>
                   )}
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     {gapCount > 0 ? (
-                      <Badge variant="needsSupport" size="sm">
-                        <AlertTriangle className="w-3 h-3 mr-1" />
+                      <Badge variant="needsSupport" size="sm" dot>
+                        <AlertTriangle className="w-3 h-3 mr-1 text-rose-400" />
                         <span>{gapCount} Active Gap{gapCount > 1 ? "s" : ""}</span>
                       </Badge>
                     ) : (
-                      <Badge variant="mastered" size="sm">
+                      <Badge variant="mastered" size="sm" dot>
                         <span>On Track</span>
                       </Badge>
                     )}
                   </div>
 
-                  <Link
-                    href={`/students/${std.id}`}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-800"
-                  >
-                    <span>View Profile</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                  <Link href={`/students/${std.id}`}>
+                    <Button variant="ghost" size="sm" className="text-xs text-amber-400 hover:text-white">
+                      <span>3D Profile &rarr;</span>
+                    </Button>
                   </Link>
                 </div>
               </Card>

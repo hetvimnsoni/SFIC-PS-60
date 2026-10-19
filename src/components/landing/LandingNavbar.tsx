@@ -6,7 +6,8 @@ import { BrandLogo } from "@/components/shared/BrandLogo";
 import { LanguageSelector } from "@/components/shared/LanguageSelector";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { useLanguage } from "@/context/LanguageContext";
-import { Menu, X, ArrowRight, Sparkles, LogIn, Compass } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Menu, X, ArrowRight, LogIn } from "lucide-react";
 
 export function LandingNavbar() {
   const { t, language } = useLanguage();
@@ -18,19 +19,18 @@ export function LandingNavbar() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      setIsScrolled(scrollY > 25);
+      setIsScrolled(scrollY > 20);
 
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const progress = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
       setScrollProgress(progress);
 
-      // Active section detection
-      const sections = ["#hero", "#challenge", "#diagnostics", "#how-it-works", "#impact", "#contact"];
+      const sections = ["#hero", "#challenge", "#solution", "#features", "#preview", "#impact", "#cta"];
       for (const sec of sections) {
         const el = document.querySelector(sec);
         if (el) {
           const rect = el.getBoundingClientRect();
-          if (rect.top <= 200 && rect.bottom >= 200) {
+          if (rect.top <= 250 && rect.bottom >= 250) {
             setActiveSection(sec);
             break;
           }
@@ -44,12 +44,12 @@ export function LandingNavbar() {
   }, []);
 
   const navLinks = [
-    { label: language === "gu" ? "મુખ્ય પૃષ્ઠ" : "Home", href: "#hero" },
-    { label: language === "gu" ? "શિક્ષણ ત્રુટિ" : "The Challenge", href: "#challenge" },
-    { label: language === "gu" ? "નિદાન પ્રણાલી" : "Diagnostics", href: "#diagnostics" },
-    { label: language === "gu" ? "કાર્ય પદ્ધતિ" : "How It Works", href: "#how-it-works" },
-    { label: language === "gu" ? "અસર" : "Our Impact", href: "#impact" },
-    { label: language === "gu" ? "સંપર્ક" : "Contact", href: "#contact" },
+    { label: language === "gu" ? "મુખ્ય પૃષ્ઠ" : "The Bridge", href: "#hero" },
+    { label: language === "gu" ? "પડકાર" : "The Challenge", href: "#challenge" },
+    { label: language === "gu" ? "૪ તબક્કા" : "4 Phases", href: "#solution" },
+    { label: language === "gu" ? "સુવિધાઓ" : "Features", href: "#features" },
+    { label: language === "gu" ? "લાઈવ પ્રિવ્યૂ" : "Live Preview", href: "#preview" },
+    { label: language === "gu" ? "પરિણામો" : "Impact", href: "#impact" },
   ];
 
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -65,10 +65,10 @@ export function LandingNavbar() {
 
   return (
     <>
-      {/* 3D Electric Glowing Scroll Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-[3px] bg-slate-900/40 z-50 overflow-hidden">
+      {/* Glowing Bridge Progress Rail at the very top */}
+      <div className="fixed top-0 left-0 right-0 h-[3px] bg-[#14123D]/60 z-50 overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-cyan-400 via-indigo-500 to-sky-400 shadow-[0_0_12px_#00f0ff] transition-all duration-75"
+          className="h-full bg-gradient-to-r from-amber-500 via-teal-400 to-amber-400 shadow-[0_0_12px_#FF8A3D] transition-all duration-75"
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
@@ -76,31 +76,22 @@ export function LandingNavbar() {
       <header
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
           isScrolled
-            ? "bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-lg py-3"
+            ? "bg-[#14123D]/85 backdrop-blur-xl border-b border-white/10 shadow-2xl py-2.5 sm:py-3"
             : "bg-transparent py-4 sm:py-5"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          {/* Brand Logo */}
-          <Link href="#hero" onClick={(e) => handleSmoothScroll(e, "#hero")} className="cursor-pointer">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-400 to-indigo-600 flex items-center justify-center text-white font-black text-sm shadow-[0_0_15px_rgba(0,240,255,0.4)]">
-                શ
-              </div>
-              <div className="flex flex-col">
-                <span className="font-extrabold text-sm tracking-tight text-white flex items-center gap-1.5">
-                  ShikshaSetu AI
-                  <span className="text-[10px] font-semibold text-cyan-400 bg-cyan-950/60 border border-cyan-800/60 px-1.5 py-0.2 rounded-full">3D</span>
-                </span>
-                <span className="text-[9px] text-slate-400 tracking-wider font-medium uppercase">
-                  Smart Tracking System
-                </span>
-              </div>
-            </div>
+          {/* Brand Logo with Bridge glyph & શ */}
+          <Link
+            href="#hero"
+            onClick={(e) => handleSmoothScroll(e, "#hero")}
+            className="cursor-pointer group"
+          >
+            <BrandLogo size={isScrolled ? 34 : 40} />
           </Link>
 
-          {/* Desktop Navigation Links with Active Indicator */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+          {/* Desktop Navigation Links */}
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2 px-3 py-1.5 rounded-full bg-slate-900/40 border border-white/10 backdrop-blur-md">
             {navLinks.map((item) => {
               const isActive = activeSection === item.href;
               return (
@@ -108,10 +99,10 @@ export function LandingNavbar() {
                   key={item.href}
                   href={item.href}
                   onClick={(e) => handleSmoothScroll(e, item.href)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                     isActive
-                      ? "text-cyan-300 bg-cyan-950/50 border border-cyan-500/30 shadow-[0_0_10px_rgba(0,240,255,0.2)]"
-                      : "text-slate-300 hover:text-white hover:bg-white/10"
+                      ? "text-amber-400 bg-amber-500/10 border border-amber-500/30 shadow-[0_0_12px_rgba(255,138,61,0.25)] font-bold"
+                      : "text-slate-300 hover:text-white hover:bg-white/5"
                   }`}
                 >
                   {item.label}
@@ -121,24 +112,30 @@ export function LandingNavbar() {
           </nav>
 
           {/* Desktop Actions */}
-          <div className="hidden sm:flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2.5">
             <LanguageSelector />
             <ThemeToggle />
 
-            <Link
-              href="/login"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-200 hover:text-white hover:bg-white/10 border border-slate-700/80 bg-slate-900/60 transition-colors cursor-pointer"
-            >
-              <LogIn className="w-3.5 h-3.5 text-cyan-400" />
-              <span>{t.nav?.login || "Sign In"}</span>
+            <Link href="/login">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-full border-slate-700 bg-slate-900/60 text-slate-200 hover:text-white hover:border-amber-500/40"
+              >
+                <LogIn className="w-3.5 h-3.5 text-amber-400" />
+                <span>{t.nav?.login || "Sign In"}</span>
+              </Button>
             </Link>
 
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white shadow-[0_0_20px_rgba(79,70,229,0.4)] hover:shadow-[0_0_25px_rgba(0,240,255,0.6)] transition-all cursor-pointer"
-            >
-              <span>{language === "gu" ? "શરૂ કરો" : "Get Started"}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+            <Link href="/dashboard">
+              <Button
+                variant="saffron"
+                size="sm"
+                className="rounded-full shadow-[0_0_20px_rgba(255,138,61,0.35)]"
+              >
+                <span>{language === "gu" ? "ડેશબોર્ડ ખોલો" : "Get Started"}</span>
+                <ArrowRight className="w-3.5 h-3.5 ml-1" />
+              </Button>
             </Link>
           </div>
 
@@ -159,7 +156,7 @@ export function LandingNavbar() {
 
         {/* Mobile Drawer Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden fixed inset-x-0 top-full bg-slate-950/98 backdrop-blur-2xl border-b border-slate-800 shadow-2xl px-5 py-6 space-y-4 animate-in slide-in-from-top-2 duration-200">
+          <div className="lg:hidden fixed inset-x-0 top-full bg-[#14123D]/98 backdrop-blur-2xl border-b border-white/10 shadow-2xl px-5 py-6 space-y-4 animate-in slide-in-from-top-2 duration-200">
             <div className="flex flex-col space-y-1">
               {navLinks.map((item) => (
                 <a
@@ -168,7 +165,7 @@ export function LandingNavbar() {
                   onClick={(e) => handleSmoothScroll(e, item.href)}
                   className={`px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
                     activeSection === item.href
-                      ? "text-cyan-400 bg-cyan-950/60"
+                      ? "text-amber-400 bg-amber-500/10 font-bold"
                       : "text-slate-300 hover:text-white hover:bg-slate-800/60"
                   }`}
                 >
@@ -181,16 +178,16 @@ export function LandingNavbar() {
               <Link
                 href="/login"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-200 transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full text-sm font-bold border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-200 transition-colors"
               >
-                <LogIn className="w-4 h-4 text-cyan-400" />
-                <span>{t.nav?.login || "Sign In"}</span>
+                <LogIn className="w-4 h-4 text-amber-400" />
+                <span>{t.nav?.login || "Sign In (Demo Access)"}</span>
               </Link>
 
               <Link
                 href="/dashboard"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full text-sm font-black bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/30 transition-colors"
               >
                 <span>{language === "gu" ? "ડેશબોર્ડ ખોલો" : "Explore Dashboard"}</span>
                 <ArrowRight className="w-4 h-4" />

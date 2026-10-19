@@ -1,85 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Gujarati:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --primary: #312e81; /* Deep Indigo */
-  --primary-hover: #1e1b4b;
-  --primary-light: #e0e7ff;
-  --success: #059669; /* Emerald/Teal for positive progress */
-  --success-light: #d1fae5;
-  --warning: #d97706; /* Amber for needs practice */
-  --warning-light: #fef3c7;
-  --danger: #dc2626; /* Red for urgent learning gaps */
-  --danger-light: #fee2e2;
-  --card-bg: #ffffff;
-  --card-border: #e2e8f0;
+  /* THE BRIDGE Palette: Light Mode (Warm Ivory Classroom Feel) */
+  --background: #FFF8EC;
+  --foreground: #14123D;
+  --primary: #FF8A3D; /* Saffron-Orange Action */
+  --primary-hover: #E67429;
+  --primary-light: #FFF0E6;
+  --indigo-deep: #14123D;
+  --indigo-mid: #2B2A6B;
+  --indigo-light: #EEF0FA;
+  --mint: #3DDBA9; /* Mastery / Success */
+  --mint-light: #E6FAF3;
+  --coral: #FF5C6C; /* Gap / Needs Support */
+  --coral-light: #FFEAEB;
+  --amber: #F59E0B; /* Developing */
+  --amber-light: #FEF3C7;
+  --card-bg: #FFFFFF;
+  --card-border: rgba(43, 42, 107, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(43, 42, 107, 0.12);
+  --font-heading: 'Baloo 2', cursive, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-gujarati: 'Noto Sans Gujarati', 'Baloo 2', sans-serif;
   color-scheme: light;
 }
 
 .dark {
-  --background: #090d16;
-  --foreground: #f1f5f9;
-  --primary: #6366f1; /* Vibrant Indigo for dark mode */
-  --primary-hover: #818cf8;
-  --primary-light: #1e1b4b;
-  --success: #10b981;
-  --success-light: #064e3b;
-  --warning: #f59e0b;
-  --warning-light: #78350f;
-  --danger: #ef4444;
-  --danger-light: #7f1d1d;
-  --card-bg: #0f172a;
-  --card-border: #1e293b;
+  /* THE BRIDGE Palette: Dark Mode (Deep Indigo Night) */
+  --background: #0E0D2A;
+  --foreground: #F8FAFC;
+  --primary: #FF8A3D; /* Vibrant Saffron */
+  --primary-hover: #FFA263;
+  --primary-light: rgba(255, 138, 61, 0.15);
+  --indigo-deep: #14123D;
+  --indigo-mid: #222055;
+  --indigo-light: #1A1845;
+  --mint: #3DDBA9;
+  --mint-light: rgba(61, 219, 169, 0.15);
+  --coral: #FF5C6C;
+  --coral-light: rgba(255, 92, 108, 0.18);
+  --amber: #F59E0B;
+  --amber-light: rgba(245, 158, 11, 0.18);
+  --card-bg: #14123D;
+  --card-border: rgba(129, 140, 248, 0.2);
+  --glass-bg: rgba(20, 18, 61, 0.75);
+  --glass-border: rgba(129, 140, 248, 0.25);
   color-scheme: dark;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  overflow-x: hidden;
 }
 
-/* Custom dark scrollbar */
-.dark ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+h1, h2, h3, .font-heading {
+  font-family: var(--font-heading);
 }
-.dark ::-webkit-scrollbar-track {
-  background: #090d16;
+
+.font-gujarati {
+  font-family: var(--font-gujarati);
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-panel-glow {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(20, 18, 61, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass-panel-glow {
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Bridge Glowing Gradients */
+.bridge-gradient-text {
+  background: linear-gradient(135deg, #FF8A3D 0%, #FF5C6C 50%, #3DDBA9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bridge-glow-button {
+  background: linear-gradient(135deg, #FF8A3D 0%, #FF6E2E 100%);
+  box-shadow: 0 4px 20px rgba(255, 138, 61, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bridge-glow-button:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 8px 25px rgba(255, 138, 61, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+}
+
+.bridge-glow-button:active {
+  transform: translateY(0.5px);
+}
+
+/* Pulse animation for learning gaps */
+@keyframes pulse-coral {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 92, 108, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(255, 92, 108, 0);
+  }
+}
+
+.animate-gap-pulse {
+  animation: pulse-coral 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(43, 42, 107, 0.2);
+  border-radius: 9999px;
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+  background: rgba(129, 140, 248, 0.25);
 }
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
 }
 
-/* Custom focus ring for accessibility */
+/* Accessible focus ring */
 *:focus-visible {
-  outline: 2px solid #4338ca;
+  outline: 2px solid #FF8A3D;
   outline-offset: 2px;
 }
 
-.dark *:focus-visible {
-  outline: 2px solid #818cf8;
-  outline-offset: 2px;
-}
-
-/* Dark mode form controls */
-.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="submit"]):not([type="button"]),
-.dark select,
-.dark textarea {
-  color-scheme: dark;
-}
-
-/* Print styles for reports and student worksheets */
+/* Print Stylesheet for A4 Official Progress Reports */
 @media print {
   body {
     background: #ffffff !important;
@@ -90,7 +162,8 @@ body {
   aside,
   header,
   nav,
-  .print-hide {
+  .print-hide,
+  .shikshabot-widget {
     display: none !important;
   }
 
@@ -100,16 +173,9 @@ body {
     width: 100% !important;
   }
 
-  .print-only {
-    display: block !important;
-  }
-
-  .print-break-before {
-    page-break-before: always;
-  }
-
   .print-card {
     box-shadow: none !important;
     border: 1px solid #cbd5e1 !important;
+    page-break-inside: avoid;
   }
 }
