@@ -51,6 +51,7 @@ export function LandingNavbar() {
     { label: language === "gu" ? "લાઈવ પ્રિવ્યૂ" : "Live Preview", href: "#preview" },
     { label: language === "gu" ? "પરિણામો" : "Impact", href: "#impact" },
     { label: language === "gu" ? "માર્ગદર્શિકા" : "Tutorial", href: "/tutorial" },
+    { label: language === "gu" ? "૩D વર્લ્ડ" : "3D Living World", href: "/landing-pages/inner-green-3d.html" },
   ];
 
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -137,6 +138,18 @@ export function LandingNavbar() {
               >
                 <BookOpen className="w-3.5 h-3.5 text-amber-400" />
                 <span>{language === "gu" ? "ટ્યુટોરિયલ" : "Tutorial & Guide"}</span>
+              </Button>
+            </Link>
+
+            {/* 3D Living World Landing Link */}
+            <Link href="/landing-pages/inner-green-3d.html">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-full border-emerald-500/50 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 text-xs font-bold shadow-[0_0_15px_rgba(16,185,129,0.25)] flex items-center gap-1.5"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{language === "gu" ? "૩D વર્લ્ડ" : "3D World"}</span>
               </Button>
             </Link>
 
