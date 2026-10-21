@@ -229,15 +229,16 @@ export function AppHeader({
         {/* AI Workspace Quick Launch */}
         <Link
           href="/ai"
+          aria-label="AI Hub Workspace"
           className="inline-flex items-center gap-1.5 bg-[#F2CAB3] hover:bg-white text-[#49352F] border border-[#49352F]/15 px-3 py-1.5 rounded-xl text-xs font-bold shadow-xs transition-all"
         >
-          <Sparkles className="w-3.5 h-3.5 text-[#B26A1B]" />
+          <Sparkles className="w-3.5 h-3.5 text-[#B26A1B]" aria-hidden="true" />
           <span className="hidden sm:inline">AI Hub</span>
         </Link>
 
         {/* Hackathon Demo Tag */}
         <div className="hidden xl:inline-flex items-center gap-1 bg-[#F2DCB5]/60 border border-[#49352F]/15 text-[#49352F] px-2.5 py-1 rounded-full text-[11px] font-semibold">
-          <Sparkles className="w-3 h-3 text-[#B26A1B]" />
+          <Sparkles className="w-3 h-3 text-[#B26A1B]" aria-hidden="true" />
           <span>SFIC Gujarat Hackathon Demo</span>
         </div>
 
@@ -252,19 +253,21 @@ export function AppHeader({
             triggerPageTour(pageKey);
           }}
           className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-[#49352F]/15 bg-white hover:bg-[#F2CAB3] text-[#49352F] text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95"
+          aria-label={t.tutorial?.replayTour || "Start Page Guided Tour"}
           title={t.tutorial?.replayTour || "Start Page Guided Tour"}
         >
-          <RotateCcw className="w-3.5 h-3.5 text-[#B26A1B]" />
+          <RotateCcw className="w-3.5 h-3.5 text-[#B26A1B]" aria-hidden="true" />
           <span className="hidden sm:inline">{t.tutorial?.replayTour || "Tour"}</span>
         </button>
 
         {/* Tutorial & Help Center Link */}
         <Link
           href="/tutorial"
+          aria-label={t.tutorial?.pageTitle || "Help & Tutorial Center"}
           className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-[#49352F]/15 bg-white hover:bg-[#F2CAB3] text-[#49352F] text-xs font-bold transition-all shadow-xs"
           title={t.tutorial?.pageTitle || "Help & Tutorial Center"}
         >
-          <HelpCircle className="w-3.5 h-3.5 text-[#B26A1B]" />
+          <HelpCircle className="w-3.5 h-3.5 text-[#B26A1B]" aria-hidden="true" />
           <span className="hidden sm:inline">{t.nav?.tutorial || "Tutorial"}</span>
         </Link>
 

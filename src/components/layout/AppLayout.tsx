@@ -77,10 +77,10 @@ export function AppLayout({ children, showDemoBanner = true }: AppLayoutProps) {
               className={`flex flex-col items-center py-1 px-2.5 rounded-xl transition-colors ${
                 isActive
                   ? "text-[#49352F] font-bold bg-[#F2CAB3]/70 shadow-xs"
-                  : "text-[#7A6862] hover:text-[#49352F]"
+                  : "text-[#5C4B45] hover:text-[#49352F]"
               }`}
             >
-              <Icon className="w-5 h-5" />
+              <Icon className="w-5 h-5" aria-hidden="true" />
               <span className="text-[10px] mt-0.5">{item.label}</span>
             </Link>
           );

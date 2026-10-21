@@ -38,21 +38,21 @@ export function Badge({
 }: BadgeProps) {
   const variantStyles: Record<BadgeVariant, string> = {
     needsSupport:
-      "bg-[#FBECE9] text-[#C54738] border border-[#C54738]/25 font-semibold",
+      "bg-[#FBECE9] text-[#A93327] border border-[#A93327]/25 font-semibold",
     developing:
-      "bg-[#FDF4E7] text-[#B26A1B] border border-[#B26A1B]/25 font-medium",
+      "bg-[#FDF4E7] text-[#8D4E10] border border-[#8D4E10]/25 font-semibold",
     mastered:
       "bg-[#EAF4EE] text-[#2E7D5E] border border-[#2E7D5E]/25 font-semibold",
-    high: "bg-[#FBECE9] text-[#C54738] border border-[#C54738]/30 font-bold",
+    high: "bg-[#FBECE9] text-[#A93327] border border-[#A93327]/30 font-bold",
     medium:
-      "bg-[#FDF4E7] text-[#B26A1B] border border-[#B26A1B]/30 font-semibold",
+      "bg-[#FDF4E7] text-[#8D4E10] border border-[#8D4E10]/30 font-semibold",
     low: "bg-[#FAF6E9] text-[#49352F] border border-[#49352F]/12 font-medium",
     suggested:
       "bg-[#FAF6E9] text-[#49352F] border border-[#49352F]/15 font-medium",
     approved:
       "bg-[#EAF4EE] text-[#2E7D5E] border border-[#2E7D5E]/25 font-semibold",
     inProgress:
-      "bg-[#FDF4E7] text-[#B26A1B] border border-[#B26A1B]/25 font-medium",
+      "bg-[#FDF4E7] text-[#8D4E10] border border-[#8D4E10]/25 font-semibold",
     completed:
       "bg-[#EAF4EE] text-[#2E7D5E] border border-[#2E7D5E]/25 font-semibold",
     default:
@@ -64,31 +64,31 @@ export function Badge({
     mint:
       "bg-[#EAF4EE] text-[#2E7D5E] border border-[#2E7D5E]/25 font-semibold",
     coral:
-      "bg-[#FBECE9] text-[#C54738] border border-[#C54738]/25 font-semibold",
+      "bg-[#FBECE9] text-[#A93327] border border-[#A93327]/25 font-semibold",
     indigo:
       "bg-[#F2DCB5]/80 text-[#49352F] border border-[#49352F]/14 font-semibold",
     amber:
-      "bg-[#FDF4E7] text-[#B26A1B] border border-[#B26A1B]/25 font-semibold",
+      "bg-[#FDF4E7] text-[#8D4E10] border border-[#8D4E10]/25 font-semibold",
   };
 
   const dotColors: Record<BadgeVariant, string> = {
-    needsSupport: "bg-[#C54738]",
-    developing: "bg-[#B26A1B]",
+    needsSupport: "bg-[#A93327]",
+    developing: "bg-[#8D4E10]",
     mastered: "bg-[#2E7D5E]",
-    high: "bg-[#C54738]",
-    medium: "bg-[#B26A1B]",
+    high: "bg-[#A93327]",
+    medium: "bg-[#8D4E10]",
     low: "bg-[#7A6862]",
     suggested: "bg-[#49352F]",
     approved: "bg-[#2E7D5E]",
-    inProgress: "bg-[#B26A1B]",
+    inProgress: "bg-[#8D4E10]",
     completed: "bg-[#2E7D5E]",
     default: "bg-[#49352F]",
     outline: "bg-[#49352F]",
-    saffron: "bg-[#F2CAB3]",
+    saffron: "bg-[#8D4E10]",
     mint: "bg-[#2E7D5E]",
-    coral: "bg-[#C54738]",
+    coral: "bg-[#A93327]",
     indigo: "bg-[#B8673E]",
-    amber: "bg-amber-400",
+    amber: "bg-[#8D4E10]",
   };
 
   const sizeStyles = {
@@ -109,18 +109,18 @@ export function Badge({
       {...props}
     >
       {showDot && (
-        <span className="relative flex h-2 w-2">
+        <span className="relative flex h-2 w-2 items-center justify-center" aria-hidden="true">
           {pulse && (
             <span
               className={cn(
-                "animate-ping absolute inline-flex h-full w-full rounded-full opacity-75",
+                "animate-pulse motion-reduce:animate-none absolute inline-flex h-3 w-3 rounded-full opacity-40",
                 dotColors[variant]
               )}
             />
           )}
           <span
             className={cn(
-              "relative inline-flex rounded-full h-2 w-2",
+              "relative inline-flex rounded-full h-1.5 w-1.5",
               dotColors[variant]
             )}
           />

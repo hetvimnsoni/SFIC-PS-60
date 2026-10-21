@@ -25,7 +25,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseClasses =
-    "inline-flex items-center justify-center font-semibold rounded-full select-none transition-all duration-200 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
+    "inline-flex items-center justify-center font-semibold rounded-full select-none transition-all duration-150 ease-out active:scale-[0.98] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#8D4E10] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FAF6E9] disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
 
   const sizeClasses = {
     sm: "text-xs px-3.5 py-1.5 gap-1.5",
@@ -35,36 +35,37 @@ export function Button({
 
   const variantClasses = {
     primary:
-      "bg-[#F2CAB3] hover:bg-white text-[#49352F] font-bold border border-[#49352F]/16 shadow-[0_4px_14px_rgba(73,53,47,0.08)] hover:shadow-[0_8px_20px_rgba(73,53,47,0.14)] hover:-translate-y-0.5 focus-visible:ring-[#F2CAB3]",
+      "bg-[#F2CAB3] hover:bg-white text-[#49352F] font-bold border border-[#49352F]/16 shadow-[0_4px_14px_rgba(73,53,47,0.08)] hover:shadow-[0_8px_20px_rgba(73,53,47,0.14)] hover:-translate-y-0.5",
     saffron:
-      "bg-[#F2CAB3] hover:bg-white text-[#49352F] font-bold border border-[#49352F]/16 shadow-[0_4px_14px_rgba(73,53,47,0.08)] hover:shadow-[0_8px_20px_rgba(73,53,47,0.14)] hover:-translate-y-0.5 focus-visible:ring-[#F2CAB3]",
+      "bg-[#F2CAB3] hover:bg-white text-[#49352F] font-bold border border-[#49352F]/16 shadow-[0_4px_14px_rgba(73,53,47,0.08)] hover:shadow-[0_8px_20px_rgba(73,53,47,0.14)] hover:-translate-y-0.5",
     secondary:
-      "bg-white hover:bg-[#F2CAB3] text-[#49352F] font-semibold border border-[#49352F]/14 shadow-xs hover:-translate-y-0.5 focus-visible:ring-[#F2CAB3]",
+      "bg-white hover:bg-[#F2CAB3] text-[#49352F] font-semibold border border-[#49352F]/14 shadow-xs hover:-translate-y-0.5",
     indigo:
-      "bg-[#F2DCB5]/80 hover:bg-[#F2CAB3] text-[#49352F] font-semibold border border-[#49352F]/14 shadow-xs hover:-translate-y-0.5 focus-visible:ring-[#F2CAB3]",
+      "bg-[#F2DCB5]/80 hover:bg-[#F2CAB3] text-[#49352F] font-semibold border border-[#49352F]/14 shadow-xs hover:-translate-y-0.5",
     outline:
-      "border border-[#49352F]/18 bg-white/70 hover:bg-[#F2CAB3]/40 text-[#49352F] font-semibold backdrop-blur-sm focus-visible:ring-[#F2CAB3]",
+      "border border-[#49352F]/18 bg-white/70 hover:bg-[#F2CAB3]/40 text-[#49352F] font-semibold backdrop-blur-xs",
     ghost:
-      "text-[#49352F] hover:bg-[#49352F]/8 font-medium focus-visible:ring-[#F2CAB3]",
+      "text-[#49352F] hover:bg-[#49352F]/8 font-medium",
     mint:
       "bg-[#EAF4EE] text-[#2E7D5E] hover:bg-[#2E7D5E] hover:text-white font-bold border border-[#2E7D5E]/25 shadow-xs hover:-translate-y-0.5 focus-visible:ring-[#2E7D5E]",
     coral:
-      "bg-[#FBECE9] text-[#C54738] hover:bg-[#C54738] hover:text-white font-bold border border-[#C54738]/25 shadow-xs hover:-translate-y-0.5 focus-visible:ring-[#C54738]",
+      "bg-[#FBECE9] text-[#A93327] hover:bg-[#A93327] hover:text-white font-bold border border-[#A93327]/25 shadow-xs hover:-translate-y-0.5 focus-visible:ring-[#A93327]",
   };
 
   return (
     <button
       className={clsx(baseClasses, sizeClasses[size], variantClasses[variant], className)}
       disabled={disabled || isLoading}
+      aria-busy={isLoading ? "true" : undefined}
       {...props}
     >
       {isLoading ? (
-        <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+        <Loader2 className="w-4 h-4 animate-spin shrink-0" aria-hidden="true" />
       ) : (
-        leftIcon && <span className="shrink-0">{leftIcon}</span>
+        leftIcon && <span className="shrink-0" aria-hidden="true">{leftIcon}</span>
       )}
       <span>{children}</span>
-      {!isLoading && rightIcon && <span className="shrink-0">{rightIcon}</span>}
+      {!isLoading && rightIcon && <span className="shrink-0" aria-hidden="true">{rightIcon}</span>}
     </button>
   );
 }

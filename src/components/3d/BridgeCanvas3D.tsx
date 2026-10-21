@@ -3,7 +3,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { BridgeHero3D } from "./BridgeHero3D";
-import { Sparkles, Zap, Eye, Monitor } from "lucide-react";
+import { Sparkles, Zap, Eye, Monitor, Star } from "lucide-react";
 
 interface BridgeCanvas3DProps {
   progress?: number;
@@ -68,8 +68,8 @@ function BridgeLiteFallback({ progress }: { progress: number }) {
         <div className="flex flex-col items-center">
           <div className="w-28 h-28 rounded-2xl bg-slate-900/80 border border-emerald-500/40 p-3 shadow-[0_0_25px_rgba(61,219,169,0.3)] flex flex-col justify-between">
             <span className="text-[10px] font-mono font-bold text-emerald-400">MASTERY</span>
-            <div className="flex justify-center text-amber-400 text-xl font-bold animate-pulse">
-              ★
+            <div className="flex justify-center text-amber-400 animate-pulse">
+              <Star className="w-5 h-5 text-amber-400 fill-amber-400" aria-hidden="true" />
             </div>
             <span className="text-[9px] text-emerald-300 text-center font-bold">Goal: 85%+</span>
           </div>

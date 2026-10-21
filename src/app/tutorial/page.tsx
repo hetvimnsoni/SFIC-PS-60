@@ -233,8 +233,8 @@ export default function TutorialPage() {
 
               {/* Bot Avatar Callout */}
               <div className="p-2 rounded-2xl bg-[#FAF6E9] border border-[#49352F]/10 flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-[#F2CAB3] text-[#49352F] flex items-center justify-center text-xs shrink-0 font-bold">
-                  🤖
+                <div className="w-6 h-6 rounded-full bg-[#F2CAB3] text-[#49352F] flex items-center justify-center shrink-0">
+                  <Bot className="w-3.5 h-3.5 text-[#49352F]" aria-hidden="true" />
                 </div>
                 <p className="text-[10px] text-[#49352F] leading-tight">
                   {language === "gu"
@@ -721,8 +721,9 @@ export default function TutorialPage() {
                       <span>Verified Mastery Achieved! (+50 pp gain)</span>
                     </div>
 
-                    <h4 className="font-heading text-xl font-black text-[#49352F]">
-                      Aarav Advanced from 35% to 85%! 🎉
+                    <h4 className="font-heading text-xl font-black text-[#49352F] flex items-center justify-center gap-2">
+                      <span>Aarav Advanced from 35% to 85%!</span>
+                      <Sparkles className="w-5 h-5 text-[#2E7D5E]" aria-hidden="true" />
                     </h4>
 
                     <p className="text-xs text-[#7A6862] max-w-lg mx-auto">

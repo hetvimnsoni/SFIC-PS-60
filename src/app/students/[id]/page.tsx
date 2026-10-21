@@ -361,9 +361,11 @@ export default function StudentDetailPage({
         </div>
 
         {/* Navigation Tabs Bar */}
-        <div className="flex items-center gap-2 border-b border-[#49352F]/10 pb-2 overflow-x-auto">
+        <div role="tablist" aria-label="Student details views" className="flex items-center gap-2 border-b border-[#49352F]/10 pb-2 overflow-x-auto">
           <button
             type="button"
+            role="tab"
+            aria-selected={activeTab === "skilltree"}
             onClick={() => setActiveTab("skilltree")}
             className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "skilltree"
@@ -375,6 +377,8 @@ export default function StudentDetailPage({
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={activeTab === "gaps"}
             onClick={() => setActiveTab("gaps")}
             className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "gaps"
@@ -386,6 +390,8 @@ export default function StudentDetailPage({
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={activeTab === "mastery"}
             onClick={() => setActiveTab("mastery")}
             className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "mastery"
@@ -397,6 +403,8 @@ export default function StudentDetailPage({
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={activeTab === "history"}
             onClick={() => setActiveTab("history")}
             className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "history"

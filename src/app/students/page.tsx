@@ -162,6 +162,7 @@ export default function StudentsPage() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#B26A1B] pointer-events-none" />
             <input
               type="text"
+              aria-label="Search students by name, roll number, or learning gap"
               placeholder={
                 language === "gu"
                   ? "વિદ્યાર્થીનું નામ, રોલ નંબર અથવા વિષય શોધો..."
@@ -176,6 +177,7 @@ export default function StudentsPage() {
                 type="button"
                 onClick={() => setSearchTerm("")}
                 className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 rounded-full text-[#7A6862] hover:text-[#49352F] hover:bg-[#FAF6E9] transition-colors cursor-pointer"
+                aria-label="Clear search"
                 title="Clear search"
               >
                 <X className="w-4 h-4" />
@@ -260,7 +262,7 @@ export default function StudentsPage() {
                   <div className="flex items-center gap-1.5">
                     {gapCount > 0 ? (
                       <Badge variant="needsSupport" size="sm" dot>
-                        <AlertTriangle className="w-3 h-3 mr-1 text-[#C54738]" />
+                        <AlertTriangle className="w-3 h-3 mr-1 text-[#C54738]" aria-hidden="true" />
                         <span>{gapCount} Active Gap{gapCount > 1 ? "s" : ""}</span>
                       </Badge>
                     ) : (
@@ -270,7 +272,7 @@ export default function StudentsPage() {
                     )}
                   </div>
 
-                  <Link href={`/students/${std.id}`}>
+                  <Link href={`/students/${std.id}`} aria-label={`View 3D Profile for ${std.displayName}`}>
                     <Button variant="ghost" size="sm" className="text-xs text-[#B26A1B] hover:text-[#49352F]">
                       <span>3D Profile &rarr;</span>
                     </Button>

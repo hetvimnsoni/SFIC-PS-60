@@ -39,6 +39,7 @@ import {
   FileText,
   Play,
   RotateCcw,
+  Bot,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -125,9 +126,9 @@ export default function HomePage() {
           </p>
 
           {/* ShikshaBot Floating Speech Bubble Companion */}
-          <div className="inline-flex items-center gap-3 p-3.5 pr-5 rounded-2xl bg-[#2B2A6B]/80 border border-amber-500/30 backdrop-blur-xl shadow-[0_0_25px_rgba(255,138,61,0.2)] animate-bounce-subtle">
+          <div className="inline-flex items-center gap-3 p-3.5 pr-5 rounded-2xl bg-[#2B2A6B]/80 border border-amber-500/30 backdrop-blur-xl shadow-[0_0_25px_rgba(255,138,61,0.2)] hover:-translate-y-0.5 transition-transform duration-200">
             <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-400 to-teal-400 flex items-center justify-center text-slate-950 font-black text-xs shadow-md shadow-amber-500/40 shrink-0">
-              🤖
+              <Bot className="w-4 h-4 text-slate-950" aria-hidden="true" />
             </div>
             <p className="text-xs sm:text-sm font-medium text-amber-200">
               {activeSpeech}
@@ -177,7 +178,7 @@ export default function HomePage() {
           <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-indigo-950/60 to-purple-950/40 border border-amber-500/35 backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-base shrink-0">
-                📖
+                <BookOpen className="w-4 h-4 text-amber-400" aria-hidden="true" />
               </div>
               <div>
                 <p className="text-xs font-bold text-white flex items-center gap-1.5">

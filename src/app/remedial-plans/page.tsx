@@ -29,6 +29,7 @@ import {
   Circle,
   CheckSquare,
   Square,
+  Check,
 } from "lucide-react";
 
 // Step material icons mapping
@@ -297,8 +298,9 @@ export default function RemedialPlansPage() {
                       >
                         {plan.status}
                       </Badge>
-                      <span className="text-xs text-[#7A6862] font-mono">
-                        ⏱ {plan.estimatedMinutes || 60} mins sequence
+                      <span className="text-xs text-[#7A6862] font-mono flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5 text-[#7A6862]" aria-hidden="true" />
+                        <span>{plan.estimatedMinutes || 60} mins sequence</span>
                       </span>
                     </div>
 
@@ -420,7 +422,7 @@ export default function RemedialPlansPage() {
                                 : "bg-[#FAF6E9] text-[#49352F] border-[#49352F]/20"
                             } print:bg-white print:text-black print:border-black`}
                           >
-                            {isDone ? "✓" : step.stepNumber}
+                            {isDone ? <Check className="w-3.5 h-3.5 text-white" aria-hidden="true" /> : step.stepNumber}
                           </div>
 
                           <div className="flex items-start justify-between gap-3">

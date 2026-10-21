@@ -14,6 +14,7 @@ import {
   ArrowRight,
   RotateCcw,
   ListChecks,
+  PartyPopper,
 } from "lucide-react";
 
 export interface ChecklistStep {
@@ -252,7 +253,7 @@ export function ChecklistWidget() {
               </h4>
               {isAllComplete && (
                 <span className="px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[9px] font-extrabold uppercase">
-                  Ready 🎉
+                  Ready
                 </span>
               )}
             </div>
@@ -290,9 +291,9 @@ export function ChecklistWidget() {
           {isAllComplete ? (
             <div className="p-3 rounded-2xl bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/40 text-center space-y-1.5">
               <div className="flex items-center justify-center gap-1.5 text-xs font-black text-emerald-300">
-                <Sparkles className="w-4 h-4 text-emerald-400" />
+                <Sparkles className="w-4 h-4 text-emerald-400" aria-hidden="true" />
                 <span>
-                  {t.checklist?.allDone || (language === "gu" ? "તમે તૈયાર છો! ૪ માંથી ૪ પગલાં પૂર્ણ થયા 🎉" : "You're ready! All 4 steps completed 🎉")}
+                  {t.checklist?.allDone || (language === "gu" ? "તમે તૈયાર છો! ૪ માંથી ૪ પગલાં પૂર્ણ થયા" : "You're ready! All 4 steps completed")}
                 </span>
               </div>
               <p className="text-[11px] text-slate-300">
@@ -303,9 +304,10 @@ export function ChecklistWidget() {
               <button
                 type="button"
                 onClick={() => fireCelebrationConfetti()}
-                className="mt-1 text-[10px] font-bold text-emerald-400 hover:text-emerald-300 underline cursor-pointer"
+                className="mt-1 text-[10px] font-bold text-emerald-400 hover:text-emerald-300 underline cursor-pointer inline-flex items-center gap-1"
               >
-                {language === "gu" ? "ફરીથી ઉજવણી કરો 🎊" : "Celebrate again 🎊"}
+                <span>{language === "gu" ? "ફરીથી ઉજવણી કરો" : "Celebrate again"}</span>
+                <PartyPopper className="w-3 h-3" aria-hidden="true" />
               </button>
             </div>
           ) : (

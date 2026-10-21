@@ -19,6 +19,7 @@ import {
   Moon,
   Monitor,
   Palette,
+  Info,
 } from "lucide-react";
 
 export default function SettingsPage() {
@@ -304,8 +305,11 @@ export default function SettingsPage() {
             </CardHeader>
 
             <div className="space-y-4">
-              <div className="p-3 rounded-xl bg-[#FAF6E9] border border-[#49352F]/12 text-xs text-[#49352F] leading-relaxed">
-                ℹ️ <strong>Note:</strong> These thresholds are configurable operational metrics for classroom prioritization, not immutable universal standards. Changing them dynamically recalculates all stored learning gaps.
+              <div className="p-3 rounded-xl bg-[#FAF6E9] border border-[#49352F]/12 text-xs text-[#49352F] leading-relaxed flex items-start gap-2">
+                <Info className="w-4 h-4 text-[#8D4E10] shrink-0 mt-0.5" aria-hidden="true" />
+                <p>
+                  <strong>Note:</strong> These thresholds are configurable operational metrics for classroom prioritization, not immutable universal standards. Changing them dynamically recalculates all stored learning gaps.
+                </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

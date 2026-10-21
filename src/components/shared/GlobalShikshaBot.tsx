@@ -16,6 +16,7 @@ import {
   ChevronDown,
   Minimize2,
   RefreshCw,
+  Lightbulb,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
@@ -116,7 +117,7 @@ export function GlobalShikshaBot() {
           {
             id: Math.random().toString(36).substring(7),
             sender: "bot",
-            text: `💡 [${language === "gu" ? "ઑફલાઇન સહાયક" : "Offline Knowledge"}]: ${answer}`,
+            text: `[${language === "gu" ? "ઑફલાઇન સહાયક" : "Offline Knowledge"}]: ${answer}`,
             time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
           },
         ]);
@@ -184,14 +185,14 @@ export function GlobalShikshaBot() {
         >
           {/* Inner orb reflection */}
           <div className="w-full h-full rounded-full bg-white flex items-center justify-center relative overflow-hidden border border-[#49352F]/10">
-            <span className="text-2xl animate-bounce-subtle">🤖</span>
+            <Bot className="w-6 h-6 text-[#49352F] transition-transform duration-200 group-hover:scale-110" aria-hidden="true" />
             {/* Pulsing sage dot */}
-            <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-[#2E7D5E] shadow-[0_0_8px_#2E7D5E] animate-pulse" />
+            <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-[#2E7D5E] shadow-[0_0_8px_#2E7D5E]" />
           </div>
 
           {/* Persistent speech callout badge for new teachers */}
           <div className="absolute right-full mr-3 top-2 px-3 py-1.5 rounded-2xl bg-white border border-[#49352F]/15 text-[11px] font-bold text-[#49352F] shadow-[0_4px_16px_rgba(73,53,47,0.1)] whitespace-nowrap pointer-events-none hidden sm:flex items-center gap-1.5">
-            <span className="text-sm">💡</span>
+            <Lightbulb className="w-3.5 h-3.5 text-[#8D4E10] shrink-0" aria-hidden="true" />
             <span>{language === "gu" ? "વેબસાઇટ ટૂર માટે અહીં ક્લિક કરો" : "New here? Click for website tour"}</span>
           </div>
 
@@ -209,7 +210,7 @@ export function GlobalShikshaBot() {
           <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#49352F]/10 bg-[#FAF6E9]">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full bg-[#F2CAB3] border border-[#49352F]/15 flex items-center justify-center text-sm shadow-xs">
-                🤖
+                <Bot className="w-4 h-4 text-[#49352F]" aria-hidden="true" />
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
@@ -240,8 +241,8 @@ export function GlobalShikshaBot() {
                 className={`flex gap-2.5 ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
               >
                 {msg.sender === "bot" && (
-                  <div className="w-6 h-6 rounded-full bg-[#FAF6E9] border border-[#49352F]/15 flex items-center justify-center text-xs shrink-0 mt-0.5">
-                    🤖
+                  <div className="w-6 h-6 rounded-full bg-[#FAF6E9] border border-[#49352F]/15 flex items-center justify-center shrink-0 mt-0.5">
+                    <Bot className="w-3.5 h-3.5 text-[#49352F]" aria-hidden="true" />
                   </div>
                 )}
                 <div

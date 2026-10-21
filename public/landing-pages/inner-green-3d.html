@@ -413,7 +413,7 @@
     letter-spacing:calc(0.6 * var(--u)); text-transform:uppercase;
     color:var(--card-label); line-height:1.2;
   }
-  .card h2{
+  .card h2, .card .card-heading{
     position:static; margin:0; width:100%;
     font-size:calc(21 * var(--u)); line-height:calc(25 * var(--u));
     font-weight:600; letter-spacing:calc(-0.4 * var(--u));
@@ -1130,37 +1130,37 @@
           <path d="M9.6 12.55h2.8v4.2c1.35.3 2.45 1.15 3.15 2.4-1.35.4-2.4.15-3.15-.4v4.15H9.6v-4.15c-.75.55-1.8.8-3.15.4.7-1.25 1.8-2.1 3.15-2.4v-4.2Z"/>
         </svg>
       </a>
-      <a class="dock-item is-active" data-dock data-spec data-burst href="#hero" style="--d:180ms">
+      <a class="dock-item is-active" data-dock data-spec data-burst href="#hero" style="--d:180ms" aria-label="Home">
         <span class="glyph" aria-hidden="true">
           <svg viewBox="0 0 16 16"><path d="M8 14V9"/><path d="M8 9c0-2.4 1.7-4.3 4-4.3.2 2.6-1.6 4.6-4 4.3Z"/><path d="M8 10.5C7.9 8.4 6.4 6.8 4.4 6.8 4.3 8.9 5.9 10.6 8 10.5Z"/></svg>
         </span>
         <span>Home</span>
       </a>
-      <a class="dock-item" data-dock data-spec data-burst href="#how-it-works" style="--d:220ms">
+      <a class="dock-item" data-dock data-spec data-burst href="#how-it-works" style="--d:220ms" aria-label="How It Works">
         <span class="glyph" aria-hidden="true">
           <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
         </span>
         <span>How It Works</span>
       </a>
-      <a class="dock-item" data-dock data-spec data-burst href="#features" style="--d:260ms">
+      <a class="dock-item" data-dock data-spec data-burst href="#features" style="--d:260ms" aria-label="Features">
         <span class="glyph" aria-hidden="true">
           <svg viewBox="0 0 16 16"><path d="M2 3h12v10H2z"/><path d="M2 7h12"/></svg>
         </span>
         <span>Features</span>
       </a>
-      <a class="dock-item" data-dock data-spec data-burst href="#for-teachers" style="--d:300ms">
+      <a class="dock-item" data-dock data-spec data-burst href="#for-teachers" style="--d:300ms" aria-label="For Teachers">
         <span class="glyph" aria-hidden="true">
           <svg viewBox="0 0 16 16"><path d="M13 14s1 0 1-1-1-4-6-4-6 3-6 4 1 1 1 1z"/><circle cx="8" cy="5" r="3"/></svg>
         </span>
         <span>For Teachers</span>
       </a>
-      <a class="dock-item" data-dock data-spec data-burst href="/login" style="--d:340ms">
+      <a class="dock-item" data-dock data-spec data-burst href="/login" style="--d:340ms" aria-label="Sign In">
         <span class="glyph" aria-hidden="true">
           <svg viewBox="0 0 16 16"><path d="M6 2h6a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H6"/><path d="M9 8H1"/><path d="m5 4-4 4 4 4"/></svg>
         </span>
         <span>Sign In</span>
       </a>
-      <a class="dock-item dock-item--enter" data-dock data-spec data-burst href="/dashboard" style="--d:380ms">
+      <a class="dock-item dock-item--enter" data-dock data-spec data-burst href="/dashboard" style="--d:380ms" aria-label="Get Started">
         <span class="glyph" aria-hidden="true">
           <svg viewBox="0 0 16 16"><path d="M6.6 2.5h5.1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6.6"/><path d="M2.6 8h6.6"/><path d="m7 5.6 2.4 2.4L7 10.4"/></svg>
         </span>
@@ -1187,7 +1187,7 @@
       </figure>
       <div class="card-text-block">
         <p class="label">Learning Insights</p>
-        <h2>Learning Gap Detected</h2>
+        <div class="card-heading">Learning Gap Detected</div>
         <div class="card-meta">
           <span class="card-meta-pill">Mathematics</span>
           <span class="card-meta-desc">Needs practice</span>
@@ -1278,7 +1278,7 @@
     <article class="card card--stove mask" style="--d:880ms; --pd:22; --pr:2.4; cursor:pointer;" onclick="document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });">
       <div class="card-text-block">
         <p class="label">Student Progress</p>
-        <h2>68% &rarr; 88% Mastery</h2>
+        <div class="card-heading">68% &rarr; 88% Mastery</div>
         <div class="card-meta">
           <span class="card-meta-pill">Remedial Plan</span>
           <span class="card-meta-desc">Place Value &amp; Fractions</span>

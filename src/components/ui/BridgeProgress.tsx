@@ -52,24 +52,24 @@ export function BridgeProgress({
               {studentName ? `${studentName}'s Bridge` : "Learning Bridge"}
             </span>
             {clampedPrev !== null && (
-              <span className="rounded-full bg-emerald-100 px-2 py-0.5 font-bold text-[#2E7D5E] border border-emerald-200">
+              <span className="rounded-full bg-[#EAF4EE] px-2 py-0.5 font-bold text-[#1E5C44] border border-[#2E7D5E]/30">
                 +{clampedScore - clampedPrev} pp gain
               </span>
             )}
           </div>
           <div className="flex items-center gap-2">
             {clampedPrev !== null && (
-              <span className="text-[#7A6862] line-through">
+              <span className="text-[#5C4B45] line-through">
                 {clampedPrev}%
               </span>
             )}
             <span
               className={`font-heading text-sm font-extrabold ${
                 isMastered
-                  ? "text-[#2E7D5E]"
+                  ? "text-[#1E5C44]"
                   : isDeveloping
-                  ? "text-[#B26A1B]"
-                  : "text-[#C54738]"
+                  ? "text-[#8D4E10]"
+                  : "text-[#A93327]"
               }`}
             >
               {clampedScore}%

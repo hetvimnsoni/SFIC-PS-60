@@ -13,6 +13,8 @@ import {
   Sparkles,
   ArrowRight,
   Bot,
+  Lightbulb,
+  CheckCircle2,
 } from "lucide-react";
 import { fireCelebrationConfetti } from "@/lib/confetti";
 
@@ -361,7 +363,7 @@ export function SpotlightTour({ page, autoStartDelay = 600 }: SpotlightTourProps
 
           {/* ShikshaBot speech callout tip */}
           <div className="mt-2.5 p-2.5 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-2 text-[11px] text-amber-200/90 leading-snug">
-            <span className="text-base leading-none">💡</span>
+            <Lightbulb className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" aria-hidden="true" />
             <span>
               {language === "gu"
                 ? "શિક્ષાબોટ ટિપ: તમે ઉપરના ટૂલબારમાંથી અથવા 'Esc' દબાવીને આ ટૂર ગમે ત્યારે ફરી જોઈ શકો છો."
@@ -409,13 +411,17 @@ export function SpotlightTour({ page, autoStartDelay = 600 }: SpotlightTourProps
                   ? currentStep.ctaTextKey
                     ? resolveText(currentStep.ctaTextKey, "Finish Tour")
                     : language === "gu"
-                    ? "સમાપ્ત કરો 🎉"
-                    : "Finish Tour 🎉"
+                    ? "સમાપ્ત કરો"
+                    : "Finish Tour"
                   : language === "gu"
                   ? "આગળ"
                   : "Next"}
               </span>
-              {!isLast && <ChevronRight className="w-3.5 h-3.5" />}
+              {isLast ? (
+                <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
+              ) : (
+                <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
+              )}
             </button>
           </div>
         </div>

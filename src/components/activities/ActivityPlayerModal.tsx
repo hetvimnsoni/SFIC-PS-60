@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Dialog } from "../ui/Dialog";
 import { Badge } from "../ui/Badge";
-import { CheckCircle2, XCircle, ArrowRight, Sparkles, HelpCircle, Trophy } from "lucide-react";
+import { CheckCircle2, XCircle, ArrowRight, Sparkles, HelpCircle, Trophy, Lightbulb } from "lucide-react";
 import type { LearningActivity, ActivityQuestion } from "@/lib/types";
 
 interface ActivityPlayerModalProps {
@@ -146,8 +146,11 @@ export function ActivityPlayerModal({
             )}
 
             {showHint && currentQ.hint && (
-              <div className="mt-3 p-3 rounded-xl bg-[#F2DCB5]/40 border border-[#49352F]/12 text-xs text-[#49352F] font-medium">
-                💡 <strong>Hint:</strong> {currentQ.hint}
+              <div className="mt-3 p-3 rounded-xl bg-[#F2DCB5]/40 border border-[#49352F]/12 text-xs text-[#49352F] font-medium flex items-start gap-2">
+                <Lightbulb className="w-4 h-4 text-[#8D4E10] shrink-0 mt-0.5" aria-hidden="true" />
+                <div>
+                  <strong>Hint:</strong> {currentQ.hint}
+                </div>
               </div>
             )}
           </div>

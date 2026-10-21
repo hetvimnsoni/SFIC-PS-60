@@ -288,16 +288,16 @@ export default function DashboardPage() {
             {/* New Teacher Onboarding & Tutorial Welcome Banner */}
             <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-[#F2DCB5]/90 via-[#FAF6E9] to-[#F2CAB3]/80 border border-[#49352F]/15 shadow-[0_8px_24px_rgba(73,53,47,0.06)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative overflow-hidden text-[#49352F]">
               <div className="flex items-start gap-3.5 z-10">
-                <div className="w-11 h-11 rounded-2xl bg-[#F2CAB3] border border-[#49352F]/15 text-[#49352F] flex items-center justify-center font-bold text-xl shrink-0 shadow-xs">
-                  👋
+                <div className="w-11 h-11 rounded-2xl bg-[#F2CAB3] border border-[#49352F]/15 text-[#49352F] flex items-center justify-center font-bold shrink-0 shadow-xs">
+                  <Sparkles className="w-5 h-5 text-[#49352F]" aria-hidden="true" />
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-heading text-sm sm:text-base font-bold text-[#49352F]">
+                    <h2 className="font-heading text-sm sm:text-base font-bold text-[#49352F]">
                       {language === "gu"
                         ? "નવા શિક્ષક છો? શિક્ષાસેતુ AI કેવી રીતે વાપરવું તે જાણો"
                         : "New Teacher? Learn How to Handle ShikshaSetu AI"}
-                    </h3>
+                    </h2>
                     <Badge variant="saffron" size="sm">
                       {language === "gu" ? "માર્ગદર્શિત ટૂર" : "Interactive Tour"}
                     </Badge>
@@ -423,8 +423,8 @@ export default function DashboardPage() {
                     onClick={handleCelebrate}
                     className="rounded-full shadow-xs text-xs px-4"
                   >
-                    <PartyPopper className="w-4 h-4 mr-1.5" />
-                    <span>{hasCelebrated ? "Celebrated! 🎉" : "Celebrate Win 🎉"}</span>
+                    <PartyPopper className="w-4 h-4 mr-1.5" aria-hidden="true" />
+                    <span>{hasCelebrated ? "Celebrated!" : "Celebrate Win"}</span>
                   </Button>
 
                   <Link href="/students/std-aarav">
@@ -515,7 +515,7 @@ export default function DashboardPage() {
                       <span className="w-2.5 h-2.5 rounded-xs bg-[#F2CAB3] border border-[#49352F]/15" />
                       <span>Baseline %</span>
                     </div>
-                    <Link href="/reports" className="text-[#B26A1B] hover:underline font-bold">
+                    <Link href="/reports" className="text-[#8D4E10] hover:underline font-bold">
                       Full Reports &rarr;
                     </Link>
                   </div>
@@ -598,7 +598,7 @@ export default function DashboardPage() {
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-2xl bg-[#C54738]/12 border border-[#C54738]/25 text-[#C54738] font-heading font-black text-sm flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-2xl bg-[#A93327]/12 border border-[#A93327]/25 text-[#A93327] font-heading font-black text-sm flex items-center justify-center shrink-0">
                           {item.score}%
                         </div>
                         <div>
@@ -606,7 +606,7 @@ export default function DashboardPage() {
                             <h4 className="font-bold text-[#49352F] text-sm">{item.name}</h4>
                             <span className="text-[11px] text-[#7A6862] font-medium">{item.class}</span>
                           </div>
-                          <p className="text-xs text-[#B26A1B] font-medium mt-0.5">
+                          <p className="text-xs text-[#8D4E10] font-medium mt-0.5">
                             {item.subject} • {item.concept}
                           </p>
                         </div>

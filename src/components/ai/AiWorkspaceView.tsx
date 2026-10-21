@@ -23,6 +23,11 @@ import {
   ChevronDown,
   ChevronUp,
   ShieldCheck,
+  Lightbulb,
+  Clock,
+  Package,
+  Info,
+  MessageSquare,
 } from "lucide-react";
 
 export type AiTab = "tutor" | "analyzer" | "remedial" | "worksheet" | "assistant";
@@ -648,9 +653,10 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
                       setTutorQuery(chip);
                       handleTutorSubmit(undefined, chip);
                     }}
-                    className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 text-xs text-slate-700 text-left transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 text-xs text-slate-700 text-left transition-colors cursor-pointer"
                   >
-                    💡 {chip}
+                    <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0" aria-hidden="true" />
+                    <span>{chip}</span>
                   </button>
                 ))}
               </div>
@@ -777,8 +783,9 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
                           <span>{step.title}</span>
                         </span>
                         {step.durationMinutes && (
-                          <span className="text-[10px] text-slate-400 font-normal">
-                            ⏱ {step.durationMinutes}m
+                          <span className="inline-flex items-center gap-1 text-[10px] text-slate-400 font-normal">
+                            <Clock className="w-3 h-3 text-slate-400" aria-hidden="true" />
+                            <span>{step.durationMinutes}m</span>
                           </span>
                         )}
                       </div>
@@ -1090,8 +1097,9 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
                         >
                           <span className="font-bold text-indigo-900 block">{act.activityTitle}</span>
                           <p className="text-slate-600">{act.description}</p>
-                          <span className="text-[11px] text-slate-400 block pt-1">
-                            📦 <strong>Materials:</strong> {act.concreteMaterials}
+                          <span className="inline-flex items-center gap-1 text-[11px] text-slate-500 pt-1">
+                            <Package className="w-3.5 h-3.5 text-indigo-500 shrink-0" aria-hidden="true" />
+                            <span><strong>Materials:</strong> {act.concreteMaterials}</span>
                           </span>
                         </div>
                       )
@@ -1276,12 +1284,12 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
                     onClick={handleSavePlanToDb}
                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer disabled:opacity-50"
                   >
-                    <Save className="w-3.5 h-3.5" />
+                    <Save className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>
                       {remSaveStatus === "saving"
                         ? "Saving..."
                         : remSaveStatus === "saved"
-                        ? "✓ Saved to Database"
+                        ? "Saved to Database"
                         : "Save to Remedial Plans"}
                     </span>
                   </button>
@@ -1317,9 +1325,10 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
                   {remPlan.requiredMaterials?.map((mat: string, idx: number) => (
                     <span
                       key={idx}
-                      className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 font-medium"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 font-medium"
                     >
-                      ✓ {mat}
+                      <Check className="w-3 h-3 text-emerald-600 shrink-0" aria-hidden="true" />
+                      <span>{mat}</span>
                     </span>
                   ))}
                 </div>
@@ -1346,7 +1355,10 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
                           </span>
                           <span>{step.title}</span>
                         </span>
-                        <span className="text-slate-400 font-normal">⏱ {step.durationMinutes} mins</span>
+                        <span className="inline-flex items-center gap-1 text-slate-400 font-normal">
+                          <Clock className="w-3 h-3 text-slate-400" aria-hidden="true" />
+                          <span>{step.durationMinutes} mins</span>
+                        </span>
                       </div>
                       <p className="text-slate-600 pl-7 leading-relaxed">{step.description}</p>
                     </div>
@@ -1591,8 +1603,9 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
                 </div>
 
                 {wsResult.personalizedStudentNote && (
-                  <div className="py-2 text-[11px] font-semibold text-indigo-700 print:hidden">
-                    ℹ️ {wsResult.personalizedStudentNote}
+                  <div className="py-2 text-[11px] font-semibold text-indigo-700 print:hidden inline-flex items-center gap-1.5">
+                    <Info className="w-3.5 h-3.5 text-indigo-600 shrink-0" aria-hidden="true" />
+                    <span>{wsResult.personalizedStudentNote}</span>
                   </div>
                 )}
 
@@ -1731,9 +1744,10 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
                   key={idx}
                   type="button"
                   onClick={() => handleAssistantSend(chip)}
-                  className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-cyan-50 border border-slate-200 hover:border-cyan-200 text-slate-600 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-cyan-50 border border-slate-200 hover:border-cyan-200 text-slate-600 transition-colors cursor-pointer"
                 >
-                  💬 {chip}
+                  <MessageSquare className="w-3 h-3 text-cyan-600 shrink-0" aria-hidden="true" />
+                  <span>{chip}</span>
                 </button>
               ))}
             </div>

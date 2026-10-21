@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { ShikshaBot3D } from "./ShikshaBot3D";
 import { FloatingEducationObjects } from "./FloatingEducationObjects";
-import { Sparkles as SparklesIcon } from "lucide-react";
+import { Sparkles as SparklesIcon, Bot } from "lucide-react";
 
 interface RobotCanvasProps {
   scrollProgress?: number;
@@ -48,8 +48,8 @@ export function RobotCanvas({
     return (
       <div className={`flex items-center justify-center ${className} rounded-3xl border border-[#49352F]/15 bg-[#FAF6E9] p-8 text-center`}>
         <div className="max-w-sm space-y-2">
-          <div className="w-16 h-16 rounded-full bg-[#F2CAB3] text-[#49352F] flex items-center justify-center mx-auto text-2xl font-bold border border-[#49352F]/15">
-            🤖
+          <div className="w-16 h-16 rounded-full bg-[#F2CAB3] text-[#49352F] flex items-center justify-center mx-auto border border-[#49352F]/15">
+            <Bot className="w-8 h-8 text-[#49352F]" aria-hidden="true" />
           </div>
           <h4 className="text-[#49352F] font-bold text-sm">ShikshaBot Ready</h4>
           <p className="text-xs text-[#7A6862]">
