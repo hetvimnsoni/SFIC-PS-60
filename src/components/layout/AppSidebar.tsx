@@ -20,6 +20,7 @@ import {
   X,
   Sparkles,
   BookOpen,
+  Languages,
 } from "lucide-react";
 import { triggerPageTour } from "@/components/tutorial/SpotlightTour";
 
@@ -39,6 +40,13 @@ export function AppSidebar() {
       icon: Sparkles,
       badge: "AI 5-in-1",
       badgeColor: "bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15 font-bold",
+    },
+    {
+      href: "/notices",
+      label: "Parent Bridge",
+      icon: Languages,
+      badge: "Multilingual",
+      badgeColor: "bg-[#2E7D5E]/15 text-[#2E7D5E] border border-[#2E7D5E]/20 font-bold",
     },
     { href: "/students", label: t.nav.students, icon: Users },
     { href: "/assessments", label: t.nav.assessments, icon: FileSpreadsheet },

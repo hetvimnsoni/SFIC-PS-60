@@ -12,6 +12,11 @@ import {
   SEED_LEARNING_GAPS,
   SEED_REMEDIAL_PLANS,
   SEED_ACTIVITIES,
+  SEED_PARENTS,
+  SEED_NOTICES,
+  SEED_NOTICE_TRANSLATIONS,
+  SEED_NOTICE_DELIVERIES,
+  SEED_AI_CONFIGS,
 } from "./seedData";
 import { detectLearningGap } from "../engine/gapDetection";
 import { generateRemedialPlan } from "../engine/remedialEngine";
@@ -29,6 +34,12 @@ import type {
   RemedialPlan,
   LearningActivity,
   ActivityAttempt,
+  SchoolNotice,
+  NoticeTranslation,
+  NoticeDelivery,
+  ParentProfile,
+  AiProviderConfig,
+  AiUsageMetric,
 } from "../types";
 
 interface DataStore {
@@ -44,6 +55,12 @@ interface DataStore {
   remedialPlans: RemedialPlan[];
   activities: LearningActivity[];
   attempts: ActivityAttempt[];
+  parents: ParentProfile[];
+  notices: SchoolNotice[];
+  translations: NoticeTranslation[];
+  deliveries: NoticeDelivery[];
+  aiMetrics: AiUsageMetric[];
+  aiConfigs: AiProviderConfig[];
 }
 
 const DATA_DIR = path.join(process.cwd(), "data");
@@ -63,6 +80,12 @@ function getInitialStore(): DataStore {
     remedialPlans: [...SEED_REMEDIAL_PLANS],
     activities: [...SEED_ACTIVITIES],
     attempts: [],
+    parents: [...SEED_PARENTS],
+    notices: [...SEED_NOTICES],
+    translations: [...SEED_NOTICE_TRANSLATIONS],
+    deliveries: [...SEED_NOTICE_DELIVERIES],
+    aiMetrics: [],
+    aiConfigs: [...SEED_AI_CONFIGS],
   };
 }
 
@@ -514,6 +537,251 @@ export const db = {
     const store = loadStore();
     if (!studentId) return store.attempts;
     return store.attempts.filter((a) => a.studentId === studentId);
+  },
+
+  // --- Parent & Notice Management ---
+  getParents(): ParentProfile[] {
+    const store = loadStore();
+    return store.parents || [];
+  },
+
+  getParentById(id: string): ParentProfile | undefined {
+    return this.getParents().find((p) => p.id === id);
+  },
+
+  getParentsByStudentId(studentId: string): ParentProfile[] {
+    return this.getParents().filter((p) => p.studentIds.includes(studentId));
+  },
+
+  getNotices(filter?: { category?: string; status?: string; grade?: number }): SchoolNotice[] {
+    const store = loadStore();
+    let notices = store.notices || [];
+    if (filter?.category && filter.category !== "all") {
+      notices = notices.filter((n) => n.category === filter.category);
+    }
+    if (filter?.status && filter.status !== "all") {
+      notices = notices.filter((n) => n.status === filter.status);
+    }
+    if (filter?.grade) {
+      notices = notices.filter(
+        (n) => n.targetAudience === "all" || n.targetClassGrade === filter.grade
+      );
+    }
+    return notices;
+  },
+
+  getNoticeById(id: string): SchoolNotice | undefined {
+    const store = loadStore();
+    return (store.notices || []).find((n) => n.id === id);
+  },
+
+  saveNotice(noticeData: Omit<SchoolNotice, "id" | "createdAt" | "updatedAt">): SchoolNotice {
+    const store = loadStore();
+    if (!store.notices) store.notices = [];
+    const now = new Date().toISOString();
+    const notice: SchoolNotice = {
+      ...noticeData,
+      id: `not-${Date.now()}`,
+      createdAt: now,
+      updatedAt: now,
+    };
+    store.notices.unshift(notice);
+    saveStore(store);
+    return notice;
+  },
+
+  updateNotice(id: string, updates: Partial<SchoolNotice>): SchoolNotice | null {
+    const store = loadStore();
+    if (!store.notices) store.notices = [];
+    const idx = store.notices.findIndex((n) => n.id === id);
+    if (idx === -1) return null;
+    store.notices[idx] = {
+      ...store.notices[idx],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
+    saveStore(store);
+    return store.notices[idx];
+  },
+
+  deleteNotice(id: string): boolean {
+    const store = loadStore();
+    if (!store.notices) return false;
+    const initialLen = store.notices.length;
+    store.notices = store.notices.filter((n) => n.id !== id);
+    if (store.notices.length !== initialLen) {
+      if (store.translations) {
+        store.translations = store.translations.filter((t) => t.noticeId !== id);
+      }
+      if (store.deliveries) {
+        store.deliveries = store.deliveries.filter((d) => d.noticeId !== id);
+      }
+      saveStore(store);
+      return true;
+    }
+    return false;
+  },
+
+  getTranslations(noticeId?: string): NoticeTranslation[] {
+    const store = loadStore();
+    const list = store.translations || [];
+    if (!noticeId) return list;
+    return list.filter((t) => t.noticeId === noticeId);
+  },
+
+  saveTranslation(translationData: Omit<NoticeTranslation, "id" | "updatedAt">): NoticeTranslation {
+    const store = loadStore();
+    if (!store.translations) store.translations = [];
+    const existingIdx = store.translations.findIndex(
+      (t) => t.noticeId === translationData.noticeId && t.language === translationData.language
+    );
+    const now = new Date().toISOString();
+    let result: NoticeTranslation;
+    if (existingIdx !== -1) {
+      store.translations[existingIdx] = {
+        ...store.translations[existingIdx],
+        ...translationData,
+        updatedAt: now,
+      };
+      result = store.translations[existingIdx];
+    } else {
+      result = {
+        ...translationData,
+        id: `tr-${Date.now()}-${translationData.language}`,
+        updatedAt: now,
+      };
+      store.translations.push(result);
+    }
+    saveStore(store);
+    return result;
+  },
+
+  getDeliveries(noticeId?: string, parentId?: string): NoticeDelivery[] {
+    const store = loadStore();
+    let deliveries = store.deliveries || [];
+    if (noticeId) {
+      deliveries = deliveries.filter((d) => d.noticeId === noticeId);
+    }
+    if (parentId) {
+      deliveries = deliveries.filter((d) => d.parentId === parentId);
+    }
+    return deliveries;
+  },
+
+  sendNoticeToParents(
+    noticeId: string,
+    options?: { grade?: number; section?: string; studentIds?: string[] }
+  ): NoticeDelivery[] {
+    const store = loadStore();
+    const notice = this.getNoticeById(noticeId);
+    if (!notice) return [];
+
+    let targetStudents = store.students || [];
+    if (options?.grade) {
+      targetStudents = targetStudents.filter((s) => s.grade === options.grade);
+    }
+    if (options?.section) {
+      targetStudents = targetStudents.filter((s) => s.section === options.section);
+    }
+    if (options?.studentIds && options.studentIds.length > 0) {
+      targetStudents = targetStudents.filter((s) => options.studentIds!.includes(s.id));
+    }
+
+    if (!store.deliveries) store.deliveries = [];
+    const now = new Date().toISOString();
+    const createdDeliveries: NoticeDelivery[] = [];
+
+    for (const student of targetStudents) {
+      const parents = this.getParentsByStudentId(student.id);
+      const parent = parents[0] || {
+        id: `par-gen-${student.id}`,
+        name: `Parent of ${student.displayName}`,
+        preferredLanguage: "gu",
+      };
+
+      // Check if delivery already exists to avoid duplicates
+      const exists = store.deliveries.some(
+        (d) => d.noticeId === noticeId && d.studentId === student.id
+      );
+      if (!exists) {
+        const delivery: NoticeDelivery = {
+          id: `del-${Date.now()}-${student.id}`,
+          noticeId,
+          parentId: parent.id,
+          parentName: parent.name,
+          studentId: student.id,
+          studentName: student.displayName,
+          studentGrade: student.grade,
+          studentSection: student.section,
+          language: (parent.preferredLanguage as any) || "gu",
+          channel: "whatsapp",
+          status: "delivered",
+          sentAt: now,
+          deliveredAt: now,
+        };
+        store.deliveries.push(delivery);
+        createdDeliveries.push(delivery);
+      }
+    }
+
+    // Mark notice as sent
+    this.updateNotice(noticeId, { status: "sent", sentAt: now });
+    saveStore(store);
+    return createdDeliveries;
+  },
+
+  recordAcknowledgment(deliveryId: string, feedback?: string): NoticeDelivery | null {
+    const store = loadStore();
+    if (!store.deliveries) return null;
+    const delivery = store.deliveries.find((d) => d.id === deliveryId);
+    if (!delivery) return null;
+    const now = new Date().toISOString();
+    delivery.status = "acknowledged";
+    delivery.readAt = delivery.readAt || now;
+    delivery.acknowledgedAt = now;
+    if (feedback) delivery.parentFeedback = feedback;
+    saveStore(store);
+    return delivery;
+  },
+
+  // --- AI Provider Configurations & Metrics ---
+  getAiProviderConfigs(): AiProviderConfig[] {
+    const store = loadStore();
+    return store.aiConfigs || SEED_AI_CONFIGS;
+  },
+
+  updateAiProviderConfig(task: string, updates: Partial<AiProviderConfig>): AiProviderConfig[] {
+    const store = loadStore();
+    if (!store.aiConfigs) store.aiConfigs = [...SEED_AI_CONFIGS];
+    const idx = store.aiConfigs.findIndex((c) => c.task === task);
+    if (idx !== -1) {
+      store.aiConfigs[idx] = { ...store.aiConfigs[idx], ...updates };
+    } else {
+      store.aiConfigs.push({
+        task: task as any,
+        primaryProvider: (updates.primaryProvider as any) || "offline_fallback",
+        fallbackProvider: updates.fallbackProvider as any,
+        enabled: updates.enabled ?? true,
+      });
+    }
+    saveStore(store);
+    return store.aiConfigs;
+  },
+
+  getAiMetrics(): AiUsageMetric[] {
+    const store = loadStore();
+    return store.aiMetrics || [];
+  },
+
+  recordAiMetric(metric: AiUsageMetric): void {
+    const store = loadStore();
+    if (!store.aiMetrics) store.aiMetrics = [];
+    store.aiMetrics.unshift(metric);
+    // Keep last 200 metrics to avoid storage bloat
+    if (store.aiMetrics.length > 200) {
+      store.aiMetrics = store.aiMetrics.slice(0, 200);
+    }
+    saveStore(store);
   },
 
   resetToDemoData(): void {

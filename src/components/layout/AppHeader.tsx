@@ -22,6 +22,7 @@ import {
   RotateCcw,
   HelpCircle,
   X,
+  Users,
 } from "lucide-react";
 
 interface AppHeaderProps {
@@ -334,14 +335,14 @@ export function AppHeader({
             className="flex items-center gap-2 pl-2 pr-2.5 py-1.5 rounded-xl border border-[#49352F]/15 bg-white hover:bg-[#FAF6E9] transition-colors cursor-pointer shadow-xs"
           >
             <div className="w-6 h-6 rounded-full bg-[#F2CAB3] border border-[#49352F]/15 text-[#49352F] flex items-center justify-center text-xs font-bold">
-              {role === "admin" ? "A" : "T"}
+              {role === "admin" ? "A" : role === "parent" ? "P" : "T"}
             </div>
             <div className="text-left hidden md:block">
               <div className="text-xs font-semibold text-[#49352F] leading-tight">
                 {user?.name || "Teacher"}
               </div>
               <div className="text-[10px] text-[#B26A1B] font-medium capitalize">
-                {role === "admin" ? t.app.adminRole : t.app.teacherRole}
+                {role === "admin" ? t.app.adminRole : role === "parent" ? "Guardian/Parent" : t.app.teacherRole}
               </div>
             </div>
             <ChevronDown className="w-3.5 h-3.5 text-[#7A6862]" />
@@ -389,6 +390,24 @@ export function AppHeader({
                 <div>
                   <div className="font-semibold text-[#49352F]">Principal R.K. Trivedi</div>
                   <div className="text-[10px] text-[#7A6862]">School Administrator</div>
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  switchRole("parent");
+                  setShowRoleMenu(false);
+                }}
+                className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-xl text-left transition-colors mt-1 cursor-pointer ${
+                  role === "parent"
+                    ? "bg-[#F2CAB3]/40 text-[#49352F] font-semibold"
+                    : "text-[#49352F] hover:bg-[#FAF6E9]"
+                }`}
+              >
+                <Users className="w-4 h-4 text-[#49352F]" />
+                <div>
+                  <div className="font-semibold text-[#49352F]">Dineshbhai Patel</div>
+                  <div className="text-[10px] text-[#7A6862]">Parent (Aarav Patel, Class 5-A)</div>
                 </div>
               </button>
 
