@@ -153,17 +153,17 @@ export default function NewAssessmentPage() {
         {/* Breadcrumb */}
         <Link
           href="/assessments"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#7A6862] hover:text-[#49352F]"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Assessments</span>
         </Link>
 
         <div>
-          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-[#49352F] tracking-tight font-heading">
             Create Concept-Level Assessment
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+          <p className="text-xs sm:text-sm text-[#7A6862] mt-0.5">
             Record student scores mapped directly to primary curriculum concepts for automatic gap detection.
           </p>
         </div>
@@ -172,7 +172,7 @@ export default function NewAssessmentPage() {
         <Card className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#49352F] mb-1">
                 Assessment Title <span className="text-rose-500">*</span>
               </label>
               <input
@@ -181,28 +181,28 @@ export default function NewAssessmentPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Unit 3 Division & Multiplication Check"
-                className="w-full rounded-xl border border-slate-200 p-2 text-xs font-semibold text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+                className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-xs font-semibold text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Date</label>
+              <label className="block text-xs font-semibold text-[#49352F] mb-1">Date</label>
               <input
                 type="date"
                 value={assessmentDate}
                 onChange={(e) => setAssessmentDate(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 p-2 text-xs text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+                className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-xs text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden cursor-pointer"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Classroom</label>
+              <label className="block text-xs font-semibold text-[#49352F] mb-1">Classroom</label>
               <select
                 value={classroomId}
                 onChange={(e) => setClassroomId(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 p-2 text-xs text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+                className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-xs text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden cursor-pointer"
               >
                 <option value="cls-3a">Class 3 - Section A</option>
                 <option value="cls-4a">Class 4 - Section A</option>
@@ -211,11 +211,11 @@ export default function NewAssessmentPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Subject</label>
+              <label className="block text-xs font-semibold text-[#49352F] mb-1">Subject</label>
               <select
                 value={subjectCode}
                 onChange={(e) => setSubjectCode(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 p-2 text-xs text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+                className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-xs text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden cursor-pointer"
               >
                 <option value="MATH">Mathematics</option>
                 <option value="ENG">English</option>
@@ -225,7 +225,7 @@ export default function NewAssessmentPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#49352F] mb-1">
                 Maximum Marks
               </label>
               <input
@@ -234,14 +234,14 @@ export default function NewAssessmentPage() {
                 max="100"
                 value={maxMarks}
                 onChange={(e) => setMaxMarks(Number(e.target.value))}
-                className="w-full rounded-xl border border-slate-200 p-2 text-xs font-semibold text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+                className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-xs font-semibold text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden"
               />
             </div>
           </div>
 
           {/* Concepts Selector */}
           <div className="pt-2">
-            <label className="block text-xs font-semibold text-slate-700 mb-2">
+            <label className="block text-xs font-semibold text-[#49352F] mb-2">
               Select Concept(s) Evaluated <span className="text-rose-500">*</span>
             </label>
             <div className="flex flex-wrap gap-2">
@@ -254,8 +254,8 @@ export default function NewAssessmentPage() {
                     onClick={() => toggleConcept(c.id)}
                     className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                       isSelected
-                        ? "border-indigo-600 bg-indigo-50 text-indigo-700 shadow-2xs"
-                        : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                        ? "border-[#49352F] bg-[#F2CAB3] text-[#49352F] font-bold shadow-2xs"
+                        : "border-[#49352F]/12 bg-white text-[#7A6862] hover:bg-[#FAF6E9]"
                     }`}
                   >
                     {c.name}
@@ -279,7 +279,7 @@ export default function NewAssessmentPage() {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px]">
+              <thead className="bg-[#FAF6E9] border-b border-[#49352F]/10 text-[#7A6862] uppercase tracking-wider text-[10px]">
                 <tr>
                   <th className="p-3">Student</th>
                   <th className="p-3">Marks (0 - {maxMarks})</th>
@@ -288,7 +288,7 @@ export default function NewAssessmentPage() {
                   <th className="p-3">Teacher Notes</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#49352F]/10">
                 {students.map((std) => {
                   const studentScore = scores[std.id]?.marks ?? 12;
                   const pct = calculatePercentage(studentScore, maxMarks);
@@ -296,10 +296,10 @@ export default function NewAssessmentPage() {
                     pct >= 80 ? "Mastered" : pct >= 60 ? "Developing" : "Needs Support";
 
                   return (
-                    <tr key={std.id} className="hover:bg-slate-50/50">
+                    <tr key={std.id} className="hover:bg-[#FAF6E9]/50">
                       <td className="p-3">
-                        <div className="font-bold text-slate-900">{std.displayName}</div>
-                        <div className="text-[10px] font-mono text-slate-400">{std.studentCode}</div>
+                        <div className="font-bold text-[#49352F]">{std.displayName}</div>
+                        <div className="text-[10px] font-mono text-[#7A6862]">{std.studentCode}</div>
                       </td>
                       <td className="p-3">
                         <input
@@ -309,10 +309,10 @@ export default function NewAssessmentPage() {
                           max={maxMarks}
                           value={scores[std.id]?.marks ?? ""}
                           onChange={(e) => handleScoreChange(std.id, e.target.value)}
-                          className="w-20 rounded-lg border border-slate-200 p-1.5 text-xs font-bold text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+                          className="w-20 rounded-lg border border-[#49352F]/15 bg-white p-1.5 text-xs font-bold text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden"
                         />
                       </td>
-                      <td className="p-3 font-bold text-slate-700">{pct}%</td>
+                      <td className="p-3 font-bold text-[#49352F]">{pct}%</td>
                       <td className="p-3">
                         <Badge
                           variant={
@@ -333,7 +333,7 @@ export default function NewAssessmentPage() {
                           placeholder="Optional observations..."
                           value={scores[std.id]?.notes ?? ""}
                           onChange={(e) => handleNotesChange(std.id, e.target.value)}
-                          className="w-full rounded-lg border border-slate-200 p-1 text-xs text-slate-800 placeholder-slate-400 focus:border-indigo-500 outline-hidden"
+                          className="w-full rounded-lg border border-[#49352F]/15 bg-white p-1.5 text-xs text-[#49352F] placeholder-[#7A6862]/60 focus:border-[#B26A1B] outline-hidden"
                         />
                       </td>
                     </tr>
@@ -357,7 +357,7 @@ export default function NewAssessmentPage() {
             type="button"
             disabled={isSubmitting}
             onClick={() => handleSubmit(false)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 rounded-xl border border-slate-200 shadow-2xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-[#49352F] bg-white hover:bg-[#FAF6E9] rounded-xl border border-[#49352F]/15 shadow-2xs transition-colors cursor-pointer"
           >
             <Save className="w-3.5 h-3.5" />
             <span>Save Draft</span>
@@ -366,7 +366,7 @@ export default function NewAssessmentPage() {
             type="button"
             disabled={isSubmitting}
             onClick={() => handleSubmit(true)}
-            className="inline-flex items-center gap-2 px-6 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md transition-colors cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-6 py-2.5 text-xs font-bold text-[#49352F] bg-[#F2CAB3] hover:bg-white border border-[#49352F]/16 rounded-xl shadow-md transition-colors cursor-pointer disabled:opacity-50"
           >
             <Send className="w-3.5 h-3.5" />
             <span>{isSubmitting ? "Publishing & Recalculating..." : "Publish & Recalculate Gaps"}</span>

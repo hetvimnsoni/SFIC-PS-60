@@ -51,8 +51,8 @@ const ClassMasteryHeatmap3D = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-[320px] rounded-2xl bg-[#0e0c2b] border border-slate-800 flex items-center justify-center text-slate-400 text-xs">
-        <Sparkles className="w-4 h-4 animate-spin text-amber-400 mr-2" />
+      <div className="w-full h-[320px] rounded-2xl bg-[#FAF6E9] border border-[#49352F]/15 flex items-center justify-center text-[#7A6862] text-xs">
+        <Sparkles className="w-4 h-4 animate-spin text-[#B26A1B] mr-2" />
         <span>Loading 3D Mastery Heatmap...</span>
       </div>
     ),
@@ -201,14 +201,14 @@ export default function DashboardPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#49352F] tracking-tight">
                 {language === "gu" ? "શિક્ષક ડેશબોર્ડ" : "Teacher Command Center"}
               </h1>
               <Badge variant="saffron" size="sm" pulse>
                 PS-60 Live
               </Badge>
             </div>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-[#7A6862] mt-1">
               {language === "gu"
                 ? "પ્રાથમિક શાળાના વિદ્યાર્થીઓની લર્નિંગ ગેપ્સ અને ૫-પગલાંની ઉપચારાત્મક પ્રગતિ."
                 : "Tracking student learning gap detection, 5-step concrete manipulatives, and reassessment deltas."}
@@ -217,14 +217,14 @@ export default function DashboardPage() {
 
           {/* View Switcher & Actions */}
           <div className="flex flex-wrap items-center gap-2.5">
-            <div className="flex items-center rounded-2xl bg-slate-100 dark:bg-slate-800/90 p-1 border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center rounded-2xl bg-white p-1 border border-[#49352F]/15 shadow-xs">
               <button
                 type="button"
                 onClick={() => setDashboardView("overview")}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   dashboardView === "overview"
-                    ? "bg-amber-500 text-slate-950 shadow-sm font-black"
-                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                    ? "bg-[#F2CAB3] text-[#49352F] shadow-xs font-black border border-[#49352F]/15"
+                    : "text-[#7A6862] hover:text-[#49352F]"
                 }`}
               >
                 Overview
@@ -234,11 +234,11 @@ export default function DashboardPage() {
                 onClick={() => setDashboardView("ai")}
                 className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   dashboardView === "ai"
-                    ? "bg-indigo-600 text-white shadow-sm font-black"
-                    : "text-indigo-600 dark:text-amber-400 hover:underline"
+                    ? "bg-[#F2CAB3] text-[#49352F] shadow-xs font-black border border-[#49352F]/15"
+                    : "text-[#7A6862] hover:text-[#49352F]"
                 }`}
               >
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <Sparkles className="w-3.5 h-3.5 text-[#B26A1B]" />
                 <span>AI Workspace</span>
               </button>
             </div>
@@ -247,7 +247,7 @@ export default function DashboardPage() {
               value={selectedClass}
               aria-label="Filter dashboard by class"
               onChange={(e) => setSelectedClass(e.target.value)}
-              className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-2xs outline-hidden cursor-pointer"
+              className="rounded-xl border border-[#49352F]/15 bg-white px-3 py-1.5 text-xs font-semibold text-[#49352F] shadow-xs outline-hidden cursor-pointer"
             >
               <option value="all">{t.dashboard.allClasses}</option>
               <option value="cls-3a">Class 3-A</option>
@@ -273,11 +273,11 @@ export default function DashboardPage() {
               <button
                 type="button"
                 onClick={() => setDashboardView("overview")}
-                className="text-xs font-bold text-amber-500 hover:underline flex items-center gap-1 cursor-pointer"
+                className="text-xs font-bold text-[#49352F] hover:underline flex items-center gap-1 cursor-pointer"
               >
                 &larr; Back to Classroom Overview
               </button>
-              <Link href="/ai" className="text-xs text-slate-400 hover:text-slate-200 font-medium">
+              <Link href="/ai" className="text-xs text-[#7A6862] hover:text-[#49352F] font-medium">
                 Open in Fullscreen Mode &rarr;
               </Link>
             </div>
@@ -286,15 +286,14 @@ export default function DashboardPage() {
         ) : (
           <>
             {/* New Teacher Onboarding & Tutorial Welcome Banner */}
-            <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-[#14123D] via-[#2B2A6B] to-slate-900 border border-amber-500/40 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-[#F2DCB5]/90 via-[#FAF6E9] to-[#F2CAB3]/80 border border-[#49352F]/15 shadow-[0_8px_24px_rgba(73,53,47,0.06)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative overflow-hidden text-[#49352F]">
               <div className="flex items-start gap-3.5 z-10">
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-bold text-xl shrink-0 shadow-lg shadow-amber-500/30">
+                <div className="w-11 h-11 rounded-2xl bg-[#F2CAB3] border border-[#49352F]/15 text-[#49352F] flex items-center justify-center font-bold text-xl shrink-0 shadow-xs">
                   👋
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-heading text-sm sm:text-base font-bold text-white">
+                    <h3 className="font-heading text-sm sm:text-base font-bold text-[#49352F]">
                       {language === "gu"
                         ? "નવા શિક્ષક છો? શિક્ષાસેતુ AI કેવી રીતે વાપરવું તે જાણો"
                         : "New Teacher? Learn How to Handle ShikshaSetu AI"}
@@ -303,7 +302,7 @@ export default function DashboardPage() {
                       {language === "gu" ? "માર્ગદર્શિત ટૂર" : "Interactive Tour"}
                     </Badge>
                   </div>
-                  <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
+                  <p className="text-xs text-[#7A6862] max-w-2xl leading-relaxed">
                     {language === "gu"
                       ? "પ્રાથમિક શાળાના શિક્ષકો માટે તૈયાર કરેલી ૧ મિનિટની ઇન્ટરેક્ટિવ ટૂર જુઓ અથવા સંપૂર્ણ માર્ગદર્શિકા કેન્દ્ર અને પ્રિન્ટેબલ ડેસ્ક શીટ ખોલો."
                       : "Designed for Gujarat primary teachers: spot gaps early (<60%), deploy 5-step concrete manipulatives, and verify student mastery."}
@@ -313,7 +312,7 @@ export default function DashboardPage() {
 
               <div className="flex flex-wrap items-center gap-2.5 shrink-0 w-full md:w-auto z-10">
                 <Button
-                  variant="saffron"
+                  variant="primary"
                   size="sm"
                   onClick={() => {
                     if (typeof window !== "undefined") {
@@ -321,7 +320,7 @@ export default function DashboardPage() {
                     }
                     triggerPageTour("dashboard");
                   }}
-                  className="rounded-xl text-xs font-black shadow-lg shadow-amber-500/25 flex-1 md:flex-initial cursor-pointer"
+                  className="rounded-xl text-xs font-bold shadow-xs flex-1 md:flex-initial cursor-pointer"
                 >
                   <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
                   <span>{language === "gu" ? "ટૂર શરૂ કરો (૧ મિનિટ)" : "Start Interactive Tour"}</span>
@@ -331,9 +330,9 @@ export default function DashboardPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="rounded-xl text-xs border-amber-500/40 text-amber-300 hover:bg-amber-500/10 w-full cursor-pointer"
+                    className="rounded-xl text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15 w-full cursor-pointer"
                   >
-                    <BookOpen className="w-3.5 h-3.5 mr-1.5" />
+                    <BookOpen className="w-3.5 h-3.5 mr-1.5 text-[#B26A1B]" />
                     <span>{language === "gu" ? "ટ્યુટોરિયલ કેન્દ્ર" : "Tutorial Center"}</span>
                   </Button>
                 </Link>
@@ -342,10 +341,10 @@ export default function DashboardPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="rounded-xl text-xs border-white/20 text-slate-300 hover:text-white hover:bg-white/10 cursor-pointer"
+                    className="rounded-xl text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15 cursor-pointer"
                     title="Print Desk Reference Sheet"
                   >
-                    <FileSpreadsheet className="w-3.5 h-3.5 mr-1 text-emerald-400" />
+                    <FileSpreadsheet className="w-3.5 h-3.5 mr-1 text-[#2E7D5E]" />
                     <span>{language === "gu" ? "પ્રિન્ટ ગાઈડ" : "Print Guide"}</span>
                   </Button>
                 </Link>
@@ -396,23 +395,23 @@ export default function DashboardPage() {
             {/* 2. Recent Reassessment Wins Banner with Confetti */}
             <Card
               variant="glass"
-              className="p-5 sm:p-6 border-amber-500/40 bg-gradient-to-r from-amber-500/10 via-slate-900/90 to-emerald-500/10 relative overflow-hidden"
+              className="p-5 sm:p-6 border-[#49352F]/15 bg-gradient-to-r from-[#F2DCB5]/40 via-white to-[#F2CAB3]/30 relative overflow-hidden text-[#49352F]"
             >
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="p-1.5 rounded-xl bg-amber-500/20 text-amber-400 text-xs font-bold flex items-center gap-1">
-                      <Sparkles className="w-3.5 h-3.5" />
+                    <span className="p-1.5 rounded-xl bg-[#F2DCB5]/80 border border-[#49352F]/15 text-[#49352F] text-xs font-bold flex items-center gap-1 shadow-xs">
+                      <Sparkles className="w-3.5 h-3.5 text-[#B26A1B]" />
                       Pedagogical Win
                     </span>
                     <Badge variant="mint" size="sm">
                       Mastery Verified
                     </Badge>
                   </div>
-                  <h3 className="font-heading text-lg font-bold text-white">
+                  <h3 className="font-heading text-lg font-bold text-[#49352F]">
                     Aarav Patel (Class 4A) Crosses The Bridge: 35% &rarr; 85% (+50 pp)
                   </h3>
-                  <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
+                  <p className="text-xs text-[#7A6862] max-w-2xl leading-relaxed">
                     Following 5-step concrete division remediation with counters and number line worksheets, Aarav mastered equal sharing with remainders during formative reassessment.
                   </p>
                 </div>
@@ -422,7 +421,7 @@ export default function DashboardPage() {
                     variant="saffron"
                     size="sm"
                     onClick={handleCelebrate}
-                    className="rounded-full shadow-lg shadow-amber-500/20 text-xs px-4"
+                    className="rounded-full shadow-xs text-xs px-4"
                   >
                     <PartyPopper className="w-4 h-4 mr-1.5" />
                     <span>{hasCelebrated ? "Celebrated! 🎉" : "Celebrate Win 🎉"}</span>
@@ -437,7 +436,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Aarav's Glowing Bridge Progress */}
-              <div className="mt-4 pt-4 border-t border-slate-800/80">
+              <div className="mt-4 pt-4 border-t border-[#49352F]/10">
                 <BridgeProgress
                   score={85}
                   previousScore={35}
@@ -453,14 +452,14 @@ export default function DashboardPage() {
               <div className="lg:col-span-2 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-heading text-base font-bold text-slate-900 dark:text-white">
+                    <h3 className="font-heading text-base font-bold text-[#49352F]">
                       Class Mastery Heatmap (Students × Concepts)
                     </h3>
                     <Badge variant="saffron" size="sm">
                       Interactive 3D
                     </Badge>
                   </div>
-                  <span className="text-[11px] text-slate-400">
+                  <span className="text-[11px] text-[#7A6862]">
                     Drag to rotate 3D view
                   </span>
                 </div>
@@ -476,49 +475,51 @@ export default function DashboardPage() {
               {/* Curriculum Proficiency Chart */}
               <div data-tour="curriculum-chart" className="flex flex-col">
                 <Card variant="glass" className="p-5 flex flex-col justify-between h-full">
-                <div>
-                  <h3 className="font-heading text-base font-bold text-slate-900 dark:text-white">
-                    Subject Proficiency
-                  </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Current cohort average vs baseline
-                  </p>
+                  <div>
+                    <h3 className="font-heading text-base font-bold text-[#49352F]">
+                      Subject Proficiency
+                    </h3>
+                    <p className="text-xs text-[#7A6862] mt-0.5">
+                      Current cohort average vs baseline
+                    </p>
 
-                  <div className="h-[220px] w-full mt-4">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={curriculumData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.3} />
-                        <XAxis dataKey="subject" tick={{ fill: "#94a3b8", fontSize: 11 }} />
-                        <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} domain={[0, 100]} />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "#0f172a",
-                            border: "1px solid #334155",
-                            borderRadius: "12px",
-                            fontSize: "12px",
-                          }}
-                        />
-                        <Bar dataKey="score" fill="#3DDBA9" radius={[6, 6, 0, 0]} name="Current Score" />
-                        <Bar dataKey="baseline" fill="#FF8A3D" radius={[6, 6, 0, 0]} name="Baseline" />
-                      </BarChart>
-                    </ResponsiveContainer>
+                    <div className="h-[220px] w-full mt-4">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={curriculumData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#49352F" opacity={0.1} />
+                          <XAxis dataKey="subject" tick={{ fill: "#7A6862", fontSize: 11 }} />
+                          <YAxis tick={{ fill: "#7A6862", fontSize: 11 }} domain={[0, 100]} />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: "#FAF6E9",
+                              border: "1px solid rgba(73,53,47,0.15)",
+                              borderRadius: "12px",
+                              color: "#49352F",
+                              fontSize: "12px",
+                              boxShadow: "0 4px 16px rgba(73,53,47,0.1)",
+                            }}
+                          />
+                          <Bar dataKey="score" fill="#2E7D5E" radius={[6, 6, 0, 0]} name="Current Score" />
+                          <Bar dataKey="baseline" fill="#F2CAB3" radius={[6, 6, 0, 0]} name="Baseline" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
-                </div>
 
-                <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-[#3DDBA9]" />
-                    <span>Current %</span>
+                  <div className="pt-3 border-t border-[#49352F]/10 flex items-center justify-between text-[11px] text-[#7A6862]">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-xs bg-[#2E7D5E]" />
+                      <span>Current %</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-xs bg-[#F2CAB3] border border-[#49352F]/15" />
+                      <span>Baseline %</span>
+                    </div>
+                    <Link href="/reports" className="text-[#B26A1B] hover:underline font-bold">
+                      Full Reports &rarr;
+                    </Link>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-[#FF8A3D]" />
-                    <span>Baseline %</span>
-                  </div>
-                  <Link href="/reports" className="text-amber-400 hover:underline font-bold">
-                    Full Reports &rarr;
-                  </Link>
-                </div>
-              </Card>
+                </Card>
               </div>
             </div>
 
@@ -527,12 +528,12 @@ export default function DashboardPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-heading text-base font-bold text-slate-900 dark:text-white">
+                    <h3 className="font-heading text-base font-bold text-[#49352F]">
                       Immediate Attention Required
                     </h3>
                     <ContextualHelp termKey="masteryThreshold" />
                   </div>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-[#7A6862]">
                     Students flagged below the 60% developing threshold needing active intervention
                   </p>
                 </div>
@@ -593,19 +594,19 @@ export default function DashboardPage() {
                   <Card
                     key={item.id}
                     variant="glass"
-                    className="p-4 space-y-3 border-slate-800 hover:border-amber-500/40 transition-all"
+                    className="p-4 space-y-3 border-[#49352F]/12 hover:border-[#49352F]/25 transition-all text-[#49352F]"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-400 font-heading font-black text-sm flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-2xl bg-[#C54738]/12 border border-[#C54738]/25 text-[#C54738] font-heading font-black text-sm flex items-center justify-center shrink-0">
                           {item.score}%
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <h4 className="font-bold text-white text-sm">{item.name}</h4>
-                            <span className="text-[11px] text-slate-400 font-medium">{item.class}</span>
+                            <h4 className="font-bold text-[#49352F] text-sm">{item.name}</h4>
+                            <span className="text-[11px] text-[#7A6862] font-medium">{item.class}</span>
                           </div>
-                          <p className="text-xs text-amber-400 font-medium mt-0.5">
+                          <p className="text-xs text-[#B26A1B] font-medium mt-0.5">
                             {item.subject} • {item.concept}
                           </p>
                         </div>
@@ -620,13 +621,13 @@ export default function DashboardPage() {
                       </Badge>
                     </div>
 
-                    <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/50 p-2.5 rounded-xl border border-slate-800/80">
-                      <span className="text-slate-400 font-semibold block text-[10px] uppercase">Why Flagged:</span>
+                    <p className="text-xs text-[#49352F] leading-relaxed bg-[#FAF6E9] p-2.5 rounded-xl border border-[#49352F]/10">
+                      <span className="text-[#7A6862] font-semibold block text-[10px] uppercase">Why Flagged:</span>
                       {item.reason}
                     </p>
 
                     <div className="flex items-center justify-between pt-1 text-xs">
-                      <span className="text-[11px] text-slate-400 truncate max-w-[220px]">
+                      <span className="text-[11px] text-[#7A6862] truncate max-w-[220px]">
                         {item.suggestedAction}
                       </span>
                       <Link href="/remedial-plans">

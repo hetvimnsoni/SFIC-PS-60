@@ -441,24 +441,22 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
 
   return (
     <div className="space-y-6">
-      {/* Top Header: ShikshaSetu AI Workspace Branding with Dark & Cyan Styling */}
-      <div className="rounded-3xl border border-cyan-500/20 bg-gradient-to-r from-[#060a14] via-[#091122] to-[#060a14] p-6 shadow-xl text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
-
+      {/* Top Header: ShikshaSetu AI Workspace Branding with Warm Cream & Peach Styling */}
+      <div className="rounded-3xl border border-[#49352F]/15 bg-gradient-to-r from-[#F2DCB5]/90 via-[#FAF6E9] to-[#F2CAB3]/80 p-6 shadow-[0_8px_24px_rgba(73,53,47,0.06)] text-[#49352F] relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
             <div className="flex items-center gap-2">
-              <span className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-400/30 text-cyan-400">
+              <span className="p-2 rounded-xl bg-white border border-[#49352F]/15 text-[#B26A1B] shadow-xs">
                 <Sparkles className="w-5 h-5 animate-pulse" />
               </span>
-              <span className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-cyan-400">
+              <span className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-[#B26A1B]">
                 ShikshaSetu AI Intelligence Hub
               </span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2 text-white">
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2 text-[#49352F]">
               {language === "gu" ? "શિક્ષાસેતુ ઇન્ટરેક્ટિવ AI વર્કસ્પેસ" : "Functional AI Workspace"}
             </h2>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#7A6862] mt-1 max-w-2xl leading-relaxed">
               {language === "gu"
                 ? "વાસ્તવિક શૈક્ષણિક AI ક્ષમતાઓ: શિક્ષા ટ્યુટર, ત્રુટિ વિશ્લેષક, ઉપચાર યોજના જનરેટર અને સ્માર્ટ વર્કશીટ નિર્માતા."
                 : "Fully functional pedagogical AI capabilities: AI Tutor, Learning-Gap Analyzer, Remedial Plan Generator, Worksheet Creator, and Teacher Assistant."}
@@ -470,8 +468,8 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
             <div
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold backdrop-blur-md ${
                 aiStatus.isLive
-                  ? "bg-emerald-950/60 border-emerald-500/40 text-emerald-300"
-                  : "bg-amber-950/60 border-amber-500/40 text-amber-300"
+                  ? "bg-[#2E7D5E]/15 border-[#2E7D5E]/30 text-[#2E7D5E]"
+                  : "bg-white border-[#49352F]/15 text-[#49352F]"
               }`}
               title={
                 aiStatus.isLive
@@ -481,7 +479,7 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
             >
               <span
                 className={`w-2 h-2 rounded-full ${
-                  aiStatus.isLive ? "bg-emerald-400 animate-ping" : "bg-amber-400"
+                  aiStatus.isLive ? "bg-[#2E7D5E] animate-ping" : "bg-[#B26A1B]"
                 }`}
               />
               <span>
@@ -491,14 +489,14 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
               </span>
             </div>
 
-            <div className="flex items-center rounded-xl bg-[#0b1329] border border-cyan-500/30 p-1 text-xs">
+            <div className="flex items-center rounded-xl bg-white border border-[#49352F]/15 p-1 text-xs shadow-xs">
               <button
                 type="button"
                 onClick={() => setLanguage("en")}
                 className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
                   language === "en"
-                    ? "bg-cyan-500 text-black shadow-xs"
-                    : "text-slate-400 hover:text-white"
+                    ? "bg-[#F2CAB3] text-[#49352F] shadow-xs border border-[#49352F]/15"
+                    : "text-[#7A6862] hover:text-[#49352F]"
                 }`}
               >
                 English
@@ -508,8 +506,8 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
                 onClick={() => setLanguage("gu")}
                 className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
                   language === "gu"
-                    ? "bg-cyan-500 text-black shadow-xs"
-                    : "text-slate-400 hover:text-white"
+                    ? "bg-[#F2CAB3] text-[#49352F] shadow-xs border border-[#49352F]/15"
+                    : "text-[#7A6862] hover:text-[#49352F]"
                 }`}
               >
                 ગુજરાતી
@@ -519,17 +517,17 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
         </div>
 
         {/* 5 Navigation Tabs */}
-        <div className="mt-6 flex flex-wrap gap-2 border-t border-cyan-500/15 pt-4">
+        <div className="mt-6 flex flex-wrap gap-2 border-t border-[#49352F]/10 pt-4">
           <button
             type="button"
             onClick={() => setActiveTab("tutor")}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === "tutor"
-                ? "bg-cyan-500 text-black shadow-md shadow-cyan-500/20"
-                : "bg-[#0b1329]/80 text-slate-300 hover:bg-[#121c38] hover:text-white border border-slate-700/50"
+                ? "bg-[#F2CAB3] text-[#49352F] shadow-xs border border-[#49352F]/15"
+                : "bg-white/80 text-[#7A6862] hover:bg-white hover:text-[#49352F] border border-[#49352F]/10"
             }`}
           >
-            <GraduationCap className="w-4 h-4" />
+            <GraduationCap className="w-4 h-4 text-[#B26A1B]" />
             <span>1. AI Tutor</span>
           </button>
 
@@ -538,11 +536,11 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
             onClick={() => setActiveTab("analyzer")}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === "analyzer"
-                ? "bg-cyan-500 text-black shadow-md shadow-cyan-500/20"
-                : "bg-[#0b1329]/80 text-slate-300 hover:bg-[#121c38] hover:text-white border border-slate-700/50"
+                ? "bg-[#F2CAB3] text-[#49352F] shadow-xs border border-[#49352F]/15"
+                : "bg-white/80 text-[#7A6862] hover:bg-white hover:text-[#49352F] border border-[#49352F]/10"
             }`}
           >
-            <AlertTriangle className="w-4 h-4" />
+            <AlertTriangle className="w-4 h-4 text-[#C54738]" />
             <span>2. Learning-Gap Analyzer</span>
           </button>
 
@@ -551,11 +549,11 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
             onClick={() => setActiveTab("remedial")}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === "remedial"
-                ? "bg-cyan-500 text-black shadow-md shadow-cyan-500/20"
-                : "bg-[#0b1329]/80 text-slate-300 hover:bg-[#121c38] hover:text-white border border-slate-700/50"
+                ? "bg-[#F2CAB3] text-[#49352F] shadow-xs border border-[#49352F]/15"
+                : "bg-white/80 text-[#7A6862] hover:bg-white hover:text-[#49352F] border border-[#49352F]/10"
             }`}
           >
-            <ClipboardList className="w-4 h-4" />
+            <ClipboardList className="w-4 h-4 text-[#2E7D5E]" />
             <span>3. Remedial Plan Generator</span>
           </button>
 
@@ -564,11 +562,11 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
             onClick={() => setActiveTab("worksheet")}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === "worksheet"
-                ? "bg-cyan-500 text-black shadow-md shadow-cyan-500/20"
-                : "bg-[#0b1329]/80 text-slate-300 hover:bg-[#121c38] hover:text-white border border-slate-700/50"
+                ? "bg-[#F2CAB3] text-[#49352F] shadow-xs border border-[#49352F]/15"
+                : "bg-white/80 text-[#7A6862] hover:bg-white hover:text-[#49352F] border border-[#49352F]/10"
             }`}
           >
-            <FileSpreadsheet className="w-4 h-4" />
+            <FileSpreadsheet className="w-4 h-4 text-[#B26A1B]" />
             <span>4. Worksheet Generator</span>
           </button>
 
@@ -577,11 +575,11 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
             onClick={() => setActiveTab("assistant")}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === "assistant"
-                ? "bg-cyan-500 text-black shadow-md shadow-cyan-500/20"
-                : "bg-[#0b1329]/80 text-slate-300 hover:bg-[#121c38] hover:text-white border border-slate-700/50"
+                ? "bg-[#F2CAB3] text-[#49352F] shadow-xs border border-[#49352F]/15"
+                : "bg-white/80 text-[#7A6862] hover:bg-white hover:text-[#49352F] border border-[#49352F]/10"
             }`}
           >
-            <Bot className="w-4 h-4" />
+            <Bot className="w-4 h-4 text-[#2E7D5E]" />
             <span>5. Teacher Assistant</span>
           </button>
         </div>

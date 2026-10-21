@@ -68,25 +68,25 @@ export default function ActivitiesPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-[#49352F] tracking-tight font-heading">
               Curated Remedial Practice Activities & Worksheets
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+            <p className="text-xs sm:text-sm text-[#7A6862] mt-0.5">
               Interactive digital questions for classroom devices and printable offline worksheets for primary students.
             </p>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+        <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl bg-white/95 border border-[#49352F]/12 shadow-[0_4px_16px_rgba(73,53,47,0.04)]">
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-semibold text-slate-500">Subject:</span>
+              <span className="text-xs font-semibold text-[#7A6862]">Subject:</span>
               <select
                 value={subjectFilter}
                 aria-label="Filter activities by subject"
                 onChange={(e) => setSubjectFilter(e.target.value)}
-                className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 outline-hidden cursor-pointer"
+                className="rounded-xl border border-[#49352F]/15 bg-[#FAF6E9] px-3 py-1.5 text-xs font-semibold text-[#49352F] outline-hidden cursor-pointer"
               >
                 <option value="all">All Subjects</option>
                 <option value="MATH">Mathematics</option>
@@ -97,12 +97,12 @@ export default function ActivitiesPage() {
             </div>
 
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-semibold text-slate-500">Difficulty:</span>
+              <span className="text-xs font-semibold text-[#7A6862]">Difficulty:</span>
               <select
                 value={difficultyFilter}
                 aria-label="Filter activities by difficulty"
                 onChange={(e) => setDifficultyFilter(e.target.value)}
-                className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 outline-hidden cursor-pointer"
+                className="rounded-xl border border-[#49352F]/15 bg-[#FAF6E9] px-3 py-1.5 text-xs font-semibold text-[#49352F] outline-hidden cursor-pointer"
               >
                 <option value="all">All Levels</option>
                 <option value="Easy">Beginner / Easy</option>
@@ -112,7 +112,7 @@ export default function ActivitiesPage() {
             </div>
           </div>
 
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-[#7A6862]">
             {filteredActivities.length} available practice banks
           </span>
         </div>
@@ -140,24 +140,24 @@ export default function ActivitiesPage() {
                   </Badge>
                 </div>
 
-                <h3 className="text-base font-bold text-slate-900 mt-2">{act.title}</h3>
+                <h3 className="text-base font-bold text-[#49352F] mt-2">{act.title}</h3>
                 {act.titleGujarati && (
-                  <p className="text-xs font-medium text-slate-600 mt-0.5 font-serif">
+                  <p className="text-xs font-medium text-[#7A6862] mt-0.5 font-serif">
                     {act.titleGujarati}
                   </p>
                 )}
 
-                <p className="text-xs text-slate-500 mt-1">
-                  Concept: <strong>{act.conceptName}</strong>
+                <p className="text-xs text-[#7A6862] mt-1">
+                  Concept: <strong className="text-[#49352F]">{act.conceptName}</strong>
                 </p>
 
                 {/* Questions Preview */}
-                <div className="mt-3 p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs space-y-1.5">
-                  <span className="font-semibold text-slate-700 block">
+                <div className="mt-3 p-3 rounded-xl bg-[#FAF6E9] border border-[#49352F]/10 text-xs space-y-1.5">
+                  <span className="font-semibold text-[#49352F] block">
                     Sample Questions ({act.questions?.length} items):
                   </span>
                   {act.questions?.slice(0, 2).map((q: any, i: number) => (
-                    <p key={i} className="text-slate-600 text-[11px] line-clamp-1">
+                    <p key={i} className="text-[#7A6862] text-[11px] line-clamp-1">
                       • {q.questionText}
                     </p>
                   ))}
@@ -165,20 +165,20 @@ export default function ActivitiesPage() {
               </div>
 
               {/* Actions: Start Practice or Print Worksheet */}
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+              <div className="mt-4 pt-3 border-t border-[#49352F]/10 flex items-center justify-between">
                 <button
                   type="button"
                   onClick={() => handlePrintWorksheet(act)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#49352F]/15 bg-white hover:bg-[#FAF6E9] text-[#49352F] text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
                 >
-                  <Printer className="w-3.5 h-3.5 text-slate-500" />
+                  <Printer className="w-3.5 h-3.5 text-[#B26A1B]" />
                   <span>Print Worksheet</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveActivity(act)}
-                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#F2CAB3] hover:bg-white text-[#49352F] border border-[#49352F]/16 text-xs font-bold shadow-xs transition-colors cursor-pointer"
                 >
                   <Play className="w-3.5 h-3.5 fill-current" />
                   <span>Launch Practice</span>

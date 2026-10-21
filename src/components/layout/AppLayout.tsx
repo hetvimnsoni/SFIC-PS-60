@@ -35,7 +35,7 @@ export function AppLayout({ children, showDemoBanner = true }: AppLayoutProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#070a13] text-slate-900 dark:text-slate-100 flex transition-colors duration-200 pb-16 lg:pb-0">
+    <div className="min-h-screen bg-[#F4F1E1] text-[#49352F] flex transition-colors duration-200 pb-16 lg:pb-0">
       {/* Sidebar navigation for desktop */}
       <AppSidebar />
 
@@ -55,13 +55,13 @@ export function AppLayout({ children, showDemoBanner = true }: AppLayoutProps) {
         </main>
       </div>
 
-      {/* Global Offline ShikshaBot 3D Orb Assistant */}
+      {/* Global Offline ShikshaBot Assistant */}
       <GlobalShikshaBot />
 
       {/* Mobile Bottom Tab Bar */}
       <nav
         aria-label="Mobile Navigation"
-        className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-[#14123D]/95 border-t border-slate-200 dark:border-white/10 backdrop-blur-xl px-2 py-1.5 flex items-center justify-around print:hidden shadow-lg"
+        className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[#FAF6E9]/95 border-t border-[#49352F]/10 backdrop-blur-xl px-2 py-1.5 flex items-center justify-around print:hidden shadow-[0_-4px_20px_rgba(73,53,47,0.06)]"
       >
         {mobileNavItems.map((item) => {
           const Icon = item.icon;
@@ -76,8 +76,8 @@ export function AppLayout({ children, showDemoBanner = true }: AppLayoutProps) {
               href={item.href}
               className={`flex flex-col items-center py-1 px-2.5 rounded-xl transition-colors ${
                 isActive
-                  ? "text-amber-500 font-bold"
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  ? "text-[#49352F] font-bold bg-[#F2CAB3]/70 shadow-xs"
+                  : "text-[#7A6862] hover:text-[#49352F]"
               }`}
             >
               <Icon className="w-5 h-5" />

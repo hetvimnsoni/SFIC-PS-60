@@ -49,8 +49,8 @@ const StudentSkillTree3D = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-[420px] rounded-3xl bg-[#0d0c28] border border-slate-800 flex items-center justify-center text-slate-400 text-xs">
-        <Sparkles className="w-4 h-4 animate-spin text-amber-400 mr-2" />
+      <div className="w-full h-[420px] rounded-3xl bg-[#FAF6E9] border border-[#49352F]/15 flex items-center justify-center text-[#7A6862] text-xs">
+        <Sparkles className="w-4 h-4 animate-spin text-[#B26A1B] mr-2" />
         <span>Loading 3D Skill Graph...</span>
       </div>
     ),
@@ -244,7 +244,7 @@ export default function StudentDetailPage({
         <div className="flex items-center justify-between">
           <Link
             href="/students"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-white"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#7A6862] hover:text-[#49352F]"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to All Students</span>
@@ -253,7 +253,7 @@ export default function StudentDetailPage({
             variant="outline"
             size="sm"
             onClick={() => setShowEditModal(true)}
-            className="rounded-full text-xs"
+            className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15"
           >
             <Edit className="w-3 h-3 mr-1" />
             <span>Edit Profile</span>
@@ -261,14 +261,14 @@ export default function StudentDetailPage({
         </div>
 
         {/* Profile Card Header */}
-        <Card variant="glass" className="p-6 border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <Card variant="glass" className="p-6 border-[#49352F]/15 bg-white text-[#49352F] flex flex-col md:flex-row md:items-center justify-between gap-5 shadow-xs">
           <div className="flex items-start gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-indigo-600 text-slate-950 flex items-center justify-center font-heading font-black text-2xl shadow-lg shadow-amber-500/20 shrink-0">
+            <div className="w-14 h-14 rounded-2xl bg-[#F2CAB3] border border-[#49352F]/15 text-[#49352F] flex items-center justify-center font-heading font-black text-2xl shadow-xs shrink-0">
               {student.displayName.charAt(0)}
             </div>
             <div className="space-y-1">
               <div className="flex items-center gap-2.5">
-                <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#49352F] tracking-tight">
                   {student.displayName}
                 </h1>
                 <Badge variant="outline" size="sm">
@@ -280,9 +280,9 @@ export default function StudentDetailPage({
                   </Badge>
                 )}
               </div>
-              <p className="font-mono text-xs text-slate-400">Roll: {student.studentCode} • Enrolled 2026</p>
+              <p className="font-mono text-xs text-[#7A6862]">Roll: {student.studentCode} • Enrolled 2026</p>
               {student.notes && (
-                <p className="text-xs text-slate-300 max-w-xl italic mt-1">
+                <p className="text-xs text-[#7A6862] max-w-xl italic mt-1">
                   &quot;{student.notes}&quot;
                 </p>
               )}
@@ -296,7 +296,7 @@ export default function StudentDetailPage({
                 variant="outline"
                 size="sm"
                 onClick={() => setShowActivityModal(true)}
-                className="rounded-full text-xs border-emerald-500/40 text-emerald-300 hover:bg-emerald-950/40"
+                className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15"
               >
                 <Play className="w-3.5 h-3.5 fill-current mr-1" />
                 <span>Practice Activity</span>
@@ -314,7 +314,7 @@ export default function StudentDetailPage({
                     divisionGap?.previousPercentage || 35
                   )
                 }
-                className="rounded-full text-xs font-black shadow-md shadow-amber-500/30"
+                className="rounded-full text-xs font-black shadow-xs"
               >
                 <RotateCcw className="w-3.5 h-3.5 mr-1" />
                 <span>Record Reassessment</span>
@@ -361,14 +361,14 @@ export default function StudentDetailPage({
         </div>
 
         {/* Navigation Tabs Bar */}
-        <div className="flex items-center gap-2 border-b border-slate-800 pb-2 overflow-x-auto">
+        <div className="flex items-center gap-2 border-b border-[#49352F]/10 pb-2 overflow-x-auto">
           <button
             type="button"
             onClick={() => setActiveTab("skilltree")}
             className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "skilltree"
-                ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
+                ? "bg-[#F2CAB3] text-[#49352F] shadow-xs font-black border border-[#49352F]/15"
+                : "text-[#7A6862] hover:text-[#49352F] hover:bg-[#FAF6E9]"
             }`}
           >
             3D Skill Tree (Interactive)
@@ -378,8 +378,8 @@ export default function StudentDetailPage({
             onClick={() => setActiveTab("gaps")}
             className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "gaps"
-                ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
+                ? "bg-[#F2CAB3] text-[#49352F] shadow-xs font-black border border-[#49352F]/15"
+                : "text-[#7A6862] hover:text-[#49352F] hover:bg-[#FAF6E9]"
             }`}
           >
             Learning Gaps &amp; The Bridge ({gaps.length})
@@ -389,8 +389,8 @@ export default function StudentDetailPage({
             onClick={() => setActiveTab("mastery")}
             className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "mastery"
-                ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
+                ? "bg-[#F2CAB3] text-[#49352F] shadow-xs font-black border border-[#49352F]/15"
+                : "text-[#7A6862] hover:text-[#49352F] hover:bg-[#FAF6E9]"
             }`}
           >
             Mastery Analytics
@@ -400,8 +400,8 @@ export default function StudentDetailPage({
             onClick={() => setActiveTab("history")}
             className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "history"
-                ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
+                ? "bg-[#F2CAB3] text-[#49352F] shadow-xs font-black border border-[#49352F]/15"
+                : "text-[#7A6862] hover:text-[#49352F] hover:bg-[#FAF6E9]"
             }`}
           >
             Assessment History ({results.length})
@@ -425,7 +425,7 @@ export default function StudentDetailPage({
         {activeTab === "gaps" && (
           <div className="space-y-4">
             {gaps.length === 0 ? (
-              <Card variant="glass" className="p-8 text-center text-slate-400">
+              <Card variant="glass" className="p-8 text-center text-[#7A6862] bg-white border-[#49352F]/12">
                 No learning gaps recorded for this student.
               </Card>
             ) : (
@@ -433,12 +433,12 @@ export default function StudentDetailPage({
                 <Card
                   key={gap.id}
                   variant="glass"
-                  className="p-5 border-slate-800 space-y-4 hover:border-amber-500/40 transition-all"
+                  className="p-5 border-[#49352F]/12 bg-white text-[#49352F] space-y-4 hover:border-[#49352F]/25 transition-all shadow-xs"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-heading text-lg font-bold text-white">
+                        <h3 className="font-heading text-lg font-bold text-[#49352F]">
                           {gap.conceptName}
                         </h3>
                         <Badge
@@ -461,7 +461,7 @@ export default function StudentDetailPage({
                           {gap.status}
                         </Badge>
                       </div>
-                      <p className="text-xs text-amber-400 font-medium">
+                      <p className="text-xs text-[#B26A1B] font-medium">
                         Subject: {gap.subjectName || "Mathematics"}
                       </p>
                     </div>
@@ -492,7 +492,7 @@ export default function StudentDetailPage({
                           }
                         }}
                       >
-                        <Button variant="outline" size="sm" className="rounded-full text-xs">
+                        <Button variant="outline" size="sm" className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15">
                           <span>5-Step Plan &rarr;</span>
                         </Button>
                       </Link>
@@ -510,15 +510,15 @@ export default function StudentDetailPage({
 
                   {/* Explainable AI Diagnosis */}
                   {gap.reason && (
-                    <div data-tour="student-gap-reason" className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs space-y-1">
+                    <div data-tour="student-gap-reason" className="p-3 rounded-xl bg-[#FAF6E9] border border-[#49352F]/10 text-xs space-y-1 text-[#49352F]">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1">
-                          <BrainCircuit className="w-3.5 h-3.5 text-amber-400" />
+                        <span className="text-[10px] uppercase font-bold text-[#7A6862] flex items-center gap-1">
+                          <BrainCircuit className="w-3.5 h-3.5 text-[#B26A1B]" />
                           Algorithmic Explanation:
                         </span>
                         <ContextualHelp termKey="gapDetection" />
                       </div>
-                      <p className="text-slate-300 leading-relaxed">{gap.reason}</p>
+                      <p className="text-[#49352F] leading-relaxed">{gap.reason}</p>
                     </div>
                   )}
                 </Card>
@@ -530,49 +530,50 @@ export default function StudentDetailPage({
         {/* Tab 3: Mastery Analytics */}
         {activeTab === "mastery" && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card variant="glass" className="p-5">
-              <h3 className="font-heading text-base font-bold text-white mb-2">
+            <Card variant="glass" className="p-5 bg-white border-[#49352F]/12 text-[#49352F] shadow-xs">
+              <h3 className="font-heading text-base font-bold text-[#49352F] mb-2">
                 Concept Scores Comparison
               </h3>
-              <p className="text-xs text-slate-400 mb-4">Baseline vs Reassessment %</p>
+              <p className="text-xs text-[#7A6862] mb-4">Baseline vs Reassessment %</p>
               <div className="h-[250px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={conceptScoresData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.3} />
-                    <XAxis dataKey="name" tick={{ fill: "#94a3b8", fontSize: 11 }} />
-                    <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} domain={[0, 100]} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#49352F" opacity={0.1} />
+                    <XAxis dataKey="name" tick={{ fill: "#7A6862", fontSize: 11 }} />
+                    <YAxis tick={{ fill: "#7A6862", fontSize: 11 }} domain={[0, 100]} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: "#0f172a",
-                        border: "1px solid #334155",
+                        backgroundColor: "#FAF6E9",
+                        border: "1px solid rgba(73,53,47,0.15)",
                         borderRadius: "12px",
+                        color: "#49352F",
                       }}
                     />
-                    <Bar dataKey="latest" fill="#3DDBA9" name="Latest Score %" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="previous" fill="#FF8A3D" name="Baseline %" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="latest" fill="#2E7D5E" name="Latest Score %" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="previous" fill="#F2CAB3" name="Baseline %" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </Card>
 
-            <Card variant="glass" className="p-5 flex flex-col justify-between">
+            <Card variant="glass" className="p-5 flex flex-col justify-between bg-white border-[#49352F]/12 text-[#49352F] shadow-xs">
               <div>
-                <h3 className="font-heading text-base font-bold text-white mb-2">
+                <h3 className="font-heading text-base font-bold text-[#49352F] mb-2">
                   Pedagogical Mastery Verdict
                 </h3>
                 <div className="space-y-3 mt-4 text-xs">
-                  <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
-                    <span className="text-slate-400 block font-semibold">Mastery Benchmark</span>
-                    <span className="text-lg font-black text-emerald-400">80% Threshold</span>
-                    <p className="text-[11px] text-slate-400 mt-0.5">
+                  <div className="p-3 rounded-xl bg-[#FAF6E9] border border-[#49352F]/10">
+                    <span className="text-[#7A6862] block font-semibold">Mastery Benchmark</span>
+                    <span className="text-lg font-black text-[#2E7D5E]">80% Threshold</span>
+                    <p className="text-[11px] text-[#7A6862] mt-0.5">
                       Student demonstrates independent problem-solving without prompt assistance.
                     </p>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
-                    <span className="text-slate-400 block font-semibold">Developing Benchmark</span>
-                    <span className="text-lg font-black text-amber-400">60% Threshold</span>
-                    <p className="text-[11px] text-slate-400 mt-0.5">
+                  <div className="p-3 rounded-xl bg-[#FAF6E9] border border-[#49352F]/10">
+                    <span className="text-[#7A6862] block font-semibold">Developing Benchmark</span>
+                    <span className="text-lg font-black text-[#B26A1B]">60% Threshold</span>
+                    <p className="text-[11px] text-[#7A6862] mt-0.5">
                       Basic conceptual familiarity; requires occasional manipulative or visual aid.
                     </p>
                   </div>
@@ -580,7 +581,7 @@ export default function StudentDetailPage({
               </div>
 
               <Link href="/reports">
-                <Button variant="outline" size="sm" className="w-full rounded-xl text-xs mt-4">
+                <Button variant="outline" size="sm" className="w-full rounded-xl text-xs mt-4 bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15">
                   Generate Printable Report Card &rarr;
                 </Button>
               </Link>
@@ -590,10 +591,10 @@ export default function StudentDetailPage({
 
         {/* Tab 4: Assessment History */}
         {activeTab === "history" && (
-          <Card variant="glass" className="p-5 overflow-x-auto border-slate-800">
+          <Card variant="glass" className="p-5 overflow-x-auto border-[#49352F]/12 bg-white text-[#49352F] shadow-xs">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-slate-800 text-slate-400">
+                <tr className="border-b border-[#49352F]/10 text-[#7A6862]">
                   <th className="p-3 font-semibold">Date</th>
                   <th className="p-3 font-semibold">Assessment Title</th>
                   <th className="p-3 font-semibold">Marks</th>
@@ -606,22 +607,22 @@ export default function StudentDetailPage({
                   const isMastered = res.percentage >= 80;
                   const isGap = res.percentage < 60;
                   return (
-                    <tr key={res.id} className="border-b border-slate-800/60 hover:bg-slate-900/40">
-                      <td className="p-3 text-slate-400">
+                    <tr key={res.id} className="border-b border-[#49352F]/8 hover:bg-[#FAF6E9]/60">
+                      <td className="p-3 text-[#7A6862]">
                         {new Date(res.recordedAt || Date.now()).toLocaleDateString()}
                       </td>
-                      <td className="p-3 font-bold text-white">{res.assessmentTitle || "Diagnostic Assessment"}</td>
-                      <td className="p-3 text-slate-300">
+                      <td className="p-3 font-bold text-[#49352F]">{res.assessmentTitle || "Diagnostic Assessment"}</td>
+                      <td className="p-3 text-[#7A6862]">
                         {res.marksObtained} / {res.maximumMarks}
                       </td>
                       <td className="p-3">
                         <span
                           className={`font-black ${
                             isMastered
-                              ? "text-emerald-400"
+                              ? "text-[#2E7D5E]"
                               : isGap
-                              ? "text-rose-400"
-                              : "text-amber-400"
+                              ? "text-[#C54738]"
+                              : "text-[#B26A1B]"
                           }`}
                         >
                           {res.percentage}%

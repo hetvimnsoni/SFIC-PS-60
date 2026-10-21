@@ -91,7 +91,7 @@ export function StudentFormModal({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">
+          <label className="block text-xs font-semibold text-[#49352F] mb-1">
             Student Full Name <span className="text-rose-500">*</span>
           </label>
           <input
@@ -100,13 +100,13 @@ export function StudentFormModal({
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="e.g. Aarav Patel"
-            className="w-full rounded-lg border border-slate-200 p-2 text-sm text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+            className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-sm text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-[#49352F] mb-1">
               Student Code / Roll <span className="text-rose-500">*</span>
             </label>
             <input
@@ -115,15 +115,15 @@ export function StudentFormModal({
               value={studentCode}
               onChange={(e) => setStudentCode(e.target.value)}
               placeholder="e.g. MPS-4A-12"
-              className="w-full rounded-lg border border-slate-200 p-2 text-sm font-mono text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+              className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-sm font-mono text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Grade (Class)</label>
+            <label className="block text-xs font-semibold text-[#49352F] mb-1">Grade (Class)</label>
             <select
               value={grade}
               onChange={(e) => setGrade(Number(e.target.value))}
-              className="w-full rounded-lg border border-slate-200 p-2 text-sm text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+              className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-sm text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden cursor-pointer"
             >
               <option value={1}>Class 1</option>
               <option value={2}>Class 2</option>
@@ -135,11 +135,11 @@ export function StudentFormModal({
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">Section</label>
+          <label className="block text-xs font-semibold text-[#49352F] mb-1">Section</label>
           <select
             value={section}
             onChange={(e) => setSection(e.target.value)}
-            className="w-full rounded-lg border border-slate-200 p-2 text-sm text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+            className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-sm text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden cursor-pointer"
           >
             <option value="A">Section A</option>
             <option value="B">Section B</option>
@@ -148,7 +148,7 @@ export function StudentFormModal({
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">
+          <label className="block text-xs font-semibold text-[#49352F] mb-1">
             Teacher Notes & Observations
           </label>
           <textarea
@@ -156,29 +156,29 @@ export function StudentFormModal({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="e.g. Responsive to visual charts; needs extra time for reading."
-            className="w-full rounded-lg border border-slate-200 p-2 text-xs text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden"
+            className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-xs text-[#49352F] placeholder-[#7A6862]/60 focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden"
           />
         </div>
 
         {error && (
-          <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-center gap-1.5">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-center gap-1.5">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
             <span>{error}</span>
           </div>
         )}
 
-        <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+        <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#49352F]/10">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer"
+            className="px-4 py-2 text-xs font-semibold text-[#7A6862] hover:bg-[#FAF6E9] hover:text-[#49352F] rounded-xl cursor-pointer transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-5 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+            className="px-5 py-2 text-xs font-bold bg-[#F2CAB3] hover:bg-white text-[#49352F] border border-[#49352F]/16 rounded-xl shadow-xs transition-colors cursor-pointer disabled:opacity-50"
           >
             {isSubmitting ? "Saving..." : student ? "Update Student" : "Register Student"}
           </button>

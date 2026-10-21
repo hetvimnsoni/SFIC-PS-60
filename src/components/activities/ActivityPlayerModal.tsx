@@ -105,29 +105,29 @@ export function ActivityPlayerModal({
         <div className="space-y-6">
           {/* Progress bar */}
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs font-semibold text-slate-600">
+            <div className="flex items-center justify-between text-xs font-semibold text-[#7A6862]">
               <span>Question {currentIdx + 1} of {totalQuestions}</span>
               <span>{Math.round(((currentIdx + 1) / totalQuestions) * 100)}% Complete</span>
             </div>
-            <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+            <div className="h-2 w-full rounded-full bg-[#FAF6E9] border border-[#49352F]/10 overflow-hidden">
               <div
-                className="h-full bg-indigo-600 transition-all duration-300"
+                className="h-full bg-gradient-to-r from-[#F2CAB3] to-[#B26A1B] transition-all duration-300"
                 style={{ width: `${((currentIdx + 1) / totalQuestions) * 100}%` }}
               />
             </div>
           </div>
 
           {/* Question card */}
-          <div className="rounded-2xl border border-indigo-100 bg-indigo-50/40 p-5">
+          <div className="rounded-2xl border border-[#49352F]/12 bg-[#FAF6E9] p-5 shadow-2xs">
             <div className="flex items-center justify-between gap-2 mb-2">
-              <Badge variant="default" size="sm">
+              <Badge variant="outline" size="sm">
                 {currentQ.type.toUpperCase().replace("_", " ")}
               </Badge>
               {currentQ.hint && (
                 <button
                   type="button"
                   onClick={() => setShowHint(!showHint)}
-                  className="inline-flex items-center gap-1 text-xs font-medium text-amber-700 hover:text-amber-800 cursor-pointer"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#B26A1B] hover:text-[#49352F] cursor-pointer"
                 >
                   <HelpCircle className="w-3.5 h-3.5" />
                   <span>{showHint ? "Hide Hint" : "Need a Hint?"}</span>
@@ -135,18 +135,18 @@ export function ActivityPlayerModal({
               )}
             </div>
 
-            <p className="text-base sm:text-lg font-bold text-slate-900 mt-2">
+            <p className="text-base sm:text-lg font-bold text-[#49352F] mt-2">
               {currentQ.questionText}
             </p>
 
             {currentQ.questionTextGujarati && (
-              <p className="text-sm font-medium text-slate-700 mt-1 font-serif">
+              <p className="text-sm font-medium text-[#7A6862] mt-1 font-serif">
                 {currentQ.questionTextGujarati}
               </p>
             )}
 
             {showHint && currentQ.hint && (
-              <div className="mt-3 p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 font-medium">
+              <div className="mt-3 p-3 rounded-xl bg-[#F2DCB5]/40 border border-[#49352F]/12 text-xs text-[#49352F] font-medium">
                 💡 <strong>Hint:</strong> {currentQ.hint}
               </div>
             )}
@@ -163,24 +163,24 @@ export function ActivityPlayerModal({
                   onClick={() => handleSelectOption(opt)}
                   className={`flex items-center justify-between p-4 rounded-xl border text-left font-medium text-sm transition-all cursor-pointer ${
                     isSelected
-                      ? "border-indigo-600 bg-indigo-600 text-white shadow-md scale-101"
-                      : "border-slate-200 bg-white text-slate-800 hover:bg-slate-50 hover:border-slate-300"
+                      ? "border-[#49352F] bg-[#F2CAB3] text-[#49352F] font-bold shadow-md scale-101"
+                      : "border-[#49352F]/12 bg-white text-[#49352F] hover:bg-[#FAF6E9] hover:border-[#49352F]/20"
                   }`}
                 >
                   <span>{opt}</span>
-                  {isSelected && <CheckCircle2 className="w-5 h-5 text-white shrink-0" />}
+                  {isSelected && <CheckCircle2 className="w-5 h-5 text-[#49352F] shrink-0" />}
                 </button>
               );
             })}
           </div>
 
           {/* Navigation controls */}
-          <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+          <div className="flex items-center justify-between pt-4 border-t border-[#49352F]/10">
             <button
               type="button"
               disabled={currentIdx === 0}
               onClick={() => setCurrentIdx(currentIdx - 1)}
-              className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg disabled:opacity-40 cursor-pointer"
+              className="px-4 py-2 text-xs font-semibold text-[#7A6862] hover:bg-[#FAF6E9] hover:text-[#49352F] rounded-xl disabled:opacity-40 cursor-pointer transition-colors"
             >
               Previous
             </button>
@@ -188,7 +188,7 @@ export function ActivityPlayerModal({
               type="button"
               disabled={currentAnswer === undefined || isSaving}
               onClick={handleNext}
-              className="inline-flex items-center gap-2 px-6 py-2.5 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition-all disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-2 px-6 py-2.5 text-xs font-bold bg-[#F2CAB3] hover:bg-white text-[#49352F] border border-[#49352F]/16 rounded-xl shadow-xs transition-all disabled:opacity-50 cursor-pointer"
             >
               <span>{currentIdx === totalQuestions - 1 ? (isSaving ? "Submitting..." : "Submit Answers") : "Next Question"}</span>
               <ArrowRight className="w-4 h-4" />
@@ -198,26 +198,26 @@ export function ActivityPlayerModal({
       ) : (
         /* Completion & Score Screen */
         <div className="text-center py-6 space-y-5">
-          <div className="w-16 h-16 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-inner">
+          <div className="w-16 h-16 mx-auto rounded-full bg-[#2E7D5E]/15 text-[#2E7D5E] flex items-center justify-center shadow-inner">
             <Trophy className="w-8 h-8" />
           </div>
 
           <div>
-            <h4 className="text-xl font-bold text-slate-900">Activity Completed!</h4>
-            <p className="text-xs text-slate-500 mt-1">
+            <h4 className="text-xl font-bold text-[#49352F]">Activity Completed!</h4>
+            <p className="text-xs text-[#7A6862] mt-1">
               Score recorded for {studentName || "Student"}
             </p>
           </div>
 
           {/* Score Badge Card */}
-          <div className="p-4 max-w-xs mx-auto rounded-2xl bg-slate-50 border border-slate-200">
-            <div className="text-3xl font-extrabold text-indigo-600">
+          <div className="p-4 max-w-xs mx-auto rounded-2xl bg-[#FAF6E9] border border-[#49352F]/12">
+            <div className="text-3xl font-extrabold text-[#B26A1B]">
               {attemptResult?.percentage}%
             </div>
-            <div className="text-xs font-semibold text-slate-600 mt-1">
+            <div className="text-xs font-semibold text-[#7A6862] mt-1">
               {attemptResult?.attempt?.score} out of {totalQuestions} questions correct
             </div>
-            <p className="text-xs text-slate-700 mt-3 font-medium">
+            <p className="text-xs text-[#49352F] mt-3 font-medium">
               {attemptResult?.feedback}
             </p>
           </div>
@@ -226,14 +226,14 @@ export function ActivityPlayerModal({
             <button
               type="button"
               onClick={resetActivity}
-              className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer"
+              className="px-4 py-2 text-xs font-semibold text-[#7A6862] hover:bg-[#FAF6E9] hover:text-[#49352F] rounded-xl cursor-pointer transition-colors"
             >
               Practice Again
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-xs cursor-pointer"
+              className="px-6 py-2 text-xs font-bold bg-[#F2CAB3] hover:bg-white text-[#49352F] border border-[#49352F]/16 rounded-xl shadow-xs cursor-pointer transition-colors"
             >
               Done & View Progress
             </button>

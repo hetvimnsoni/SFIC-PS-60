@@ -2,52 +2,72 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@font-face {
+  font-family: 'Lexend';
+  src: url('/landing-pages/inner-green-assets/lexend-latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
-  /* THE BRIDGE Palette: Light Mode (Warm Ivory Classroom Feel) */
-  --background: #FFF8EC;
-  --foreground: #14123D;
-  --primary: #FF8A3D; /* Saffron-Orange Action */
-  --primary-hover: #E67429;
-  --primary-light: #FFF0E6;
-  --indigo-deep: #14123D;
-  --indigo-mid: #2B2A6B;
-  --indigo-light: #EEF0FA;
-  --mint: #3DDBA9; /* Mastery / Success */
-  --mint-light: #E6FAF3;
-  --coral: #FF5C6C; /* Gap / Needs Support */
-  --coral-light: #FFEAEB;
-  --amber: #F59E0B; /* Developing */
-  --amber-light: #FEF3C7;
-  --card-bg: #FFFFFF;
-  --card-border: rgba(43, 42, 107, 0.1);
-  --glass-bg: rgba(255, 255, 255, 0.88);
-  --glass-border: rgba(43, 42, 107, 0.12);
-  --font-heading: 'Baloo 2', cursive, sans-serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-gujarati: 'Noto Sans Gujarati', 'Baloo 2', sans-serif;
+  /* MASTER LANDING PAGE REFERENCE COLOR SYSTEM */
+  --color-cream: #F4F1E1;         /* Primary warm background */
+  --color-ivory: #FAF6E9;         /* Soft secondary background */
+  --color-peach: #F2CAB3;         /* Primary peach buttons, badges, highlights */
+  --color-peach-hover: #EFBDA4;   /* Secondary accent / hover */
+  --color-beige: #F2DCB5;         /* Secondary sections / card background */
+  --color-surface-white: #FFFFFF; /* Pure white crisp card surface */
+  --color-text-brown: #49352F;    /* Readable dark brown for headings and body text */
+  --color-text-muted: #7A6862;    /* Soft muted brown/warm gray for secondary text */
+  --color-text-faint: #9E8E87;    /* Subtle captions */
+  --color-rule: rgba(73, 53, 47, 0.12); /* Subtle warm borders */
+  --color-rule-subtle: rgba(73, 53, 47, 0.08);
+
+  /* Semantic status accents harmonious with the warm palette */
+  --mint: #2E7D5E;                /* Mastered / Success (deep sage green) */
+  --mint-light: #EAF4EE;
+  --coral: #C54738;               /* Gap / Needs Support (warm terracotta/coral) */
+  --coral-light: #FBECE9;
+  --amber: #B26A1B;               /* Developing / In Progress (warm ochre/amber) */
+  --amber-light: #FDF4E7;
+
+  /* Theme mappings */
+  --background: var(--color-cream);
+  --foreground: var(--color-text-brown);
+  --primary: var(--color-peach);
+  --primary-hover: var(--color-peach-hover);
+  --primary-light: var(--color-peach);
+  --card-bg: var(--color-surface-white);
+  --card-border: var(--color-rule);
+  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-border: rgba(73, 53, 47, 0.12);
+
+  --font-heading: 'Lexend', sans-serif;
+  --font-body: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-gujarati: 'Noto Sans Gujarati', 'Lexend', sans-serif;
+
   color-scheme: light;
 }
 
 .dark {
-  /* THE BRIDGE Palette: Dark Mode (Deep Indigo Night) */
-  --background: #0E0D2A;
-  --foreground: #F8FAFC;
-  --primary: #FF8A3D; /* Vibrant Saffron */
-  --primary-hover: #FFA263;
-  --primary-light: rgba(255, 138, 61, 0.15);
-  --indigo-deep: #14123D;
-  --indigo-mid: #222055;
-  --indigo-light: #1A1845;
+  /* Warm Roasted Walnut & Peach (harmonious with warm identity instead of cold blue) */
+  --background: #1B1614;
+  --foreground: #F4F1E1;
+  --primary: #F2CAB3;
+  --primary-hover: #EFBDA4;
+  --primary-light: rgba(242, 202, 179, 0.15);
   --mint: #3DDBA9;
   --mint-light: rgba(61, 219, 169, 0.15);
-  --coral: #FF5C6C;
-  --coral-light: rgba(255, 92, 108, 0.18);
-  --amber: #F59E0B;
-  --amber-light: rgba(245, 158, 11, 0.18);
-  --card-bg: #14123D;
-  --card-border: rgba(129, 140, 248, 0.2);
-  --glass-bg: rgba(20, 18, 61, 0.82);
-  --glass-border: rgba(129, 140, 248, 0.25);
+  --coral: #E06D53;
+  --coral-light: rgba(224, 109, 83, 0.18);
+  --amber: #D98E32;
+  --amber-light: rgba(217, 142, 50, 0.18);
+  --card-bg: #26201C;
+  --card-border: rgba(242, 202, 179, 0.15);
+  --glass-bg: rgba(38, 32, 28, 0.88);
+  --glass-border: rgba(242, 202, 179, 0.2);
   color-scheme: dark;
 }
 
@@ -98,22 +118,25 @@ h1, h2, h3, .font-heading {
   }
 }
 
-/* Bridge Glowing Gradients */
+/* Master Landing Page Warm Buttons & Accents */
 .bridge-gradient-text {
-  background: linear-gradient(135deg, #FF8A3D 0%, #FF5C6C 50%, #3DDBA9 100%);
+  background: linear-gradient(135deg, #49352F 0%, #B8673E 50%, #2E7D5E 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .bridge-glow-button {
-  background: linear-gradient(135deg, #FF8A3D 0%, #FF6E2E 100%);
-  box-shadow: 0 4px 20px rgba(255, 138, 61, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+  background: var(--color-peach);
+  color: var(--color-text-brown);
+  border: 1px solid rgba(73, 53, 47, 0.16);
+  box-shadow: 0 4px 14px rgba(73, 53, 47, 0.08);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .bridge-glow-button:hover {
+  background: #ffffff;
   transform: translateY(-1.5px);
-  box-shadow: 0 8px 25px rgba(255, 138, 61, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+  box-shadow: 0 8px 20px rgba(73, 53, 47, 0.14);
 }
 
 .bridge-glow-button:active {
@@ -123,10 +146,10 @@ h1, h2, h3, .font-heading {
 /* Pulse animation for learning gaps */
 @keyframes pulse-coral {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(255, 92, 108, 0.5);
+    box-shadow: 0 0 0 0 rgba(197, 71, 56, 0.4);
   }
   50% {
-    box-shadow: 0 0 0 8px rgba(255, 92, 108, 0);
+    box-shadow: 0 0 0 8px rgba(197, 71, 56, 0);
   }
 }
 
@@ -143,19 +166,19 @@ h1, h2, h3, .font-heading {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(43, 42, 107, 0.2);
+  background: rgba(73, 53, 47, 0.18);
   border-radius: 9999px;
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: rgba(129, 140, 248, 0.25);
+  background: rgba(242, 202, 179, 0.25);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary);
+  background: var(--color-peach);
 }
 
 /* Accessible focus ring */
 *:focus-visible {
-  outline: 2px solid #FF8A3D;
+  outline: 2px solid #F2CAB3;
   outline-offset: 2px;
 }
 

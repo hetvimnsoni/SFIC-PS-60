@@ -66,7 +66,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#14123D] text-slate-100 flex flex-col justify-between overflow-hidden relative">
+    <div className="min-h-screen bg-[#F4F1E1] text-[#49352F] flex flex-col justify-between overflow-hidden relative">
       {/* Background 3D Bridge Canvas */}
       <BridgeCanvas3D progress={0.5} />
 
@@ -95,70 +95,70 @@ export default function LoginPage() {
               </Badge>
             </div>
 
-            <h1 className="font-heading text-4xl xl:text-5xl font-extrabold text-white leading-tight tracking-tight">
+            <h1 className="font-heading text-4xl xl:text-5xl font-extrabold text-[#49352F] leading-tight tracking-tight">
               {language === "gu" ? (
                 <>
                   અધ્યયન ત્રુટિથી સિદ્ધિ સુધીનો{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-emerald-400">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#B26A1B] to-[#2E7D5E]">
                     સુવર્ણ સેતુ.
                   </span>
                 </>
               ) : (
                 <>
                   The Bridge from Learning Gaps to{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-emerald-400">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#B26A1B] to-[#2E7D5E]">
                     Mastery.
                   </span>
                 </>
               )}
             </h1>
 
-            <p className="text-sm text-slate-300 leading-relaxed max-w-lg">
+            <p className="text-sm text-[#7A6862] leading-relaxed max-w-lg">
               {language === "gu"
                 ? "પ્રાથમિક શાળાના શિક્ષકો માટે પારદર્શક AI ડિટેક્શન અને ૫-પગલાંની પ્રવૃત્તિ-આધારિત ઉપચારાત્મક યોજનાઓ."
                 : "Deterministic rule-based tracking, explainable cognitive diagnosis, and concrete 5-step remedial curricula for Gujarat primary schools."}
             </p>
 
-            <div className="space-y-3 pt-2 text-xs text-slate-300">
+            <div className="space-y-3 pt-2 text-xs text-[#7A6862]">
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-[#2E7D5E] shrink-0" />
                 <span>Deterministic 60% developing &amp; 80% mastery benchmarks</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-[#B26A1B] shrink-0" />
                 <span>Interactive 3D class mastery heatmap &amp; student skill progression trees</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-sky-400 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-[#2E7D5E] shrink-0" />
                 <span>Zero paid APIs required; operates completely offline in rural schools</span>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Glassmorphism Login Card */}
+          {/* Right Column: Warm Login Card */}
           <div className="w-full lg:col-span-6 max-w-md mx-auto">
-            <div className="rounded-3xl border border-slate-700/80 bg-slate-900/90 backdrop-blur-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+            <div className="rounded-3xl border border-[#49352F]/15 bg-white/95 backdrop-blur-2xl p-6 sm:p-8 shadow-[0_16px_44px_rgba(73,53,47,0.08)] space-y-6 text-[#49352F]">
               <div className="text-center space-y-1">
-                <h2 className="font-heading text-2xl font-black text-white tracking-tight">
+                <h2 className="font-heading text-2xl font-black text-[#49352F] tracking-tight">
                   {language === "gu" ? "શિક્ષાસેતુમાં પ્રવેશ કરો" : "Sign In to ShikshaSetu AI"}
                 </h2>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-[#7A6862]">
                   Primary School Pedagogical Remedial System
                 </p>
               </div>
 
               {/* 1-Click Demo Evaluation Box */}
-              <div className="p-4 rounded-2xl bg-[#14123D]/90 border border-amber-500/40 shadow-inner space-y-3">
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-[#F2DCB5]/70 via-[#FAF6E9] to-[#F2CAB3]/60 border border-[#49352F]/15 shadow-inner space-y-3 text-[#49352F]">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="text-xs font-bold text-[#49352F] flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-[#B26A1B]" />
                     Hackathon Jury 1-Click Access
                   </span>
                   <Badge variant="mint" size="sm">
                     No Sign Up
                   </Badge>
                 </div>
-                <p className="text-[11px] text-slate-300 leading-relaxed">
+                <p className="text-[11px] text-[#7A6862] leading-relaxed">
                   Select a pre-configured role to immediately explore the live primary cohort:
                 </p>
 
@@ -168,7 +168,7 @@ export default function LoginPage() {
                     variant="saffron"
                     size="sm"
                     onClick={handleTeacherDemo}
-                    className="rounded-xl text-xs font-black shadow-md shadow-amber-500/30"
+                    className="rounded-xl text-xs font-black shadow-xs"
                   >
                     <UserCheck className="w-3.5 h-3.5 mr-1" />
                     <span>Teacher Role</span>
@@ -179,9 +179,9 @@ export default function LoginPage() {
                     variant="outline"
                     size="sm"
                     onClick={handleAdminDemo}
-                    className="rounded-xl text-xs font-bold border-slate-700 hover:border-amber-500/50"
+                    className="rounded-xl text-xs font-bold border-[#49352F]/15 hover:border-[#49352F]/30 bg-white text-[#49352F]"
                   >
-                    <ShieldCheck className="w-3.5 h-3.5 mr-1 text-amber-400" />
+                    <ShieldCheck className="w-3.5 h-3.5 mr-1 text-[#B26A1B]" />
                     <span>Admin Role</span>
                   </Button>
                 </div>
@@ -190,9 +190,9 @@ export default function LoginPage() {
               {/* Form Divider */}
               <div className="relative text-center">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-800" />
+                  <div className="w-full border-t border-[#49352F]/10" />
                 </div>
-                <span className="relative bg-slate-900 px-3 text-[11px] font-semibold text-slate-500 uppercase">
+                <span className="relative bg-white px-3 text-[11px] font-semibold text-[#7A6862] uppercase">
                   Or enter credentials
                 </span>
               </div>
@@ -200,37 +200,37 @@ export default function LoginPage() {
               {/* Standard Form */}
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#49352F] mb-1">
                     Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                    <Mail className="absolute left-3.5 top-3 h-4 w-4 text-[#7A6862]" />
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="teacher@shikshasetu.edu.in"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 py-2.5 pl-10 pr-3 text-xs text-white placeholder-slate-500 focus:border-amber-500 outline-hidden"
+                      className="w-full rounded-xl border border-[#49352F]/15 bg-[#FAF6E9] py-2.5 pl-10 pr-3 text-xs text-[#49352F] placeholder-[#7A6862] focus:border-[#F2CAB3] focus:bg-white outline-hidden"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#49352F] mb-1">
                     Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                    <Lock className="absolute left-3.5 top-3 h-4 w-4 text-[#7A6862]" />
                     <input
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 py-2.5 pl-10 pr-10 text-xs text-white focus:border-amber-500 outline-hidden"
+                      className="w-full rounded-xl border border-[#49352F]/15 bg-[#FAF6E9] py-2.5 pl-10 pr-10 text-xs text-[#49352F] focus:border-[#F2CAB3] focus:bg-white outline-hidden"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3.5 top-3 text-slate-400 hover:text-white"
+                      className="absolute right-3.5 top-3 text-[#7A6862] hover:text-[#49352F]"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -238,7 +238,7 @@ export default function LoginPage() {
                 </div>
 
                 {error && (
-                  <div className="p-2.5 rounded-xl bg-rose-950/60 border border-rose-800 text-xs text-rose-300">
+                  <div className="p-2.5 rounded-xl bg-[#C54738]/10 border border-[#C54738]/20 text-xs text-[#C54738]">
                     {error}
                   </div>
                 )}
@@ -248,7 +248,7 @@ export default function LoginPage() {
                   variant="saffron"
                   size="md"
                   disabled={loading}
-                  className="w-full rounded-full text-xs font-black shadow-lg shadow-amber-500/30"
+                  className="w-full rounded-full text-xs font-black shadow-xs"
                 >
                   <span>{loading ? "Signing In..." : "Sign In to Dashboard"}</span>
                   <ArrowRight className="w-4 h-4 ml-1.5" />
@@ -260,7 +260,7 @@ export default function LoginPage() {
       </main>
 
       {/* Footer */}
-      <footer className="relative z-20 py-4 text-center text-xs text-slate-500 border-t border-slate-800/80">
+      <footer className="relative z-20 py-4 text-center text-xs text-[#7A6862] border-t border-[#49352F]/10">
         <p>© 2026 ShikshaSetu AI • SFIC Gujarat Hackathon PS-60. Offline-First PWA.</p>
       </footer>
     </div>

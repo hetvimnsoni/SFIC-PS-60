@@ -70,7 +70,7 @@ function ProgressRing({
           cx="28"
           cy="28"
           r={radius}
-          stroke="#1e293b"
+          stroke="rgba(73, 53, 47, 0.12)"
           strokeWidth={strokeWidth}
           fill="transparent"
         />
@@ -78,7 +78,7 @@ function ProgressRing({
           cx="28"
           cy="28"
           r={radius}
-          stroke={percentage === 100 ? "#3DDBA9" : "#FF8A3D"}
+          stroke={percentage === 100 ? "#2E7D5E" : "#B26A1B"}
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeDashoffset={offset}
@@ -87,7 +87,7 @@ function ProgressRing({
           className="transition-all duration-500 ease-out"
         />
       </svg>
-      <div className="absolute text-[11px] font-mono font-black text-white">
+      <div className="absolute text-[11px] font-mono font-black text-[#49352F]">
         {percentage}%
       </div>
     </div>
@@ -193,14 +193,14 @@ export default function RemedialPlansPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#49352F] tracking-tight">
                 {language === "gu" ? "૫-પગલાંની ઉપચારાત્મક શિક્ષણ યોજનાઓ" : "5-Step Concrete Remedial Plans"}
               </h1>
               <Badge variant="saffron" size="sm" pulse>
                 Active Curricula
               </Badge>
             </div>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-[#7A6862] mt-1">
               Targeted step-by-step manipulative pathways (counting beads, number lines, flashcards) to close student learning gaps.
             </p>
           </div>
@@ -211,9 +211,9 @@ export default function RemedialPlansPage() {
                 variant="outline"
                 size="sm"
                 onClick={handlePrintPlan}
-                className="rounded-full text-xs font-semibold print:hidden"
+                className="rounded-full text-xs font-semibold print:hidden bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15"
               >
-                <Printer className="w-3.5 h-3.5 mr-1 text-slate-400" />
+                <Printer className="w-3.5 h-3.5 mr-1 text-[#7A6862]" />
                 <span>Print A4 Plans</span>
               </Button>
             </div>
@@ -228,14 +228,14 @@ export default function RemedialPlansPage() {
         </div>
 
         {/* Filter Bar */}
-        <Card variant="glass" className="p-3.5 flex items-center justify-between border-slate-800 print:hidden">
+        <Card variant="glass" className="p-3.5 flex items-center justify-between border-[#49352F]/15 bg-white text-[#49352F] print:hidden shadow-xs">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-slate-400">Filter by Status:</span>
+            <span className="text-xs font-semibold text-[#7A6862]">Filter by Status:</span>
             <select
               value={statusFilter}
               aria-label="Filter remedial plans by status"
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="rounded-full border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-semibold text-slate-200 outline-hidden cursor-pointer"
+              className="rounded-full border border-[#49352F]/15 bg-[#FAF6E9] px-3 py-1.5 text-xs font-semibold text-[#49352F] outline-hidden cursor-pointer"
             >
               <option value="all">All Statuses</option>
               <option value="Suggested">Suggested</option>
@@ -244,7 +244,7 @@ export default function RemedialPlansPage() {
               <option value="Completed">Completed</option>
             </select>
           </div>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-[#7A6862]">
             {filteredPlans.length} active remedial plans
           </span>
         </Card>
@@ -267,17 +267,17 @@ export default function RemedialPlansPage() {
               <Card
                 key={plan.id}
                 variant="glass"
-                className={`p-6 border-slate-800 space-y-5 transition-all print:border-black print:bg-white print:text-black ${
-                  isFullyCompleted ? "border-l-4 border-l-emerald-500" : "border-l-4 border-l-amber-500"
+                className={`p-6 border-[#49352F]/12 bg-white text-[#49352F] space-y-5 transition-all shadow-xs print:border-black print:bg-white print:text-black ${
+                  isFullyCompleted ? "border-l-4 border-l-[#2E7D5E]" : "border-l-4 border-l-[#F2CAB3]"
                 }`}
               >
                 {/* Header of Plan */}
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-4 border-b border-slate-800 print:border-slate-300">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-4 border-b border-[#49352F]/10 print:border-slate-300">
                   <div className="space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <Link
                         href={`/students/${plan.studentId}`}
-                        className="font-heading font-extrabold text-lg text-white hover:text-amber-400 transition-colors print:text-black"
+                        className="font-heading font-extrabold text-lg text-[#49352F] hover:text-[#B26A1B] transition-colors print:text-black"
                       >
                         {plan.studentName}
                       </Link>
@@ -297,18 +297,18 @@ export default function RemedialPlansPage() {
                       >
                         {plan.status}
                       </Badge>
-                      <span className="text-xs text-slate-400 font-mono">
+                      <span className="text-xs text-[#7A6862] font-mono">
                         ⏱ {plan.estimatedMinutes || 60} mins sequence
                       </span>
                     </div>
 
-                    <h3 className="font-heading text-base font-bold text-amber-400 mt-1 print:text-black">
+                    <h3 className="font-heading text-base font-bold text-[#B26A1B] mt-1 print:text-black">
                       Target Competency: {plan.conceptName}
                     </h3>
 
                     {plan.learningObjective && (
-                      <p className="text-xs text-slate-300 max-w-2xl leading-relaxed print:text-slate-700">
-                        <strong className="text-white print:text-black">Pedagogical Objective:</strong>{" "}
+                      <p className="text-xs text-[#7A6862] max-w-2xl leading-relaxed print:text-slate-700">
+                        <strong className="text-[#49352F] print:text-black">Pedagogical Objective:</strong>{" "}
                         {plan.learningObjective}
                       </p>
                     )}
@@ -318,10 +318,10 @@ export default function RemedialPlansPage() {
                   <div className="flex items-center gap-4 self-end sm:self-start">
                     <div className="flex items-center gap-2 text-right">
                       <div className="hidden sm:block">
-                        <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                        <span className="text-[10px] uppercase font-bold text-[#7A6862] block">
                           Progress
                         </span>
-                        <span className="text-xs font-extrabold text-white print:text-black">
+                        <span className="text-xs font-extrabold text-[#49352F] print:text-black">
                           {completedList.length}/{steps.length} Steps
                         </span>
                       </div>
@@ -369,9 +369,9 @@ export default function RemedialPlansPage() {
                 </div>
 
                 {/* Required Materials Chips */}
-                <div className="flex flex-wrap items-center gap-2 p-3 rounded-2xl bg-slate-950/60 border border-slate-800 text-xs print:bg-slate-100 print:text-black">
-                  <span className="font-bold text-slate-300 flex items-center gap-1.5 print:text-black">
-                    <Boxes className="w-3.5 h-3.5 text-amber-400" />
+                <div className="flex flex-wrap items-center gap-2 p-3 rounded-2xl bg-[#FAF6E9] border border-[#49352F]/10 text-xs print:bg-slate-100 print:text-black">
+                  <span className="font-bold text-[#49352F] flex items-center gap-1.5 print:text-black">
+                    <Boxes className="w-3.5 h-3.5 text-[#B26A1B]" />
                     Manipulatives Needed:
                   </span>
                   {(plan.requiredMaterials && plan.requiredMaterials.length > 0
@@ -380,7 +380,7 @@ export default function RemedialPlansPage() {
                   ).map((mat: string, idx: number) => (
                     <span
                       key={idx}
-                      className="px-2.5 py-0.5 rounded-full bg-slate-800/80 border border-slate-700 text-slate-200 text-[11px] font-medium print:bg-white print:border-slate-300 print:text-black"
+                      className="px-2.5 py-0.5 rounded-full bg-white border border-[#49352F]/12 text-[#49352F] text-[11px] font-medium print:bg-white print:border-slate-300 print:text-black"
                     >
                       {mat}
                     </span>
@@ -389,7 +389,7 @@ export default function RemedialPlansPage() {
 
                 {/* 5-STEP VERTICAL STEPPER WITH MATERIAL ICONS & CHECKBOXES */}
                 <div data-tour="plan-5steps" className="space-y-3 pt-1">
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <div className="flex items-center justify-between text-xs font-bold text-[#7A6862] uppercase tracking-wider">
                     <span className="flex items-center gap-1">
                       <span>5-Step Remedial Sequence</span>
                       <ContextualHelp termKey="remedialPlan" />
@@ -397,7 +397,7 @@ export default function RemedialPlansPage() {
                     <span className="text-[11px] font-normal lowercase">Click checkbox to mark step done</span>
                   </div>
 
-                  <div className="relative pl-6 space-y-3 border-l-2 border-slate-800 ml-3 print:border-slate-300">
+                  <div className="relative pl-6 space-y-3 border-l-2 border-[#49352F]/15 ml-3 print:border-slate-300">
                     {steps.map((step: any) => {
                       const isDone = completedList.includes(step.stepNumber);
 
@@ -408,16 +408,16 @@ export default function RemedialPlansPage() {
                           onClick={() => toggleStepCompleted(plan.id, step.stepNumber)}
                           className={`relative p-3.5 rounded-2xl border transition-all cursor-pointer group ${
                             isDone
-                              ? "bg-slate-900/40 border-emerald-500/40 text-slate-300"
-                              : "bg-slate-900/80 border-slate-800 text-white hover:border-amber-500/40"
+                              ? "bg-[#FAF6E9] border-[#2E7D5E]/30 text-[#49352F]"
+                              : "bg-white border-[#49352F]/12 text-[#49352F] hover:border-[#49352F]/25 shadow-xs"
                           } print:bg-white print:border-slate-200 print:text-black`}
                         >
                           {/* Step Node Marker on Vertical Line */}
                           <div
                             className={`absolute -left-[35px] top-4 w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs border ${
                               isDone
-                                ? "bg-emerald-500 text-slate-950 border-emerald-400 shadow-[0_0_10px_#3DDBA9]"
-                                : "bg-slate-900 text-slate-300 border-slate-700"
+                                ? "bg-[#2E7D5E] text-white border-[#2E7D5E]"
+                                : "bg-[#FAF6E9] text-[#49352F] border-[#49352F]/20"
                             } print:bg-white print:text-black print:border-black`}
                           >
                             {isDone ? "✓" : step.stepNumber}
@@ -426,22 +426,22 @@ export default function RemedialPlansPage() {
                           <div className="flex items-start justify-between gap-3">
                             <div className="space-y-1">
                               <div className="flex items-center gap-2">
-                                <div className="p-1 rounded-lg bg-slate-800/80 border border-slate-700">
+                                <div className="p-1 rounded-lg bg-[#FAF6E9] border border-[#49352F]/10">
                                   {getStepMaterialIcon(step.stepNumber)}
                                 </div>
                                 <h4
                                   className={`text-xs font-bold ${
-                                    isDone ? "line-through text-slate-400" : "text-white"
+                                    isDone ? "line-through text-[#7A6862]" : "text-[#49352F]"
                                   } print:text-black`}
                                 >
-                                  Step {step.stepNumber}: {step.title}
+                                  {step.title}
                                 </h4>
-                                <span className="text-[10px] text-slate-400 font-mono">
+                                <span className="text-[10px] text-[#7A6862] font-mono">
                                   {step.durationMinutes}m
                                 </span>
                               </div>
 
-                              <p className="text-[11px] text-slate-300 leading-relaxed pl-7 print:text-slate-700">
+                              <p className="text-[11px] text-[#7A6862] leading-relaxed pl-7 print:text-slate-700">
                                 {step.description}
                               </p>
                             </div>
@@ -449,9 +449,9 @@ export default function RemedialPlansPage() {
                             {/* Mark-Done Interactive Checkbox */}
                             <div className="shrink-0 mt-1">
                               {isDone ? (
-                                <CheckSquare className="w-4 h-4 text-emerald-400" />
+                                <CheckSquare className="w-4 h-4 text-[#2E7D5E]" />
                               ) : (
-                                <Square className="w-4 h-4 text-slate-500 group-hover:text-amber-400" />
+                                <Square className="w-4 h-4 text-[#7A6862] group-hover:text-[#B26A1B]" />
                               )}
                             </div>
                           </div>
@@ -463,20 +463,20 @@ export default function RemedialPlansPage() {
 
                 {/* Teacher Instructions & Reassessment Criteria */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 text-xs">
-                  <div className="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-1">
-                    <span className="font-bold text-amber-400 block text-[10px] uppercase">
+                  <div className="p-3.5 rounded-2xl bg-[#FAF6E9] border border-[#49352F]/12 space-y-1">
+                    <span className="font-bold text-[#B26A1B] block text-[10px] uppercase">
                       Teacher Concrete Instructions:
                     </span>
-                    <p className="text-slate-300 leading-relaxed text-[11px]">
+                    <p className="text-[#7A6862] leading-relaxed text-[11px]">
                       {plan.teacherInstructions || "Ensure student verbally explains remainder groups before transitioning from tactile beads to worksheet numbers."}
                     </p>
                   </div>
 
-                  <div className="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-1">
-                    <span className="font-bold text-emerald-400 block text-[10px] uppercase">
+                  <div className="p-3.5 rounded-2xl bg-[#FAF6E9] border border-[#49352F]/12 space-y-1">
+                    <span className="font-bold text-[#2E7D5E] block text-[10px] uppercase">
                       Reassessment Target Benchmark:
                     </span>
-                    <p className="text-slate-300 leading-relaxed text-[11px]">
+                    <p className="text-[#7A6862] leading-relaxed text-[11px]">
                       {plan.reassessmentCriteria || "Student achieves &ge; 80% independently on a 5-question formative check without counting manipulatives."}
                     </p>
                   </div>

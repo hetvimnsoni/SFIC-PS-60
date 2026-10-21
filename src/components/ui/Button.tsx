@@ -35,21 +35,21 @@ export function Button({
 
   const variantClasses = {
     primary:
-      "bg-gradient-to-r from-[#FF8A3D] to-[#FF6E2E] text-slate-950 font-bold shadow-md shadow-[#FF8A3D]/25 hover:shadow-lg hover:shadow-[#FF8A3D]/40 hover:-translate-y-0.5 border border-white/20 focus-visible:ring-[#FF8A3D]",
+      "bg-[#F2CAB3] hover:bg-white text-[#49352F] font-bold border border-[#49352F]/16 shadow-[0_4px_14px_rgba(73,53,47,0.08)] hover:shadow-[0_8px_20px_rgba(73,53,47,0.14)] hover:-translate-y-0.5 focus-visible:ring-[#F2CAB3]",
     saffron:
-      "bg-gradient-to-r from-[#FF8A3D] to-[#FF6E2E] text-slate-950 font-bold shadow-md shadow-[#FF8A3D]/25 hover:shadow-lg hover:shadow-[#FF8A3D]/40 hover:-translate-y-0.5 border border-white/20 focus-visible:ring-[#FF8A3D]",
+      "bg-[#F2CAB3] hover:bg-white text-[#49352F] font-bold border border-[#49352F]/16 shadow-[0_4px_14px_rgba(73,53,47,0.08)] hover:shadow-[0_8px_20px_rgba(73,53,47,0.14)] hover:-translate-y-0.5 focus-visible:ring-[#F2CAB3]",
     secondary:
-      "bg-[#2B2A6B] text-white hover:bg-[#383785] shadow-md shadow-[#2B2A6B]/20 hover:-translate-y-0.5 border border-indigo-400/20 focus-visible:ring-[#2B2A6B]",
+      "bg-white hover:bg-[#F2CAB3] text-[#49352F] font-semibold border border-[#49352F]/14 shadow-xs hover:-translate-y-0.5 focus-visible:ring-[#F2CAB3]",
     indigo:
-      "bg-[#2B2A6B] text-white hover:bg-[#383785] shadow-md shadow-[#2B2A6B]/20 hover:-translate-y-0.5 border border-indigo-400/20 focus-visible:ring-[#2B2A6B]",
+      "bg-[#F2DCB5]/80 hover:bg-[#F2CAB3] text-[#49352F] font-semibold border border-[#49352F]/14 shadow-xs hover:-translate-y-0.5 focus-visible:ring-[#F2CAB3]",
     outline:
-      "border border-slate-300 dark:border-indigo-500/30 text-slate-800 dark:text-slate-100 hover:bg-slate-100/80 dark:hover:bg-indigo-950/40 backdrop-blur-sm focus-visible:ring-slate-400",
+      "border border-[#49352F]/18 bg-white/70 hover:bg-[#F2CAB3]/40 text-[#49352F] font-semibold backdrop-blur-sm focus-visible:ring-[#F2CAB3]",
     ghost:
-      "text-slate-700 dark:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-indigo-900/30 focus-visible:ring-slate-400",
+      "text-[#49352F] hover:bg-[#49352F]/8 font-medium focus-visible:ring-[#F2CAB3]",
     mint:
-      "bg-[#3DDBA9] text-[#0A3D2D] hover:bg-[#48E5B3] font-bold shadow-md shadow-[#3DDBA9]/25 hover:-translate-y-0.5 border border-white/30 focus-visible:ring-[#3DDBA9]",
+      "bg-[#EAF4EE] text-[#2E7D5E] hover:bg-[#2E7D5E] hover:text-white font-bold border border-[#2E7D5E]/25 shadow-xs hover:-translate-y-0.5 focus-visible:ring-[#2E7D5E]",
     coral:
-      "bg-[#FF5C6C] text-white hover:bg-[#FF6E7C] shadow-md shadow-[#FF5C6C]/25 hover:-translate-y-0.5 border border-white/20 focus-visible:ring-[#FF5C6C]",
+      "bg-[#FBECE9] text-[#C54738] hover:bg-[#C54738] hover:text-white font-bold border border-[#C54738]/25 shadow-xs hover:-translate-y-0.5 focus-visible:ring-[#C54738]",
   };
 
   return (

@@ -76,10 +76,10 @@ export default function ProgressTrackingPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-[#49352F] tracking-tight font-heading">
               Curriculum Mastery & Progress Tracking
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+            <p className="text-xs sm:text-sm text-[#7A6862] mt-0.5">
               Empirical before-and-after evaluation measuring true percentage-point (pp) delta growth following remedial intervention.
             </p>
           </div>
@@ -87,50 +87,50 @@ export default function ProgressTrackingPage() {
 
         {/* 4 Summary Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          <Card className="border-l-4 border-l-emerald-500">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-700">
+          <Card className="border-l-4 border-l-[#2E7D5E]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#2E7D5E]">
               Students Showing Growth
             </span>
-            <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 mt-1">
+            <div className="text-2xl sm:text-3xl font-extrabold text-[#2E7D5E] mt-1 font-heading">
               {progressData?.improvingCount || 2} Students
             </div>
-            <span className="text-[11px] text-emerald-600/80 mt-1 block font-medium">
+            <span className="text-[11px] text-[#7A6862] mt-1 block font-medium">
               Positive percentage-point delta
             </span>
           </Card>
 
-          <Card className="border-l-4 border-l-purple-500">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-purple-700">
+          <Card className="border-l-4 border-l-[#B26A1B]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#B26A1B]">
               Interventions Completed
             </span>
-            <div className="text-2xl sm:text-3xl font-extrabold text-purple-600 mt-1">
+            <div className="text-2xl sm:text-3xl font-extrabold text-[#B26A1B] mt-1 font-heading">
               {progressData?.completedPlansCount || 1} Plans
             </div>
-            <span className="text-[11px] text-purple-600/80 mt-1 block font-medium">
+            <span className="text-[11px] text-[#7A6862] mt-1 block font-medium">
               Validated practice sessions
             </span>
           </Card>
 
-          <Card className="border-l-4 border-l-indigo-500">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-indigo-700">
+          <Card className="border-l-4 border-l-[#F2CAB3]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#49352F]">
               Gaps Resolved
             </span>
-            <div className="text-2xl sm:text-3xl font-extrabold text-indigo-600 mt-1">
+            <div className="text-2xl sm:text-3xl font-extrabold text-[#49352F] mt-1 font-heading">
               {progressData?.resolvedGapsCount || 0} Gaps
             </div>
-            <span className="text-[11px] text-indigo-600/80 mt-1 block font-medium">
+            <span className="text-[11px] text-[#7A6862] mt-1 block font-medium">
               Met &ge;80% mastery
             </span>
           </Card>
 
-          <Card className="border-l-4 border-l-amber-500">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-amber-700">
+          <Card className="border-l-4 border-l-[#C54738]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#C54738]">
               Active Interventions
             </span>
-            <div className="text-2xl sm:text-3xl font-extrabold text-amber-600 mt-1">
+            <div className="text-2xl sm:text-3xl font-extrabold text-[#C54738] mt-1 font-heading">
               {progressData?.activeGapsCount || 3} Gaps
             </div>
-            <span className="text-[11px] text-amber-600/80 mt-1 block font-medium">
+            <span className="text-[11px] text-[#7A6862] mt-1 block font-medium">
               Ongoing remedial practice
             </span>
           </Card>
@@ -146,12 +146,12 @@ export default function ProgressTrackingPage() {
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-slate-500">Subject:</span>
+              <span className="text-xs font-semibold text-[#7A6862]">Subject:</span>
               <select
                 value={subjectFilter}
                 aria-label="Filter progress by subject"
                 onChange={(e) => setSubjectFilter(e.target.value)}
-                className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700 outline-hidden cursor-pointer"
+                className="rounded-xl border border-[#49352F]/15 bg-[#FAF6E9] px-3 py-1 text-xs font-semibold text-[#49352F] outline-hidden cursor-pointer"
               >
                 <option value="all">All</option>
                 <option value="MATH">Math</option>
@@ -163,15 +163,15 @@ export default function ProgressTrackingPage() {
           <div className="h-72 w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={beforeAfterChartData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5DEC9" />
+                <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#7A6862" }} />
+                <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: "#7A6862" }} />
                 <Tooltip
                   formatter={(val: any, name: any) => [`${val}%`, name]}
-                  contentStyle={{ borderRadius: "12px", border: "1px solid #CBD5E1", fontSize: "12px" }}
+                  contentStyle={{ borderRadius: "14px", border: "1px solid rgba(73,53,47,0.15)", backgroundColor: "#FAF6E9", color: "#49352F", fontSize: "12px" }}
                 />
-                <Bar dataKey="Baseline" fill="#94A3B8" name="Initial Baseline" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="Latest" fill="#059669" name="Post-Intervention Score" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Baseline" fill="#C9BDAF" name="Initial Baseline" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Latest" fill="#2E7D5E" name="Post-Intervention Score" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -190,7 +190,7 @@ export default function ProgressTrackingPage() {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px]">
+              <thead className="bg-[#FAF6E9] border-b border-[#49352F]/10 text-[#7A6862] uppercase tracking-wider text-[10px]">
                 <tr>
                   <th className="p-3">Student</th>
                   <th className="p-3">Subject & Concept</th>
@@ -202,42 +202,42 @@ export default function ProgressTrackingPage() {
                   <th className="p-3">Profile Link</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#49352F]/10">
                 {filteredItems.map((item: any, i: number) => {
                   const isMastered = item.latestPercentage >= 80;
 
                   return (
-                    <tr key={i} className="hover:bg-slate-50/50">
+                    <tr key={i} className="hover:bg-[#FAF6E9]/50">
                       <td className="p-3">
-                        <div className="font-bold text-slate-900">{item.studentName}</div>
-                        <div className="text-[10px] text-slate-400">Class {item.grade}-A</div>
+                        <div className="font-bold text-[#49352F]">{item.studentName}</div>
+                        <div className="text-[10px] text-[#7A6862]">Class {item.grade}-A</div>
                       </td>
                       <td className="p-3">
-                        <div className="font-semibold text-slate-800">{item.conceptName}</div>
-                        <span className="text-[10px] text-slate-400 font-mono">
+                        <div className="font-semibold text-[#49352F]">{item.conceptName}</div>
+                        <span className="text-[10px] text-[#7A6862] font-mono">
                           {item.subjectCode}
                         </span>
                       </td>
-                      <td className="p-3 font-semibold">{item.attemptsCount} test(s)</td>
-                      <td className="p-3 font-medium text-slate-600">
+                      <td className="p-3 font-semibold text-[#49352F]">{item.attemptsCount} test(s)</td>
+                      <td className="p-3 font-medium text-[#7A6862]">
                         {item.hasSufficientEvidence ? `${item.initialPercentage}%` : "—"}
                       </td>
-                      <td className="p-3 font-bold text-slate-900">{item.latestPercentage}%</td>
+                      <td className="p-3 font-bold text-[#49352F]">{item.latestPercentage}%</td>
                       <td className="p-3">
                         {item.hasSufficientEvidence ? (
                           <span
                             className={`font-bold ${
                               item.deltaPercentagePoints > 0
-                                ? "text-emerald-600"
+                                ? "text-[#2E7D5E]"
                                 : item.deltaPercentagePoints < 0
                                 ? "text-rose-600"
-                                : "text-slate-600"
+                                : "text-[#7A6862]"
                             }`}
                           >
                             {item.deltaPercentagePoints > 0 ? `+${item.deltaPercentagePoints}` : item.deltaPercentagePoints} pp
                           </span>
                         ) : (
-                          <span className="text-[10px] text-slate-400 italic">
+                          <span className="text-[10px] text-[#7A6862] italic">
                             Single Observation
                           </span>
                         )}
@@ -263,7 +263,7 @@ export default function ProgressTrackingPage() {
                       <td className="p-3">
                         <Link
                           href={`/students/${item.studentId}`}
-                          className="font-bold text-indigo-600 hover:text-indigo-800 inline-flex items-center gap-1"
+                          className="font-bold text-[#B26A1B] hover:text-[#49352F] inline-flex items-center gap-1"
                         >
                           <span>View</span>
                           <ArrowRight className="w-3 h-3" />

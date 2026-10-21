@@ -31,7 +31,7 @@ export default function RootLayout({
               (function() {
                 try {
                   var stored = localStorage.getItem('shikshasetu_theme');
-                  var isDark = stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches) || (stored === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                  var isDark = stored === 'dark';
                   if (isDark) {
                     document.documentElement.classList.add('dark');
                     document.documentElement.setAttribute('data-theme', 'dark');
@@ -47,7 +47,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-slate-50 dark:bg-[#070a13] text-slate-900 dark:text-slate-100 antialiased font-sans transition-colors duration-200">
+      <body className="min-h-screen bg-[#F4F1E1] text-[#49352F] antialiased font-sans transition-colors duration-200">
         <ThemeProvider>
           <LanguageProvider>
             <AuthProvider>

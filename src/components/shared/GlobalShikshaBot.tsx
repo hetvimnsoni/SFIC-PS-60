@@ -173,30 +173,30 @@ export function GlobalShikshaBot() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 print:hidden select-none">
-      {/* Floating 3D Orb Trigger Button */}
+      {/* Floating Warm Assistant Trigger Button */}
       {!isOpen && (
         <button
           type="button"
           data-tour="shikshabot-trigger"
           onClick={() => setIsOpen(true)}
-          className="group relative flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-tr from-[#14123D] via-[#2B2A6B] to-[#FF8A3D] p-0.5 shadow-[0_0_25px_rgba(255,138,61,0.4)] hover:shadow-[0_0_35px_rgba(255,138,61,0.6)] transition-all duration-300 transform hover:scale-105 cursor-pointer"
+          className="group relative flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-tr from-[#FAF6E9] via-[#F2DCB5] to-[#F2CAB3] p-0.5 shadow-[0_4px_20px_rgba(73,53,47,0.15)] hover:shadow-[0_6px_28px_rgba(73,53,47,0.22)] border border-[#49352F]/20 transition-all duration-300 transform hover:scale-105 cursor-pointer"
           aria-label="Open ShikshaBot AI Assistant"
         >
           {/* Inner orb reflection */}
-          <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center relative overflow-hidden">
+          <div className="w-full h-full rounded-full bg-white flex items-center justify-center relative overflow-hidden border border-[#49352F]/10">
             <span className="text-2xl animate-bounce-subtle">🤖</span>
-            {/* Pulsing halo dot */}
-            <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#3DDBA9] animate-pulse" />
+            {/* Pulsing sage dot */}
+            <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-[#2E7D5E] shadow-[0_0_8px_#2E7D5E] animate-pulse" />
           </div>
 
           {/* Persistent speech callout badge for new teachers */}
-          <div className="absolute right-full mr-3 top-2 px-3 py-1.5 rounded-2xl bg-[#14123D]/95 border border-amber-500/40 text-[11px] font-bold text-amber-200 shadow-xl whitespace-nowrap pointer-events-none hidden sm:flex items-center gap-1.5">
+          <div className="absolute right-full mr-3 top-2 px-3 py-1.5 rounded-2xl bg-white border border-[#49352F]/15 text-[11px] font-bold text-[#49352F] shadow-[0_4px_16px_rgba(73,53,47,0.1)] whitespace-nowrap pointer-events-none hidden sm:flex items-center gap-1.5">
             <span className="text-sm">💡</span>
             <span>{language === "gu" ? "વેબસાઇટ ટૂર માટે અહીં ક્લિક કરો" : "New here? Click for website tour"}</span>
           </div>
 
           {/* Hover tooltip label */}
-          <span className="absolute right-full mr-3 px-3 py-1.5 rounded-xl bg-slate-900/90 text-white text-xs font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity border border-slate-700 pointer-events-none shadow-xl">
+          <span className="absolute right-full mr-3 px-3 py-1.5 rounded-xl bg-[#49352F] text-white text-xs font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl">
             {language === "gu" ? "શિક્ષાબોટ સહાયક (ટૂર અને મદદ)" : "ShikshaBot AI (Tour & Help)"}
           </span>
         </button>
@@ -204,28 +204,28 @@ export function GlobalShikshaBot() {
 
       {/* Expanded Glassmorphic Chat Panel */}
       {isOpen && (
-        <div className="w-[360px] sm:w-[400px] h-[520px] rounded-3xl bg-slate-900/95 border border-slate-700/80 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] backdrop-blur-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 duration-200">
+        <div className="w-[360px] sm:w-[400px] h-[520px] rounded-3xl bg-white/95 border border-[#49352F]/15 shadow-[0_20px_60px_-15px_rgba(73,53,47,0.18)] backdrop-blur-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 duration-200 text-[#49352F]">
           {/* Top Panel Header */}
-          <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-800 bg-[#14123D]/80">
+          <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#49352F]/10 bg-[#FAF6E9]">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-sm shadow-md shadow-amber-500/20">
+              <div className="w-8 h-8 rounded-full bg-[#F2CAB3] border border-[#49352F]/15 flex items-center justify-center text-sm shadow-xs">
                 🤖
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <h4 className="text-xs font-bold text-white">ShikshaBot AI</h4>
-                  <span className="px-1.5 py-0.2 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[9px] font-extrabold uppercase">
+                  <h4 className="text-xs font-bold text-[#49352F]">ShikshaBot AI</h4>
+                  <span className="px-1.5 py-0.2 rounded-full bg-[#2E7D5E]/15 text-[#2E7D5E] border border-[#2E7D5E]/20 text-[9px] font-extrabold uppercase">
                     Offline
                   </span>
                 </div>
-                <p className="text-[10px] text-slate-400">Pedagogical Rule Assistant</p>
+                <p className="text-[10px] text-[#7A6862]">Pedagogical Rule Assistant</p>
               </div>
             </div>
 
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+              className="p-1.5 rounded-xl text-[#7A6862] hover:text-[#49352F] hover:bg-white transition-colors cursor-pointer"
               aria-label="Close assistant"
             >
               <Minimize2 className="w-4 h-4" />
@@ -233,28 +233,28 @@ export function GlobalShikshaBot() {
           </div>
 
           {/* Messages Body */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3 text-xs">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3 text-xs bg-[#F4F1E1]/40">
             {messages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex gap-2.5 ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
               >
                 {msg.sender === "bot" && (
-                  <div className="w-6 h-6 rounded-full bg-indigo-950 border border-indigo-700/60 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                  <div className="w-6 h-6 rounded-full bg-[#FAF6E9] border border-[#49352F]/15 flex items-center justify-center text-xs shrink-0 mt-0.5">
                     🤖
                   </div>
                 )}
                 <div
-                  className={`max-w-[80%] rounded-2xl p-3 leading-relaxed shadow-sm ${
+                  className={`max-w-[80%] rounded-2xl p-3 leading-relaxed shadow-xs ${
                     msg.sender === "user"
-                      ? "bg-amber-500 text-slate-950 font-medium rounded-tr-xs"
-                      : "bg-slate-800/90 text-slate-200 border border-slate-700/60 rounded-tl-xs"
+                      ? "bg-[#F2CAB3] text-[#49352F] font-medium border border-[#49352F]/12 rounded-tr-xs"
+                      : "bg-white text-[#49352F] border border-[#49352F]/12 rounded-tl-xs shadow-xs"
                   }`}
                 >
                   <p className="whitespace-pre-wrap">{msg.text}</p>
                   <span
                     className={`block text-[9px] mt-1 ${
-                      msg.sender === "user" ? "text-slate-800 text-right" : "text-slate-400"
+                      msg.sender === "user" ? "text-[#49352F]/70 text-right" : "text-[#7A6862]"
                     }`}
                   >
                     {msg.time}
@@ -264,8 +264,8 @@ export function GlobalShikshaBot() {
             ))}
 
             {isLoading && (
-              <div className="flex items-center gap-2 text-slate-400 text-xs italic">
-                <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-400" />
+              <div className="flex items-center gap-2 text-[#7A6862] text-xs italic">
+                <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#B26A1B]" />
                 <span>Consulting pedagogical rule engine...</span>
               </div>
             )}
@@ -273,14 +273,14 @@ export function GlobalShikshaBot() {
           </div>
 
           {/* Suggested Prompts Pills */}
-          <div className="px-3 py-2 border-t border-slate-800/80 bg-slate-950/40 flex items-center gap-1.5 overflow-x-auto">
+          <div className="px-3 py-2 border-t border-[#49352F]/10 bg-[#FAF6E9] flex items-center gap-1.5 overflow-x-auto">
             {/* Quick-chip: Show me how to use this page */}
             <button
               type="button"
               onClick={handleStartPageTour}
-              className="shrink-0 text-[11px] font-bold text-slate-950 bg-gradient-to-r from-[#FF8A3D] to-amber-400 hover:from-amber-400 hover:to-amber-300 px-3 py-1 rounded-full transition-all flex items-center gap-1 cursor-pointer shadow-xs active:scale-95"
+              className="shrink-0 text-[11px] font-bold text-white bg-[#49352F] hover:bg-[#2C1F1B] px-3 py-1 rounded-full transition-all flex items-center gap-1 cursor-pointer shadow-xs active:scale-95"
             >
-              <Sparkles className="w-3 h-3 text-slate-950" />
+              <Sparkles className="w-3 h-3 text-[#F2CAB3]" />
               <span>{language === "gu" ? "આ પેજ કેવી રીતે વાપરવું? (ટૂર)" : "Show me how to use this page"}</span>
             </button>
             {suggestedPrompts.map((p, idx) => (
@@ -288,7 +288,7 @@ export function GlobalShikshaBot() {
                 key={idx}
                 type="button"
                 onClick={() => handleSend(p.query)}
-                className="shrink-0 text-[11px] font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 border border-slate-700/80 px-2.5 py-1 rounded-full transition-colors cursor-pointer"
+                className="shrink-0 text-[11px] font-semibold text-[#49352F] hover:bg-[#F2DCB5]/50 bg-white border border-[#49352F]/12 px-2.5 py-1 rounded-full transition-colors cursor-pointer shadow-xs"
               >
                 {p.label}
               </button>
@@ -301,7 +301,7 @@ export function GlobalShikshaBot() {
               e.preventDefault();
               handleSend();
             }}
-            className="p-3 border-t border-slate-800 bg-[#14123D]/60 flex items-center gap-2"
+            className="p-3 border-t border-[#49352F]/10 bg-[#FAF6E9] flex items-center gap-2"
           >
             <input
               type="text"
@@ -312,7 +312,7 @@ export function GlobalShikshaBot() {
                   ? "વિદ્યાર્થી અથવા નિયમ વિશે પૂછો..."
                   : "Ask about a student, gap, or 5-step plan..."
               }
-              className="flex-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-hidden focus:border-amber-500"
+              className="flex-1 px-3 py-2 rounded-xl bg-white border border-[#49352F]/15 text-xs text-[#49352F] placeholder-[#7A6862] focus:outline-hidden focus:border-[#F2CAB3]"
             />
             <Button
               type="submit"

@@ -105,10 +105,10 @@ export function ReassessmentModal({
     >
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Animated Bridge-Building Progress Bar */}
-        <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-3">
+        <div className="p-4 rounded-2xl bg-[#FAF6E9] border border-[#49352F]/12 space-y-3 shadow-inner">
           <div className="flex items-center justify-between text-xs">
-            <span className="font-bold text-white flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span className="font-bold text-[#49352F] flex items-center gap-1.5 font-heading">
+              <Sparkles className="w-3.5 h-3.5 text-[#B26A1B]" />
               The Bridge Delta
             </span>
             <Badge
@@ -134,23 +134,23 @@ export function ReassessmentModal({
           />
 
           <div className="grid grid-cols-3 gap-2 pt-2 text-center text-xs">
-            <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-              <span className="text-[10px] text-slate-400 uppercase font-semibold block">
+            <div className="p-2.5 rounded-xl bg-white border border-[#49352F]/10 shadow-2xs">
+              <span className="text-[10px] text-[#7A6862] uppercase font-semibold block">
                 Baseline
               </span>
-              <span className="text-base font-bold text-slate-400">{previousPercentage}%</span>
+              <span className="text-base font-bold text-[#7A6862]">{previousPercentage}%</span>
             </div>
-            <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-              <span className="text-[10px] text-amber-400 uppercase font-semibold block">
+            <div className="p-2.5 rounded-xl bg-white border border-[#49352F]/10 shadow-2xs">
+              <span className="text-[10px] text-[#B26A1B] uppercase font-semibold block">
                 New Score
               </span>
-              <span className="text-base font-black text-amber-400">{currentPct}%</span>
+              <span className="text-base font-black text-[#B26A1B]">{currentPct}%</span>
             </div>
-            <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-              <span className="text-[10px] text-emerald-400 uppercase font-semibold block">
+            <div className="p-2.5 rounded-xl bg-white border border-[#49352F]/10 shadow-2xs">
+              <span className="text-[10px] text-[#2E7D5E] uppercase font-semibold block">
                 Delta Gain
               </span>
-              <span className="text-base font-black text-emerald-400">
+              <span className="text-base font-black text-[#2E7D5E]">
                 {deltaPp >= 0 ? `+${deltaPp}` : deltaPp} pp
               </span>
             </div>
@@ -160,7 +160,7 @@ export function ReassessmentModal({
         {/* Inputs */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
+            <label className="block text-xs font-semibold text-[#49352F] mb-1">
               Marks Obtained
             </label>
             <input
@@ -171,11 +171,11 @@ export function ReassessmentModal({
               required
               value={marksObtained}
               onChange={(e) => setMarksObtained(e.target.value)}
-              className="w-full rounded-xl border border-slate-700 bg-slate-900 p-2.5 text-sm font-bold text-white focus:border-amber-500 outline-hidden"
+              className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-sm font-bold text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
+            <label className="block text-xs font-semibold text-[#49352F] mb-1">
               Maximum Marks
             </label>
             <input
@@ -184,32 +184,32 @@ export function ReassessmentModal({
               required
               value={maximumMarks}
               onChange={(e) => setMaximumMarks(e.target.value)}
-              className="w-full rounded-xl border border-slate-700 bg-slate-900 p-2.5 text-sm font-bold text-white focus:border-amber-500 outline-hidden"
+              className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-sm font-bold text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1">
+          <label className="block text-xs font-semibold text-[#49352F] mb-1">
             Teacher Observation & Remedial Notes
           </label>
           <textarea
             rows={2}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="w-full rounded-xl border border-slate-700 bg-slate-900 p-2.5 text-xs text-white placeholder-slate-500 focus:border-amber-500 outline-hidden"
+            className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-xs text-[#49352F] placeholder-[#7A6862]/60 focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden"
             placeholder="e.g. Student successfully used visual grouping cards without prompts."
           />
         </div>
 
         {error && (
-          <div className="p-3 rounded-xl bg-rose-950/60 border border-rose-800 text-xs text-rose-300 flex items-center gap-1.5">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-center gap-1.5">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
             <span>{error}</span>
           </div>
         )}
 
-        <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#49352F]/10">
           <Button
             type="button"
             variant="ghost"

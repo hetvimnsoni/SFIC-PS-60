@@ -62,17 +62,17 @@ export default function AssessmentsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-[#49352F] tracking-tight font-heading">
               Classroom Assessments & Diagnostic Evaluations
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+            <p className="text-xs sm:text-sm text-[#7A6862] mt-0.5">
               Record concept-level assessment results to automatically trigger learning-gap detection.
             </p>
           </div>
 
           <Link
             href="/assessments/new"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer self-start sm:self-center"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#F2CAB3] hover:bg-white text-[#49352F] border border-[#49352F]/16 text-xs font-bold shadow-xs transition-colors cursor-pointer self-start sm:self-center"
           >
             <PlusCircle className="w-3.5 h-3.5" />
             <span>{t.actions.createAssessment}</span>
@@ -80,14 +80,14 @@ export default function AssessmentsPage() {
         </div>
 
         {/* Filters */}
-        <div className="flex items-center justify-between p-3 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+        <div className="flex items-center justify-between p-3 rounded-2xl bg-white/95 border border-[#49352F]/12 shadow-[0_4px_16px_rgba(73,53,47,0.04)]">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-slate-500">Filter by Subject:</span>
+            <span className="text-xs font-semibold text-[#7A6862]">Filter by Subject:</span>
             <select
               value={subjectFilter}
               aria-label="Filter assessments by subject"
               onChange={(e) => setSubjectFilter(e.target.value)}
-              className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 outline-hidden cursor-pointer"
+              className="rounded-xl border border-[#49352F]/15 bg-[#FAF6E9] px-3 py-1.5 text-xs font-semibold text-[#49352F] outline-hidden cursor-pointer"
             >
               <option value="all">All Subjects</option>
               <option value="MATH">Mathematics</option>
@@ -96,7 +96,7 @@ export default function AssessmentsPage() {
               <option value="EVS">EVS</option>
             </select>
           </div>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-[#7A6862]">
             {filteredAssessments.length} assessment records
           </span>
         </div>
@@ -116,36 +116,36 @@ export default function AssessmentsPage() {
                     <span
                       className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                         asm.status === "published"
-                          ? "bg-emerald-100 text-emerald-800"
-                          : "bg-amber-100 text-amber-800"
+                          ? "bg-[#2E7D5E]/15 text-[#2E7D5E] border border-[#2E7D5E]/20"
+                          : "bg-[#B26A1B]/15 text-[#B26A1B] border border-[#B26A1B]/20"
                       }`}
                     >
                       {asm.status === "published" ? "Published & Analyzed" : "Draft"}
                     </span>
                   </div>
 
-                  <h3 className="font-bold text-sm sm:text-base text-slate-900 mt-2 line-clamp-2">
+                  <h3 className="font-bold text-sm sm:text-base text-[#49352F] mt-2 line-clamp-2">
                     {asm.title}
                   </h3>
 
-                  <div className="flex items-center gap-3 text-xs text-slate-500 mt-2">
+                  <div className="flex items-center gap-3 text-xs text-[#7A6862] mt-2">
                     <span className="flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                      <Calendar className="w-3.5 h-3.5 text-[#B26A1B]" />
                       <span>{asm.assessmentDate}</span>
                     </span>
-                    <span>Max Marks: <strong>{asm.maxMarks}</strong></span>
+                    <span>Max Marks: <strong className="text-[#49352F]">{asm.maxMarks}</strong></span>
                   </div>
 
                   {/* Concepts evaluated */}
-                  <div className="mt-3 pt-3 border-t border-slate-100">
-                    <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+                  <div className="mt-3 pt-3 border-t border-[#49352F]/10">
+                    <span className="text-[11px] font-semibold text-[#7A6862] uppercase tracking-wider block mb-1">
                       Target Concepts Assessed:
                     </span>
                     <div className="flex flex-wrap gap-1">
                       {conceptNames.map((name, idx) => (
                         <span
                           key={idx}
-                          className="bg-slate-100 text-slate-700 text-[11px] font-medium px-2 py-0.5 rounded-md"
+                          className="bg-[#FAF6E9] text-[#49352F] border border-[#49352F]/10 text-[11px] font-medium px-2 py-0.5 rounded-md"
                         >
                           {name}
                         </span>
@@ -154,11 +154,11 @@ export default function AssessmentsPage() {
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-[11px] text-slate-400">Class 4-A</span>
+                <div className="mt-4 pt-3 border-t border-[#49352F]/10 flex items-center justify-between">
+                  <span className="text-[11px] text-[#7A6862]">Class 4-A</span>
                   <Link
                     href={`/students`}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-800"
+                    className="inline-flex items-center gap-1 text-xs font-bold text-[#B26A1B] hover:text-[#49352F]"
                   >
                     <span>View Student Scores</span>
                     <ArrowRight className="w-3.5 h-3.5" />

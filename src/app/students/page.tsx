@@ -111,14 +111,14 @@ export default function StudentsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#49352F] tracking-tight">
                 {language === "gu" ? "વિદ્યાર્થી ડિરેક્ટરી અને પ્રોફાઇલ્સ" : "Student Directory & 3D Profiles"}
               </h1>
-              <Badge variant="indigo" size="sm">
+              <Badge variant="saffron" size="sm">
                 15 Enrolled
               </Badge>
             </div>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-[#7A6862] mt-1">
               Manage primary school enrollments, track 3D skill trees, and coordinate 5-step remedial plans.
             </p>
           </div>
@@ -128,18 +128,18 @@ export default function StudentsPage() {
               variant="outline"
               size="sm"
               onClick={handleExportCsv}
-              className="rounded-full text-xs"
+              className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15"
             >
-              <Download className="w-3.5 h-3.5 mr-1 text-slate-400" />
+              <Download className="w-3.5 h-3.5 mr-1 text-[#7A6862]" />
               <span>{t.actions.exportCsv}</span>
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={() => setShowCsvModal(true)}
-              className="rounded-full text-xs"
+              className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15"
             >
-              <Upload className="w-3.5 h-3.5 mr-1 text-slate-400" />
+              <Upload className="w-3.5 h-3.5 mr-1 text-[#7A6862]" />
               <span>{t.actions.importCsv}</span>
             </Button>
             <div data-tour="students-add">
@@ -157,9 +157,9 @@ export default function StudentsPage() {
         </div>
 
         {/* Filter & Search Bar - Big, Showable & Clearable */}
-        <Card variant="glass" className="p-4 sm:p-5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 border-slate-800">
+        <Card variant="glass" className="p-4 sm:p-5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 border-[#49352F]/15 bg-white text-[#49352F]">
           <div data-tour="students-search" className="relative flex-1 max-w-xl">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-amber-400 pointer-events-none" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#B26A1B] pointer-events-none" />
             <input
               type="text"
               placeholder={
@@ -169,13 +169,13 @@ export default function StudentsPage() {
               }
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-12 rounded-2xl border-2 border-slate-700 bg-slate-900/90 py-2.5 pl-12 pr-10 text-sm text-white placeholder-slate-400 focus:border-amber-500 focus:bg-slate-900 focus:ring-4 focus:ring-amber-500/20 outline-hidden transition-all shadow-inner"
+              className="w-full h-12 rounded-2xl border-2 border-[#49352F]/15 bg-[#FAF6E9] py-2.5 pl-12 pr-10 text-sm text-[#49352F] placeholder-[#7A6862] focus:border-[#F2CAB3] focus:bg-white focus:ring-4 focus:ring-[#F2CAB3]/30 outline-hidden transition-all shadow-inner"
             />
             {searchTerm && (
               <button
                 type="button"
                 onClick={() => setSearchTerm("")}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 rounded-full text-[#7A6862] hover:text-[#49352F] hover:bg-[#FAF6E9] transition-colors cursor-pointer"
                 title="Clear search"
               >
                 <X className="w-4 h-4" />
@@ -184,19 +184,19 @@ export default function StudentsPage() {
           </div>
 
           <div data-tour="students-filter" className="flex items-center gap-3 shrink-0 flex-wrap">
-            <span className="text-xs font-bold text-slate-300">Class:</span>
+            <span className="text-xs font-bold text-[#49352F]">Class:</span>
             <select
               value={activeGrade}
               aria-label="Filter students by class"
               onChange={(e) => handleGradeFilterChange(e.target.value)}
-              className="rounded-xl border border-slate-700 bg-slate-900 px-3.5 py-2 text-xs font-bold text-slate-200 outline-hidden cursor-pointer"
+              className="rounded-xl border border-[#49352F]/15 bg-[#FAF6E9] px-3.5 py-2 text-xs font-bold text-[#49352F] outline-hidden cursor-pointer"
             >
               <option value="all">All Classes (1-5)</option>
               <option value="3">Class 3</option>
               <option value="4">Class 4</option>
               <option value="5">Class 5</option>
             </select>
-            <span className="text-xs font-semibold text-amber-400/90 ml-1">
+            <span className="text-xs font-semibold text-[#7A6862] ml-1">
               Showing {filteredStudents.length} students
             </span>
           </div>
@@ -212,23 +212,23 @@ export default function StudentsPage() {
               <Card
                 key={std.id}
                 variant="glass"
-                className={`p-5 flex flex-col justify-between transition-all border-slate-800 hover:border-amber-500/50 ${
+                className={`p-5 flex flex-col justify-between transition-all border-[#49352F]/12 hover:border-[#49352F]/25 bg-white text-[#49352F] ${
                   isDemoCase
-                    ? "ring-1 ring-amber-500/60 shadow-[0_0_20px_rgba(255,138,61,0.15)]"
+                    ? "ring-1 ring-[#F2CAB3] shadow-[0_8px_24px_rgba(73,53,47,0.08)]"
                     : ""
                 }`}
               >
                 <div className="space-y-3">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-indigo-600/30 text-amber-400 border border-amber-500/30 flex items-center justify-center font-heading font-black text-sm shrink-0">
+                      <div className="w-10 h-10 rounded-2xl bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15 flex items-center justify-center font-heading font-black text-sm shrink-0">
                         {std.displayName.charAt(0)}
                       </div>
                       <div>
                         <div className="flex items-center gap-1.5">
                           <Link
                             href={`/students/${std.id}`}
-                            className="font-bold text-sm text-white hover:text-amber-400 transition-colors"
+                            className="font-bold text-sm text-[#49352F] hover:text-[#B26A1B] transition-colors"
                           >
                             {std.displayName}
                           </Link>
@@ -238,7 +238,7 @@ export default function StudentsPage() {
                             </Badge>
                           )}
                         </div>
-                        <span className="font-mono text-[11px] text-slate-400">
+                        <span className="font-mono text-[11px] text-[#7A6862]">
                           {std.studentCode}
                         </span>
                       </div>
@@ -250,17 +250,17 @@ export default function StudentsPage() {
                   </div>
 
                   {std.notes && (
-                    <p className="text-xs text-slate-300 line-clamp-2 italic bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/60">
+                    <p className="text-xs text-[#7A6862] line-clamp-2 italic bg-[#FAF6E9] p-2.5 rounded-xl border border-[#49352F]/10">
                       &quot;{std.notes}&quot;
                     </p>
                   )}
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
+                <div className="mt-4 pt-3 border-t border-[#49352F]/10 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     {gapCount > 0 ? (
                       <Badge variant="needsSupport" size="sm" dot>
-                        <AlertTriangle className="w-3 h-3 mr-1 text-rose-400" />
+                        <AlertTriangle className="w-3 h-3 mr-1 text-[#C54738]" />
                         <span>{gapCount} Active Gap{gapCount > 1 ? "s" : ""}</span>
                       </Badge>
                     ) : (
@@ -271,7 +271,7 @@ export default function StudentsPage() {
                   </div>
 
                   <Link href={`/students/${std.id}`}>
-                    <Button variant="ghost" size="sm" className="text-xs text-amber-400 hover:text-white">
+                    <Button variant="ghost" size="sm" className="text-xs text-[#B26A1B] hover:text-[#49352F]">
                       <span>3D Profile &rarr;</span>
                     </Button>
                   </Link>
