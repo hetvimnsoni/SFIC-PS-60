@@ -57,36 +57,45 @@ function SkillTreeMesh({
     }
   };
 
+  const branchGeometries = React.useMemo(() => {
+    const list: { id: string; geo: THREE.TubeGeometry; color: string; isGapPath: boolean }[] = [];
+    skills.forEach((source) => {
+      source.connectedTo?.forEach((targetId) => {
+        const target = skills.find((s) => s.id === targetId);
+        if (!target) return;
+        const points = [
+          new THREE.Vector3(...source.position),
+          new THREE.Vector3(...target.position),
+        ];
+        const curve = new THREE.LineCurve3(points[0], points[1]);
+        const tubeGeo = new THREE.TubeGeometry(curve, 12, 0.03, 8, false);
+        const isGapPath = source.status === "gap" || target.status === "gap";
+        const lineColor = isGapPath ? "#FF5C6C" : source.status === "mastered" ? "#3DDBA9" : "#6366F1";
+        list.push({ id: `${source.id}-${targetId}`, geo: tubeGeo, color: lineColor, isGapPath });
+      });
+    });
+    return list;
+  }, [skills]);
+
+  React.useEffect(() => {
+    return () => {
+      branchGeometries.forEach((b) => b.geo.dispose());
+    };
+  }, [branchGeometries]);
+
   return (
     <group ref={groupRef}>
       {/* Connecting Branch Cables */}
-      {skills.map((source) =>
-        source.connectedTo?.map((targetId) => {
-          const target = skills.find((s) => s.id === targetId);
-          if (!target) return null;
-
-          const points = [
-            new THREE.Vector3(...source.position),
-            new THREE.Vector3(...target.position),
-          ];
-          const curve = new THREE.LineCurve3(points[0], points[1]);
-          const tubeGeo = new THREE.TubeGeometry(curve, 12, 0.03, 8, false);
-
-          const isGapPath = source.status === "gap" || target.status === "gap";
-          const lineColor = isGapPath ? "#FF5C6C" : source.status === "mastered" ? "#3DDBA9" : "#6366F1";
-
-          return (
-            <mesh key={`${source.id}-${targetId}`} geometry={tubeGeo}>
-              <meshStandardMaterial
-                color={lineColor}
-                emissive={lineColor}
-                emissiveIntensity={isGapPath ? 0.8 : 0.3}
-                roughness={0.4}
-              />
-            </mesh>
-          );
-        })
-      )}
+      {branchGeometries.map((branch) => (
+        <mesh key={branch.id} geometry={branch.geo}>
+          <meshStandardMaterial
+            color={branch.color}
+            emissive={branch.color}
+            emissiveIntensity={branch.isGapPath ? 0.8 : 0.3}
+            roughness={0.4}
+          />
+        </mesh>
+      ))}
 
       {/* Skill Nodes */}
       {skills.map((skill) => {
@@ -144,7 +153,7 @@ function SkillTreeMesh({
   );
 }
 
-export function StudentSkillTree3D({
+export const StudentSkillTree3D = React.memo(function StudentSkillTree3D({
   studentName,
   skills,
   onSelectSkill,
@@ -154,6 +163,31 @@ export function StudentSkillTree3D({
     skills.find((s) => s.status === "gap") || skills[0] || null
   );
   const [viewMode, setViewMode] = useState<"3d" | "2d">("3d");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(true);
+  const [isTabVisible, setIsTabVisible] = useState(true);
+
+  // Tab visibility tracking
+  React.useEffect(() => {
+    const handleVis = () => setIsTabVisible(!document.hidden);
+    document.addEventListener("visibilitychange", handleVis);
+    return () => document.removeEventListener("visibilitychange", handleVis);
+  }, []);
+
+  // Viewport intersection observer to avoid rendering offscreen
+  React.useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { rootMargin: "100px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const handleSelect = (skill: SkillNode) => {
     setSelectedSkill(skill);
@@ -161,7 +195,10 @@ export function StudentSkillTree3D({
   };
 
   return (
-    <div className="relative w-full rounded-3xl bg-[#0d0c28] border border-slate-800 overflow-hidden shadow-2xl select-none">
+    <div
+      ref={containerRef}
+      className="relative w-full rounded-3xl bg-[#0d0c28] border border-slate-800 overflow-hidden shadow-2xl select-none"
+    >
       {/* Top Header */}
       <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-[#14123D]/80">
         <div className="flex items-center gap-2">
@@ -192,7 +229,16 @@ export function StudentSkillTree3D({
         {/* 3D Canvas / 2D Grid */}
         <div className="flex-1 relative h-full">
           {viewMode === "3d" ? (
-            <Canvas camera={{ position: [0, 0, 4.5], fov: 45 }} gl={{ antialias: true, alpha: true }}>
+            <Canvas
+              camera={{ position: [0, 0, 4.5], fov: 45 }}
+              gl={{
+                antialias: true,
+                powerPreference: "high-performance",
+                alpha: true,
+              }}
+              frameloop={isInView && isTabVisible ? "always" : "demand"}
+              dpr={[1, 1.5]}
+            >
               <ambientLight intensity={0.5} />
               <directionalLight position={[4, 5, 3]} intensity={1.5} color="#FFD59E" />
               <directionalLight position={[-4, 2, -2]} intensity={0.6} color="#3DDBA9" />
@@ -373,4 +419,4 @@ export function StudentSkillTree3D({
       </div>
     </div>
   );
-}
+});

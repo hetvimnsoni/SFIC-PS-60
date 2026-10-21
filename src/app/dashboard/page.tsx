@@ -2,17 +2,17 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { StatTile } from "@/components/ui/StatTile";
 import { BridgeProgress } from "@/components/ui/BridgeProgress";
-import { ClassMasteryHeatmap3D, StudentMasteryPoint } from "@/components/3d/ClassMasteryHeatmap3D";
+import type { StudentMasteryPoint } from "@/components/3d/ClassMasteryHeatmap3D";
 import { fireCelebrationConfetti } from "@/lib/confetti";
 import { useLanguage } from "@/context/LanguageContext";
 import { useFilter } from "@/context/FilterContext";
-import { StudentFormModal } from "@/components/student/StudentFormModal";
 import { SpotlightTour, triggerPageTour } from "@/components/tutorial/SpotlightTour";
 import { ChecklistWidget } from "@/components/tutorial/ChecklistWidget";
 import { ContextualHelp } from "@/components/shared/ContextualHelp";
@@ -35,7 +35,7 @@ import {
   Flame,
   RotateCcw,
 } from "lucide-react";
-import { AiWorkspaceView, AiTab } from "@/components/ai/AiWorkspaceView";
+import type { AiTab } from "@/components/ai/AiWorkspaceView";
 import {
   ResponsiveContainer,
   BarChart,
@@ -45,6 +45,37 @@ import {
   Tooltip,
   CartesianGrid,
 } from "recharts";
+
+const ClassMasteryHeatmap3D = dynamic(
+  () => import("@/components/3d/ClassMasteryHeatmap3D").then((m) => m.ClassMasteryHeatmap3D),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[320px] rounded-2xl bg-[#0e0c2b] border border-slate-800 flex items-center justify-center text-slate-400 text-xs">
+        <Sparkles className="w-4 h-4 animate-spin text-amber-400 mr-2" />
+        <span>Loading 3D Mastery Heatmap...</span>
+      </div>
+    ),
+  }
+);
+
+const AiWorkspaceView = dynamic(
+  () => import("@/components/ai/AiWorkspaceView").then((m) => m.AiWorkspaceView),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="p-12 text-center text-slate-400 text-sm">
+        <Sparkles className="w-5 h-5 animate-spin text-amber-400 mx-auto mb-2" />
+        <span>Loading AI Assistant Studio...</span>
+      </div>
+    ),
+  }
+);
+
+const StudentFormModal = dynamic(
+  () => import("@/components/student/StudentFormModal").then((m) => m.StudentFormModal),
+  { ssr: false }
+);
 
 export default function DashboardPage() {
   const { t, language } = useLanguage();

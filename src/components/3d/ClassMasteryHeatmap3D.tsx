@@ -92,13 +92,38 @@ function HeatmapBars({
   );
 }
 
-export function ClassMasteryHeatmap3D({
+export const ClassMasteryHeatmap3D = React.memo(function ClassMasteryHeatmap3D({
   data,
   students,
   concepts,
 }: ClassMasteryHeatmap3DProps) {
   const [viewMode, setViewMode] = useState<"3d" | "2d">("3d");
   const [hoveredPoint, setHoveredPoint] = useState<StudentMasteryPoint | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(true);
+  const [isTabVisible, setIsTabVisible] = useState(true);
+
+  // Tab visibility tracking
+  React.useEffect(() => {
+    const handleVis = () => setIsTabVisible(!document.hidden);
+    document.addEventListener("visibilitychange", handleVis);
+    return () => document.removeEventListener("visibilitychange", handleVis);
+  }, []);
+
+  // Viewport intersection observer to avoid rendering offscreen
+  React.useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { rootMargin: "100px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // 2D Matrix Grid Fallback
   if (viewMode === "2d") {
@@ -167,7 +192,10 @@ export function ClassMasteryHeatmap3D({
   }
 
   return (
-    <div className="relative w-full h-[320px] rounded-2xl bg-[#0e0c2b] border border-slate-800 overflow-hidden select-none">
+    <div
+      ref={containerRef}
+      className="relative w-full h-[320px] rounded-2xl bg-[#0e0c2b] border border-slate-800 overflow-hidden select-none"
+    >
       {/* View Switcher Top Bar */}
       <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
         {hoveredPoint && (
@@ -203,7 +231,13 @@ export function ClassMasteryHeatmap3D({
       {/* 3D WebGL Canvas */}
       <Canvas
         camera={{ position: [2.5, 2.2, 3.2], fov: 42 }}
-        gl={{ antialias: true, alpha: true }}
+        gl={{
+          antialias: true,
+          powerPreference: "high-performance",
+          alpha: true,
+        }}
+        frameloop={isInView && isTabVisible ? "always" : "demand"}
+        dpr={[1, 1.5]}
       >
         <ambientLight intensity={0.6} />
         <directionalLight position={[4, 5, 3]} intensity={1.5} color="#FFD59E" />
@@ -243,4 +277,4 @@ export function ClassMasteryHeatmap3D({
       </div>
     </div>
   );
-}
+});

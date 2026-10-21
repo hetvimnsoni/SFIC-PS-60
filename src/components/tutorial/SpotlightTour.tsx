@@ -97,6 +97,15 @@ export function SpotlightTour({ page, autoStartDelay = 600 }: SpotlightTourProps
     return () => window.removeEventListener("shikshasetu_start_tour", handleReplay);
   }, [page, startTour]);
 
+  // Scroll active target into view once when step changes
+  useEffect(() => {
+    if (!isActive || !currentStep?.targetSelector) return;
+    const el = document.querySelector(currentStep.targetSelector);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+    }
+  }, [isActive, currentStepIndex, currentStep?.targetSelector]);
+
   // Calculate Target Rect
   const updateTargetRect = useCallback(() => {
     if (!isActive || !currentStep?.targetSelector) {
@@ -106,8 +115,6 @@ export function SpotlightTour({ page, autoStartDelay = 600 }: SpotlightTourProps
 
     const el = document.querySelector(currentStep.targetSelector);
     if (el) {
-      // Scroll into view if needed
-      el.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
       const rect = el.getBoundingClientRect();
       const padding = 8;
       setTargetRect({
@@ -131,13 +138,13 @@ export function SpotlightTour({ page, autoStartDelay = 600 }: SpotlightTourProps
       updateTargetRect();
     }, 120);
 
-    window.addEventListener("resize", updateTargetRect);
-    window.addEventListener("scroll", updateTargetRect, true);
+    window.addEventListener("resize", updateTargetRect, { passive: true });
+    window.addEventListener("scroll", updateTargetRect, { passive: true });
 
     return () => {
       clearTimeout(timer);
       window.removeEventListener("resize", updateTargetRect);
-      window.removeEventListener("scroll", updateTargetRect, true);
+      window.removeEventListener("scroll", updateTargetRect);
     };
   }, [isActive, currentStepIndex, updateTargetRect]);
 

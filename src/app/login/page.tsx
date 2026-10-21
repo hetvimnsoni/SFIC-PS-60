@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -10,7 +11,6 @@ import { LanguageSelector } from "@/components/shared/LanguageSelector";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { BridgeCanvas3D } from "@/components/3d/BridgeCanvas3D";
 import {
   Lock,
   Mail,
@@ -24,6 +24,11 @@ import {
   Cpu,
   GraduationCap,
 } from "lucide-react";
+
+const BridgeCanvas3D = dynamic(
+  () => import("@/components/3d/BridgeCanvas3D").then((m) => m.BridgeCanvas3D),
+  { ssr: false }
+);
 
 export default function LoginPage() {
   const router = useRouter();

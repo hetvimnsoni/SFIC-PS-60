@@ -2,17 +2,15 @@
 
 import React, { useState, useEffect, use } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { StatTile } from "@/components/ui/StatTile";
 import { BridgeProgress } from "@/components/ui/BridgeProgress";
-import { StudentSkillTree3D, SkillNode } from "@/components/3d/StudentSkillTree3D";
+import type { SkillNode } from "@/components/3d/StudentSkillTree3D";
 import { useLanguage } from "@/context/LanguageContext";
-import { ReassessmentModal } from "@/components/assessment/ReassessmentModal";
-import { ActivityPlayerModal } from "@/components/activities/ActivityPlayerModal";
-import { StudentFormModal } from "@/components/student/StudentFormModal";
 import { SpotlightTour } from "@/components/tutorial/SpotlightTour";
 import { ContextualHelp } from "@/components/shared/ContextualHelp";
 import {
@@ -45,6 +43,34 @@ import {
   LineChart,
   Line,
 } from "recharts";
+
+const StudentSkillTree3D = dynamic(
+  () => import("@/components/3d/StudentSkillTree3D").then((m) => m.StudentSkillTree3D),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[420px] rounded-3xl bg-[#0d0c28] border border-slate-800 flex items-center justify-center text-slate-400 text-xs">
+        <Sparkles className="w-4 h-4 animate-spin text-amber-400 mr-2" />
+        <span>Loading 3D Skill Graph...</span>
+      </div>
+    ),
+  }
+);
+
+const ReassessmentModal = dynamic(
+  () => import("@/components/assessment/ReassessmentModal").then((m) => m.ReassessmentModal),
+  { ssr: false }
+);
+
+const ActivityPlayerModal = dynamic(
+  () => import("@/components/activities/ActivityPlayerModal").then((m) => m.ActivityPlayerModal),
+  { ssr: false }
+);
+
+const StudentFormModal = dynamic(
+  () => import("@/components/student/StudentFormModal").then((m) => m.StudentFormModal),
+  { ssr: false }
+);
 
 export default function StudentDetailPage({
   params,

@@ -43,7 +43,6 @@ import {
 
 export default function HomePage() {
   const { t, language } = useLanguage();
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [activeSpeech, setActiveSpeech] = useState(
     language === "gu"
       ? "નમસ્તે! હું શિક્ષાબોટ છું. ચાલો અધ્યયન ત્રુટિઓને દૂર કરીને સફળતાનો સેતુ બનાવીએ!"
@@ -51,20 +50,6 @@ export default function HomePage() {
   );
   const [feedbackSent, setFeedbackSent] = useState(false);
   const [feedbackEmail, setFeedbackEmail] = useState("");
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const vh = window.innerHeight;
-      // 5 continuous narrative scenes
-      const p = Math.max(0, Math.min(5, scrollY / Math.max(1, vh)));
-      setScrollProgress(p);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
@@ -85,8 +70,8 @@ export default function HomePage() {
 
   return (
     <div className="relative min-h-screen bg-[#14123D] text-slate-100 selection:bg-amber-500 selection:text-black overflow-x-hidden font-sans">
-      {/* 1. Persistent 3D The Bridge WebGL Canvas in Background */}
-      <BridgeCanvas3D progress={scrollProgress} />
+      {/* 1. Persistent 3D The Bridge WebGL Canvas in Background (autonomously tracks scroll without re-rendering HomePage) */}
+      <BridgeCanvas3D />
 
       {/* 2. Glass Sticky Navbar */}
       <LandingNavbar />
