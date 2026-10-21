@@ -11,7 +11,28 @@ export async function POST(request: Request) {
     }
 
     const result = await aiService.askAssistant(message, history, language, userRole);
-    return NextResponse.json({ success: true, ...result });
+    if (!result.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: result.error || "Failed to generate AI assistant response",
+          provider: result.provider,
+          modelUsed: result.modelUsed,
+        },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: result.message,
+      reply: result.message,
+      text: result.message,
+      isAiGenerated: result.isAiGenerated,
+      provider: result.provider,
+      modelUsed: result.modelUsed,
+      note: result.note,
+    });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message || "Failed to process chat message" }, { status: 500 });
   }

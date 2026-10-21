@@ -11,12 +11,18 @@
  * - Transparent metadata indicating whether Live AI or Local Fallback generated the response
  */
 
+export interface AiChatMessage {
+  role: "system" | "user" | "assistant";
+  content: string;
+}
+
 export interface AiRequestOptions {
   prompt: string;
   systemInstruction?: string;
   temperature?: number;
   maxTokens?: number;
   responseFormat?: "json" | "text";
+  messages?: AiChatMessage[];
 }
 
 export interface AiResponse<T = any> {
@@ -97,14 +103,23 @@ async function callGeminiApi(
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
   const contents: any[] = [];
-  if (options.systemInstruction) {
-    // Gemini supports system_instruction in v1beta
+  if (options.messages && options.messages.length > 0) {
+    for (const msg of options.messages) {
+      if (msg.role === "system") continue;
+      contents.push({
+        role: msg.role === "assistant" ? "model" : "user",
+        parts: [{ text: msg.content }],
+      });
+    }
   }
 
-  contents.push({
-    role: "user",
-    parts: [{ text: options.prompt }],
-  });
+  // Ensure the current user prompt is present if not already added
+  if (!options.messages || options.messages.length === 0 || contents[contents.length - 1]?.parts[0]?.text !== options.prompt) {
+    contents.push({
+      role: "user",
+      parts: [{ text: options.prompt }],
+    });
+  }
 
   const payload: any = {
     contents,
@@ -170,7 +185,20 @@ async function callOpenAiApi(
   if (options.systemInstruction) {
     messages.push({ role: "system", content: options.systemInstruction });
   }
-  messages.push({ role: "user", content: options.prompt });
+
+  if (options.messages && options.messages.length > 0) {
+    for (const m of options.messages) {
+      if (m.role === "system" && options.systemInstruction) continue;
+      messages.push({
+        role: m.role === "assistant" ? "assistant" : m.role === "system" ? "system" : "user",
+        content: m.content,
+      });
+    }
+  }
+
+  if (!options.messages || options.messages.length === 0 || messages[messages.length - 1]?.content !== options.prompt) {
+    messages.push({ role: "user", content: options.prompt });
+  }
 
   const payload: any = {
     model,
@@ -195,7 +223,16 @@ async function callOpenAiApi(
 
   if (!response.ok) {
     const errorBody = await response.text();
-    throw new Error(`OpenAI API returned status ${response.status}: ${errorBody.slice(0, 150)}`);
+    let errorDetail = "";
+    try {
+      const parsed = JSON.parse(errorBody);
+      if (parsed.error?.message) {
+        errorDetail = `: ${parsed.error.message}`;
+      }
+    } catch {
+      errorDetail = `: ${errorBody.slice(0, 150)}`;
+    }
+    throw new Error(`OpenAI API returned status ${response.status}${errorDetail}`);
   }
 
   const data = await response.json();
@@ -210,14 +247,22 @@ async function callOpenAiApi(
 
 /**
  * Primary dispatch function: attempts Live AI call with configured keys,
- * or gracefully returns null to indicate fallback is required.
+ * or gracefully returns null / fallback to indicate fallback is required.
  */
 export async function generateAiContent<T = any>(
   options: AiRequestOptions,
   fallbackGenerator?: () => { content: string; data?: T }
 ): Promise<AiResponse<T>> {
   const sanitizedPrompt = sanitizePrompt(options.prompt);
-  const sanitizedOptions = { ...options, prompt: sanitizedPrompt };
+  const sanitizedMessages = options.messages?.map((m) => ({
+    ...m,
+    content: sanitizePrompt(m.content),
+  }));
+  const sanitizedOptions: AiRequestOptions = {
+    ...options,
+    prompt: sanitizedPrompt,
+    messages: sanitizedMessages,
+  };
 
   const geminiKey = process.env.GEMINI_API_KEY?.trim();
   const openAiKey = process.env.OPENAI_API_KEY?.trim();
@@ -239,26 +284,14 @@ export async function generateAiContent<T = any>(
         note: `Generated live using Google Gemini (${model}) with child privacy safeguards.`,
       };
     } catch (err: any) {
-      console.warn("Gemini API call failed, falling back to local pedagogical engine:", err.message);
-      if (fallbackGenerator) {
-        const fb = fallbackGenerator();
-        return {
-          success: true,
-          content: fb.content,
-          data: fb.data,
-          isAiGenerated: false,
-          provider: "offline_fallback",
-          modelUsed: "deterministic_pedagogical_rule_engine",
-          note: `Live AI connection encountered an issue (${err.message}). Seamlessly fell back to local pedagogical engine.`,
-        };
-      }
+      console.error("Gemini API call failed:", err.message);
       return {
         success: false,
         content: "",
         isAiGenerated: false,
         provider: "gemini",
         modelUsed: model,
-        error: `AI provider error: ${err.message}`,
+        error: `AI provider error (Gemini): ${err.message}`,
       };
     }
   }
@@ -278,26 +311,14 @@ export async function generateAiContent<T = any>(
         note: `Generated live using OpenAI (${model}) with child privacy safeguards.`,
       };
     } catch (err: any) {
-      console.warn("OpenAI API call failed, falling back to local pedagogical engine:", err.message);
-      if (fallbackGenerator) {
-        const fb = fallbackGenerator();
-        return {
-          success: true,
-          content: fb.content,
-          data: fb.data,
-          isAiGenerated: false,
-          provider: "offline_fallback",
-          modelUsed: "deterministic_pedagogical_rule_engine",
-          note: `Live AI connection error (${err.message}). Seamlessly fell back to local pedagogical engine.`,
-        };
-      }
+      console.error("OpenAI API call failed:", err.message);
       return {
         success: false,
         content: "",
         isAiGenerated: false,
         provider: "openai",
         modelUsed: model,
-        error: `AI provider error: ${err.message}`,
+        error: `AI provider error (OpenAI): ${err.message}`,
       };
     }
   }
@@ -312,7 +333,7 @@ export async function generateAiContent<T = any>(
       isAiGenerated: false,
       provider: "offline_fallback",
       modelUsed: "deterministic_pedagogical_rule_engine",
-      note: "Offline Pedagogical Fallback Active: No external AI key is configured (GEMINI_API_KEY). Using built-in Gujarat primary curriculum templates.",
+      note: "Offline Pedagogical Fallback Active: No external AI key is configured. Using built-in Gujarat primary curriculum templates.",
     };
   }
 
@@ -322,6 +343,6 @@ export async function generateAiContent<T = any>(
     isAiGenerated: false,
     provider: "offline_fallback",
     modelUsed: "none",
-    error: "No AI API key is configured on the server. Please set GEMINI_API_KEY in server environment variables to enable live generative AI.",
+    error: "No AI API key is configured on the server. Please set OPENAI_API_KEY or GEMINI_API_KEY in server environment variables to enable live generative AI.",
   };
 }

@@ -24,7 +24,25 @@ export class AiController {
       }
 
       const result = await aiService.askAssistant(message, history, language, userRole);
-      res.status(200).json({ success: true, ...result });
+      if (!result.success) {
+        return res.status(500).json({
+          success: false,
+          error: result.error || "AI assistant request failed",
+          provider: result.provider,
+          modelUsed: result.modelUsed,
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: result.message,
+        reply: result.message,
+        text: result.message,
+        isAiGenerated: result.isAiGenerated,
+        provider: result.provider,
+        modelUsed: result.modelUsed,
+        note: result.note,
+      });
     } catch (err: any) {
       res.status(500).json({ success: false, error: err.message || "AI assistant request failed" });
     }

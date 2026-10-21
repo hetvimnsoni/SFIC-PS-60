@@ -25,6 +25,8 @@ interface ChatMessage {
   sender: "user" | "bot";
   text: string;
   time: string;
+  isError?: boolean;
+  failedText?: string;
 }
 
 export function GlobalShikshaBot() {
@@ -55,8 +57,8 @@ export function GlobalShikshaBot() {
       sender: "bot",
       text:
         language === "gu"
-          ? "નમસ્તે! હું શિક્ષાબોટ છું. હું તમને વિદ્યાર્થીઓના લર્નિંગ ગેપ્સ ઓળખવામાં અને ૫-પગલાંની ઉપચારાત્મક યોજનાઓ તૈયાર કરવામાં મદદ કરી શકું છું. તમે શું જાણવા માંગો છો?"
-          : "Hello! I'm ShikshaBot, your offline pedagogical assistant. I can help analyze learning gaps, generate 5-step remedial plans for Aarav, or explain benchmark thresholds. How can I assist you today?",
+          ? "નમસ્તે! હું શિક્ષાસેતુ AI સહાયક છું. હું તમને વર્ગખંડ શિક્ષણ, વિદ્યાર્થીઓના લર્નિંગ ગેપ્સ, ઉપચારાત્મક યોજનાઓ અને શાળાકીય પ્રશ્નોના ઉત્તરો આપવામાં મદદ કરી શકું છું. તમે શું જાણવા માંગો છો?"
+          : "Hello! I'm ShikshaSetu AI Assistant. I can help analyze learning gaps, formulate remedial plans, answer educational questions, and query authorized school records. How can I assist you today?",
       time: "Just now",
     },
   ]);
@@ -103,28 +105,13 @@ export function GlobalShikshaBot() {
     setInputValue("");
     setIsLoading(true);
 
-    // 1. Instant offline keyword match against TUTORIAL_FAQS
-    const lower = text.toLowerCase();
-    const matchedFaq = TUTORIAL_FAQS.find((faq) =>
-      faq.keywords.some((kw) => lower.includes(kw.toLowerCase()))
-    );
-
-    if (matchedFaq) {
-      const answer = language === "gu" ? matchedFaq.answerGu : matchedFaq.answerEn;
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: Math.random().toString(36).substring(7),
-            sender: "bot",
-            text: `[${language === "gu" ? "ઑફલાઇન સહાયક" : "Offline Knowledge"}]: ${answer}`,
-            time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-          },
-        ]);
-        setIsLoading(false);
-      }, 250);
-      return;
-    }
+    const historyPayload = messages
+      .filter((m) => m.id !== "welcome" && !m.isError)
+      .slice(-6)
+      .map((m) => ({
+        role: m.sender === "user" ? ("user" as const) : ("assistant" as const),
+        content: m.text,
+      }));
 
     try {
       const res = await fetch("/api/v1/ai/chat", {
@@ -132,18 +119,39 @@ export function GlobalShikshaBot() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: text,
+          history: historyPayload,
           language: language === "gu" ? "gu" : "en",
           userRole: "teacher",
         }),
       });
 
       const data = await res.json();
-      const botResponseText =
-        data.reply ||
-        data.text ||
-        (language === "gu"
-          ? "આરવ પટેલ (ધોરણ ૪) ને ભાગાકારના ખ્યાલમાં ૫-પગલાંની મણકા અને નંબર-લાઇન પ્રવૃત્તિથી +૫૦ પોઈન્ટનો સુધારો થયો છે."
-          : "Based on our offline pedagogical engine, Aarav Patel was identified with a 35% baseline in Division Basics. A 5-step manipulative plan with counters led to an 85% mastery score (+50 pp gain).");
+
+      if (!res.ok || !data.success) {
+        const errorMsg =
+          data.error ||
+          (language === "gu"
+            ? "હું અત્યારે ઉત્તર જનરેટ કરવામાં અસમર્થ છું. કૃપા કરીને ફરી પ્રયાસ કરો."
+            : "I'm temporarily unable to generate a response. Please try again.");
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Math.random().toString(36).substring(7),
+            sender: "bot",
+            text: errorMsg,
+            time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            isError: true,
+            failedText: text,
+          },
+        ]);
+        return;
+      }
+
+      const botResponseText = data.message || data.reply || data.text;
+      if (!botResponseText) {
+        throw new Error("No response received from AI service");
+      }
 
       setMessages((prev) => [
         ...prev,
@@ -154,7 +162,7 @@ export function GlobalShikshaBot() {
           time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         },
       ]);
-    } catch {
+    } catch (err: any) {
       setMessages((prev) => [
         ...prev,
         {
@@ -162,9 +170,11 @@ export function GlobalShikshaBot() {
           sender: "bot",
           text:
             language === "gu"
-              ? "ઑફલાઇન સહાયક: વર્ગખંડમાં ૪ વિદ્યાર્થીઓને ૬૦% કરતાં ઓછા ગુણ સાથે વિશેષ ધ્યાનની જરૂર છે."
-              : "Offline rule-engine response: 4 students currently fall below the 60% benchmark threshold (Aarav, Pooja, Karan, Diya). Check /remedial-plans for action items.",
+              ? "નેટવર્ક સમસ્યા: AI સેવા સાથે કનેક્ટ થઈ શક્યું નથી. કૃપા કરીને ફરી પ્રયાસ કરો."
+              : `I'm temporarily unable to generate a response. ${err?.message || "Network error"}. Please try again.`,
           time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          isError: true,
+          failedText: text,
         },
       ]);
     } finally {
@@ -198,7 +208,7 @@ export function GlobalShikshaBot() {
 
           {/* Hover tooltip label */}
           <span className="absolute right-full mr-3 px-3 py-1.5 rounded-xl bg-[#49352F] text-white text-xs font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl">
-            {language === "gu" ? "શિક્ષાબોટ સહાયક (ટૂર અને મદદ)" : "ShikshaBot AI (Tour & Help)"}
+            {language === "gu" ? "શિક્ષાસેતુ AI સહાયક" : "ShikshaSetu AI Assistant"}
           </span>
         </button>
       )}
@@ -216,10 +226,10 @@ export function GlobalShikshaBot() {
                 <div className="flex items-center gap-1.5">
                   <h4 className="text-xs font-bold text-[#49352F]">ShikshaBot AI</h4>
                   <span className="px-1.5 py-0.2 rounded-full bg-[#2E7D5E]/15 text-[#2E7D5E] border border-[#2E7D5E]/20 text-[9px] font-extrabold uppercase">
-                    Offline
+                    Live Assistant
                   </span>
                 </div>
-                <p className="text-[10px] text-[#7A6862]">Pedagogical Rule Assistant</p>
+                <p className="text-[10px] text-[#7A6862]">{language === "gu" ? "શિક્ષણ અને સંચાર સહાયક" : "School & Communication AI"}</p>
               </div>
             </div>
 
@@ -249,10 +259,22 @@ export function GlobalShikshaBot() {
                   className={`max-w-[80%] rounded-2xl p-3 leading-relaxed shadow-xs ${
                     msg.sender === "user"
                       ? "bg-[#F2CAB3] text-[#49352F] font-medium border border-[#49352F]/12 rounded-tr-xs"
+                      : msg.isError
+                      ? "bg-[#FFF4F2] text-[#8D2B22] border border-[#8D2B22]/20 rounded-tl-xs shadow-xs"
                       : "bg-white text-[#49352F] border border-[#49352F]/12 rounded-tl-xs shadow-xs"
                   }`}
                 >
                   <p className="whitespace-pre-wrap">{msg.text}</p>
+                  {msg.isError && msg.failedText && (
+                    <button
+                      type="button"
+                      onClick={() => handleSend(msg.failedText)}
+                      className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-[#8D2B22]/30 text-[11px] font-semibold text-[#8D2B22] hover:bg-[#FAF6E9] transition-colors cursor-pointer shadow-xs active:scale-95"
+                    >
+                      <RefreshCw className="w-3 h-3 text-[#8D2B22]" />
+                      <span>{language === "gu" ? "ફરી પ્રયાસ કરો (Retry)" : "Retry"}</span>
+                    </button>
+                  )}
                   <span
                     className={`block text-[9px] mt-1 ${
                       msg.sender === "user" ? "text-[#49352F]/70 text-right" : "text-[#7A6862]"
@@ -267,7 +289,7 @@ export function GlobalShikshaBot() {
             {isLoading && (
               <div className="flex items-center gap-2 text-[#7A6862] text-xs italic">
                 <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#B26A1B]" />
-                <span>Consulting pedagogical rule engine...</span>
+                <span>{language === "gu" ? "શિક્ષાસેતુ AI વિચારી રહ્યું છે..." : "ShikshaSetu AI is generating response..."}</span>
               </div>
             )}
             <div ref={messagesEndRef} />
