@@ -546,7 +546,7 @@ Roll Number: [Your Roll Number]`;
         temperature: 0.7,
         messages: formattedHistory,
       },
-      isTestEnvironment ? fallbackGenerator : undefined
+      fallbackGenerator
     );
 
     if (!aiResult.success) {

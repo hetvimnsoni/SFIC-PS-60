@@ -44,17 +44,35 @@ export async function generateAiContent<T = any>(
 ): Promise<AiResponse<T>> {
   const geminiKey = secretManager.getSecret("GEMINI_API_KEY");
   const openAiKey = secretManager.getSecret("OPENAI_API_KEY");
-  const preferredProvider =
-    process.env.AI_PROVIDER?.toLowerCase() || (openAiKey ? "openai" : "gemini");
+  const anthropicKey = secretManager.getSecret("ANTHROPIC_API_KEY");
 
-  const chosenProvider: AiProviderName =
-    preferredProvider === "openai" && openAiKey
-      ? "openai"
-      : geminiKey
-      ? "gemini"
-      : openAiKey
-      ? "openai"
-      : "offline_fallback";
+  // Retrieve configured primary provider from task config or env override
+  let preferred = (process.env.AI_PROVIDER || "").toLowerCase().trim();
+  if (!preferred) {
+    try {
+      const taskConfig = await aiRouter.getTaskConfig("chat");
+      preferred = taskConfig.primaryProvider;
+    } catch {
+      preferred = openAiKey ? "openai" : geminiKey ? "gemini" : "offline_fallback";
+    }
+  }
+
+  let chosenProvider: AiProviderName = "offline_fallback";
+  if (preferred === "offline_fallback") {
+    chosenProvider = "offline_fallback";
+  } else if (preferred === "openai" && openAiKey) {
+    chosenProvider = "openai";
+  } else if (preferred === "gemini" && geminiKey) {
+    chosenProvider = "gemini";
+  } else if (preferred === "anthropic" && anthropicKey) {
+    chosenProvider = "anthropic";
+  } else if (openAiKey) {
+    chosenProvider = "openai";
+  } else if (geminiKey) {
+    chosenProvider = "gemini";
+  } else {
+    chosenProvider = "offline_fallback";
+  }
 
   // If no external keys and fallback generator supplied, execute honest offline fallback
   if (chosenProvider === "offline_fallback") {

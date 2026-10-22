@@ -31,8 +31,8 @@ export class GeminiAdapter implements IProviderAdapter {
     "speech_to_text",
     "assistant",
   ];
-  readonly supportedModels = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash-exp"];
-  readonly defaultModel = "gemini-1.5-flash";
+  readonly supportedModels = ["gemini-3.5-flash-lite", "gemini-3.5-flash", "gemini-flash-latest"];
+  readonly defaultModel = "gemini-3.5-flash-lite";
 
   get baseUrl(): string {
     return getGeminiConfig().baseUrl;
