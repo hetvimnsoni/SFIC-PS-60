@@ -97,6 +97,7 @@ shikshasetu-ai/
 |
 |-- tests/                              # Root integration test suites
 |-- docs/
+|   |-- AI_API_SETUP.md                 # Centralized AI Integration, Provider Registry & Security Guide
 |   |-- ARCHITECTURE.md                 # 5-tier architecture & request flow
 |   |-- API.md                          # Comprehensive REST API v1 reference
 |   |-- DEPLOYMENT.md                   # Vercel & standalone cloud deployment guide

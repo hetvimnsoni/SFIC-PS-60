@@ -67,7 +67,9 @@ export interface GapAnalysisResponseData {
 export type AiProviderName =
   | "gemini"
   | "openai"
+  | "anthropic"
   | "google_translate"
+  | "google-translate"
   | "bhashini"
   | "web_speech"
   | "offline_fallback";
@@ -77,7 +79,8 @@ export type AiTaskType =
   | "translation"
   | "speech_to_text"
   | "text_to_speech"
-  | "assistant";
+  | "assistant"
+  | "chat";
 
 export interface AiProviderConfig {
   task: AiTaskType;

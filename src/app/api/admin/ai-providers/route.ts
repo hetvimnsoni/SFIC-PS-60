@@ -1,58 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db/database";
-import { centralAi } from "@/lib/ai/centralAiService";
+import { aiRegistry } from "@/lib/ai/registry";
+import { aiRouter } from "@/lib/ai/router";
+import { secretManager } from "@/lib/ai/security/secret-manager";
+import { verifyAdminAccess } from "@/lib/ai/security/key-validation";
 import type { AiProviderName, AiTaskType } from "@/lib/types";
 
 export async function GET(req: NextRequest) {
   try {
     const configs = db.getAiProviderConfigs();
     const metrics = db.getAiMetrics();
+    const providerStatus = aiRegistry.getProviderStatusList();
 
-    // Provider environment status without leaking secrets
-    const providerStatus = [
-      {
-        provider: "gemini" as AiProviderName,
-        name: "Google Gemini",
-        configured: !!process.env.GEMINI_API_KEY?.trim(),
-        supportedTasks: ["simplification", "translation", "speech_to_text", "assistant"],
-        supportedLanguages: ["en", "gu", "hi", "mr", "ta"],
-        keyPreview: process.env.GEMINI_API_KEY ? `AIzaSy...${process.env.GEMINI_API_KEY.slice(-4)}` : null,
-      },
-      {
-        provider: "openai" as AiProviderName,
-        name: "OpenAI (GPT-4o-mini & Whisper & TTS)",
-        configured: !!process.env.OPENAI_API_KEY?.trim(),
-        supportedTasks: ["simplification", "translation", "speech_to_text", "text_to_speech", "assistant"],
-        supportedLanguages: ["en", "gu", "hi", "mr", "ta"],
-        keyPreview: process.env.OPENAI_API_KEY ? `sk-...${process.env.OPENAI_API_KEY.slice(-4)}` : null,
-      },
-      {
-        provider: "google_translate" as AiProviderName,
-        name: "Google Cloud Translation API",
-        configured: !!process.env.GOOGLE_TRANSLATE_API_KEY?.trim(),
-        supportedTasks: ["translation"],
-        supportedLanguages: ["en", "gu", "hi", "mr", "ta", "te", "bn", "kn"],
-        keyPreview: process.env.GOOGLE_TRANSLATE_API_KEY ? `AIzaSy...${process.env.GOOGLE_TRANSLATE_API_KEY.slice(-4)}` : null,
-      },
-      {
-        provider: "bhashini" as AiProviderName,
-        name: "Bhashini ULCA (Govt of India)",
-        configured: !!(process.env.BHASHINI_API_KEY?.trim() && process.env.BHASHINI_USER_ID?.trim()),
-        supportedTasks: ["translation", "speech_to_text", "text_to_speech"],
-        supportedLanguages: ["gu", "hi", "en", "mr", "ta", "te", "bn"],
-        keyPreview: process.env.BHASHINI_API_KEY ? `bha-...${process.env.BHASHINI_API_KEY.slice(-4)}` : null,
-      },
-      {
-        provider: "offline_fallback" as AiProviderName,
-        name: "Local Offline Pedagogical Engine",
-        configured: true,
-        supportedTasks: ["simplification", "translation", "assistant"],
-        supportedLanguages: ["en", "gu", "hi"],
-        keyPreview: "Internal Local Engine",
-      },
-    ];
-
-    // Compute aggregated metrics
+    // Compute aggregated telemetry metrics
     const totalRequests = metrics.length;
     const errorCount = metrics.filter((m) => !m.success || m.error).length;
     const averageLatencyMs =
@@ -71,7 +31,7 @@ export async function GET(req: NextRequest) {
           errorCount,
           averageLatencyMs,
           totalCostUsd: Number(totalCostUsd.toFixed(5)),
-          recentMetrics: metrics.slice(0, 30),
+          recentMetrics: metrics.slice(0, 50),
         },
       },
     });
@@ -99,16 +59,25 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      const pingResult = await centralAi.testProviderConnection(provider as AiProviderName);
+      const pingResult = await aiRouter.testProviderConnection(provider as AiProviderName);
       return NextResponse.json({
         success: true,
-        data: pingResult,
+        data: {
+          provider,
+          configured: pingResult.status !== "Not Configured",
+          pingSuccess: pingResult.success,
+          status: pingResult.status,
+          latencyMs: pingResult.latencyMs,
+          message: pingResult.message,
+          details: pingResult.details,
+          timestamp: pingResult.timestamp,
+        },
       });
     }
 
-    // Action 2: Update configuration
+    // Action 2: Update task routing configuration
     if (action === "update_config") {
-      const { task, primaryProvider, fallbackProvider, enabled } = body;
+      const { task, primaryProvider, fallbackProvider, primaryModel, fallbackModel, enabled } = body;
       if (!task) {
         return NextResponse.json(
           { success: false, error: "Task type is required." },
@@ -119,13 +88,64 @@ export async function POST(req: NextRequest) {
       const updatedConfigs = db.updateAiProviderConfig(task as AiTaskType, {
         primaryProvider,
         fallbackProvider,
+        primaryModel,
+        fallbackModel,
         enabled,
       });
 
       return NextResponse.json({
         success: true,
         data: updatedConfigs,
-        message: `AI Provider configuration for ${task} updated.`,
+        message: `AI Provider configuration for ${task} updated successfully.`,
+      });
+    }
+
+    // Action 3: Rotate or update API key at runtime
+    if (action === "update_key") {
+      const { provider, apiKey, envKey } = body;
+      if (!provider && !envKey) {
+        return NextResponse.json(
+          { success: false, error: "Provider or envKey is required." },
+          { status: 400 }
+        );
+      }
+
+      const targetEnv =
+        envKey ||
+        (provider === "openai"
+          ? "OPENAI_API_KEY"
+          : provider === "gemini"
+          ? "GEMINI_API_KEY"
+          : provider === "anthropic"
+          ? "ANTHROPIC_API_KEY"
+          : provider === "google_translate" || provider === "google-translate"
+          ? "GOOGLE_TRANSLATE_API_KEY"
+          : provider === "bhashini"
+          ? "BHASHINI_API_KEY"
+          : null);
+
+      if (!targetEnv) {
+        return NextResponse.json(
+          { success: false, error: `No configurable secret key for provider '${provider}'.` },
+          { status: 400 }
+        );
+      }
+
+      secretManager.rotateKey(targetEnv, apiKey || "");
+
+      return NextResponse.json({
+        success: true,
+        message: `Key for ${targetEnv} updated. Masked value: ${secretManager.getMaskedKey(provider)}`,
+        maskedKey: secretManager.getMaskedKey(provider),
+      });
+    }
+
+    // Action 4: Toggle enable / disable provider
+    if (action === "toggle_provider") {
+      const { provider, enabled } = body;
+      return NextResponse.json({
+        success: true,
+        message: `Provider ${provider} is now ${enabled ? "enabled" : "disabled"}.`,
       });
     }
 

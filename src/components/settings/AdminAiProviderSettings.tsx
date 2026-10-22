@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   Sparkles,
   Server,
@@ -28,6 +29,10 @@ interface ProviderStatus {
 }
 
 const TASK_NAMES: Record<AiTaskType, { title: string; desc: string }> = {
+  chat: {
+    title: "General AI Chatbot",
+    desc: "Interactive question-answering, pedagogy advice, and bilingual curriculum guidance.",
+  },
   simplification: {
     title: "School Notice Simplification",
     desc: "Transforms complex notices into simple sentences while preserving dates and rules.",
@@ -211,14 +216,23 @@ export function AdminAiProviderSettings() {
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={fetchData}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-white border border-[#49352F]/20 text-[#49352F] hover:bg-[#FAF6E9] transition-all cursor-pointer"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span>Refresh Telemetry</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/admin/ai-providers"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-[#2E7D5E] text-white hover:bg-[#25684E] transition-all"
+            >
+              <Cpu className="w-3.5 h-3.5" />
+              <span>Full AI Dashboard</span>
+            </Link>
+            <button
+              type="button"
+              onClick={fetchData}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-white border border-[#49352F]/20 text-[#49352F] hover:bg-[#FAF6E9] transition-all cursor-pointer"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Refresh Telemetry</span>
+            </button>
+          </div>
         </div>
 
         {/* Live Metrics Summary Cards */}

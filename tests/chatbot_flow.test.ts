@@ -192,6 +192,180 @@ describe("Chatbot Dynamic Response Flow & Bug Verification Suite", () => {
     }
   });
 
+  it("TEST 9: 'What is artificial intelligence?' returns an accurate explanation of AI systems", async () => {
+    const req = createMockRequest("http://localhost:3000/api/v1/ai/chat", "POST", {
+      message: "What is artificial intelligence?",
+      language: "en",
+    });
+    const res = await chatHandler(req);
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.success, true);
+    assert.ok(!data.message.includes(OLD_HARDCODED_FRAGMENT));
+    assert.ok(
+      data.message.toLowerCase().includes("artificial intelligence") ||
+      data.message.toLowerCase().includes("reasoning") ||
+      data.message.toLowerCase().includes("learning"),
+      "Must explain artificial intelligence"
+    );
+  });
+
+  it("TEST 10: 'Write a simple Python calculator.' returns executable Python code in code blocks", async () => {
+    const req = createMockRequest("http://localhost:3000/api/v1/ai/chat", "POST", {
+      message: "Write a simple Python calculator.",
+      language: "en",
+    });
+    const res = await chatHandler(req);
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.success, true);
+    assert.ok(!data.message.includes(OLD_HARDCODED_FRAGMENT));
+    assert.ok(data.message.includes("```python"), "Must contain markdown code block for python");
+    assert.ok(data.message.includes("def add"), "Must contain Python calculator functions");
+  });
+
+  it("TEST 11: 'Write a C++ program to reverse a string.' returns working C++ code and complexity analysis", async () => {
+    const req = createMockRequest("http://localhost:3000/api/v1/ai/chat", "POST", {
+      message: "Write a C++ program to reverse a string.",
+      language: "en",
+    });
+    const res = await chatHandler(req);
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.success, true);
+    assert.ok(!data.message.includes(OLD_HARDCODED_FRAGMENT));
+    assert.ok(data.message.includes("```cpp"), "Must contain markdown code block for C++");
+    assert.ok(data.message.includes("reverse"), "Must implement reverse logic");
+  });
+
+  it("TEST 12: 'Translate Good morning into Gujarati.' returns accurate Gujarati translation and pronunciation", async () => {
+    const req = createMockRequest("http://localhost:3000/api/v1/ai/chat", "POST", {
+      message: "Translate Good morning into Gujarati.",
+      language: "en",
+    });
+    const res = await chatHandler(req);
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.success, true);
+    assert.ok(!data.message.includes(OLD_HARDCODED_FRAGMENT));
+    assert.ok(
+      data.message.includes("સુપ્રભાત") || data.message.includes("શુભ સવાર"),
+      "Must include Gujarati translation for Good morning"
+    );
+  });
+
+  it("TEST 13: 'What is 125 multiplied by 24?' calculates 3000 dynamically", async () => {
+    const req = createMockRequest("http://localhost:3000/api/v1/ai/chat", "POST", {
+      message: "What is 125 multiplied by 24?",
+      language: "en",
+    });
+    const res = await chatHandler(req);
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.success, true);
+    assert.ok(!data.message.includes(OLD_HARDCODED_FRAGMENT));
+    assert.ok(data.message.includes("3000"), "Must compute 125 * 24 = 3000");
+  });
+
+  it("TEST 14: 'Write a birthday message for my friend.' generates a creative, warm greeting", async () => {
+    const req = createMockRequest("http://localhost:3000/api/v1/ai/chat", "POST", {
+      message: "Write a birthday message for my friend.",
+      language: "en",
+    });
+    const res = await chatHandler(req);
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.success, true);
+    assert.ok(!data.message.includes(OLD_HARDCODED_FRAGMENT));
+    assert.ok(
+      data.message.toLowerCase().includes("birthday") &&
+      (data.message.toLowerCase().includes("friend") || data.message.toLowerCase().includes("happy")),
+      "Must contain birthday greeting"
+    );
+  });
+
+  it("TEST 15: 'What is the difference between AI and machine learning?' provides a clear comparison", async () => {
+    const req = createMockRequest("http://localhost:3000/api/v1/ai/chat", "POST", {
+      message: "What is the difference between AI and machine learning?",
+      language: "en",
+    });
+    const res = await chatHandler(req);
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.success, true);
+    assert.ok(!data.message.includes(OLD_HARDCODED_FRAGMENT));
+    assert.ok(
+      data.message.toLowerCase().includes("subset") ||
+      data.message.toLowerCase().includes("umbrella") ||
+      data.message.toLowerCase().includes("machine learning"),
+      "Must explain the distinction between AI and ML"
+    );
+  });
+
+  it("TEST 16: 'Give me an unusual startup idea.' generates a creative business concept", async () => {
+    const req = createMockRequest("http://localhost:3000/api/v1/ai/chat", "POST", {
+      message: "Give me an unusual startup idea.",
+      language: "en",
+    });
+    const res = await chatHandler(req);
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.success, true);
+    assert.ok(!data.message.includes(OLD_HARDCODED_FRAGMENT));
+    assert.ok(
+      data.message.toLowerCase().includes("idea") ||
+      data.message.toLowerCase().includes("problem") ||
+      data.message.toLowerCase().includes("startup"),
+      "Must generate startup idea"
+    );
+  });
+
+  it("TEST 17: Validates input rejection for empty and excessively long messages", async () => {
+    // Empty message
+    const emptyReq = createMockRequest("http://localhost:3000/api/v1/ai/chat", "POST", {
+      message: "   ",
+    });
+    const emptyRes = await chatHandler(emptyReq);
+    assert.equal(emptyRes.status, 400);
+    const emptyData = await emptyRes.json();
+    assert.equal(emptyData.success, false);
+    assert.ok(emptyData.error.includes("required"));
+
+    // Long message (>4000 characters)
+    const longText = "a".repeat(4500);
+    const longReq = createMockRequest("http://localhost:3000/api/v1/ai/chat", "POST", {
+      message: longText,
+    });
+    const longRes = await chatHandler(longReq);
+    assert.equal(longRes.status, 400);
+    const longData = await longRes.json();
+    assert.equal(longData.success, false);
+    assert.ok(longData.error.includes("too long") || longData.error.includes("4,000"));
+  });
+
+  it("TEST 18: Validates multi-turn context retention with follow-up queries", async () => {
+    const q1 = await aiService.askAssistant("Explain machine learning with an example.", [], "en", "teacher");
+    assert.equal(q1.success, true);
+    assert.ok(!q1.message.includes(OLD_HARDCODED_FRAGMENT));
+    assert.ok(q1.message.toLowerCase().includes("machine learning"));
+
+    // Follow-up question relying on previous turn
+    const history = [
+      { role: "user" as const, content: "Explain machine learning with an example." },
+      { role: "assistant" as const, content: q1.message },
+    ];
+    const q2 = await aiService.askAssistant("Give me a real-world example.", history, "en", "teacher");
+    assert.equal(q2.success, true);
+    assert.ok(!q2.message.includes(OLD_HARDCODED_FRAGMENT));
+    assert.ok(
+      q2.message.toLowerCase().includes("netflix") ||
+      q2.message.toLowerCase().includes("spotify") ||
+      q2.message.toLowerCase().includes("recommendation") ||
+      q2.message.toLowerCase().includes("example"),
+      "Follow-up must understand machine learning context"
+    );
+  });
+
   it("Validates that /api/ai/assistant also processes dynamic questions and returns response aliases", async () => {
     const req = createMockRequest("http://localhost:3000/api/ai/assistant", "POST", {
       message: "What is 15 multiplied by 8?",

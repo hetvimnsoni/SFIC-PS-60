@@ -18,6 +18,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (message.length > 4000) {
+      return NextResponse.json(
+        { success: false, error: "Message is too long. Please limit your question to 4,000 characters." },
+        { status: 400 }
+      );
+    }
+
     const result = await aiService.askAssistant(message, history, language, userRole);
     if (!result.success) {
       return NextResponse.json(

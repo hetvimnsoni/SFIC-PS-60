@@ -17,6 +17,9 @@ import {
   Minimize2,
   RefreshCw,
   Lightbulb,
+  Copy,
+  Check,
+  RotateCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
@@ -27,6 +30,174 @@ interface ChatMessage {
   time: string;
   isError?: boolean;
   failedText?: string;
+}
+
+function CodeBlock({ language, code }: { language: string; code: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="my-2 rounded-xl overflow-hidden border border-[#49352F]/20 bg-[#1E1E1E] text-slate-100 shadow-md">
+      <div className="flex items-center justify-between px-3 py-1.5 bg-[#2D2D2D] text-[10px] font-mono text-neutral-300 border-b border-neutral-700">
+        <span className="uppercase tracking-wider font-bold text-amber-400">{language || "code"}</span>
+        <button
+          type="button"
+          onClick={handleCopy}
+          className="flex items-center gap-1 hover:text-white transition-colors cursor-pointer text-[10px]"
+          aria-label="Copy code to clipboard"
+        >
+          {copied ? (
+            <>
+              <Check className="w-3 h-3 text-emerald-400" />
+              <span className="text-emerald-400 font-semibold">Copied!</span>
+            </>
+          ) : (
+            <>
+              <Copy className="w-3 h-3" />
+              <span>Copy</span>
+            </>
+          )}
+        </button>
+      </div>
+      <pre className="p-3 text-[11px] font-mono overflow-x-auto leading-relaxed select-text">
+        <code>{code}</code>
+      </pre>
+    </div>
+  );
+}
+
+function formatInlineStyles(text: string): React.ReactNode[] {
+  const parts: React.ReactNode[] = [];
+  const regex = /(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    const token = match[0];
+    if (token.startsWith("`") && token.endsWith("`")) {
+      parts.push(
+        <code
+          key={`c-${match.index}`}
+          className="px-1.5 py-0.5 rounded bg-[#FAF6E9] text-[#8D4E10] font-mono text-[11px] border border-[#8D4E10]/20 font-semibold"
+        >
+          {token.slice(1, -1)}
+        </code>
+      );
+    } else if (token.startsWith("**") && token.endsWith("**")) {
+      parts.push(
+        <strong key={`b-${match.index}`} className="font-bold text-[#49352F]">
+          {token.slice(2, -2)}
+        </strong>
+      );
+    } else if (token.startsWith("*") && token.endsWith("*")) {
+      parts.push(
+        <em key={`i-${match.index}`} className="italic">
+          {token.slice(1, -1)}
+        </em>
+      );
+    }
+    lastIndex = match.index + token.length;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts;
+}
+
+function TextSegment({ rawText }: { rawText: string }) {
+  const paragraphs = rawText.split(/\n\n+/);
+  return (
+    <>
+      {paragraphs.map((p, pIdx) => {
+        const lines = p.split("\n");
+        return (
+          <div key={pIdx} className="space-y-1">
+            {lines.map((line, lIdx) => {
+              const trimmed = line.trim();
+              if (!trimmed) return null;
+
+              if (trimmed.startsWith("• ") || trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+                return (
+                  <div key={lIdx} className="flex items-start gap-1.5 ml-2 my-0.5">
+                    <span className="text-[#8D4E10] font-bold mt-0.5 shrink-0">•</span>
+                    <span>{formatInlineStyles(trimmed.slice(2))}</span>
+                  </div>
+                );
+              }
+
+              const numMatch = trimmed.match(/^(\d+)\.\s+(.*)$/);
+              if (numMatch) {
+                return (
+                  <div key={lIdx} className="flex items-start gap-1.5 ml-2 my-0.5">
+                    <span className="text-[#8D4E10] font-bold text-[11px] shrink-0">{numMatch[1]}.</span>
+                    <span>{formatInlineStyles(numMatch[2])}</span>
+                  </div>
+                );
+              }
+
+              if (trimmed.startsWith("### ")) {
+                return (
+                  <h5 key={lIdx} className="font-bold text-xs text-[#49352F] mt-2 mb-0.5">
+                    {formatInlineStyles(trimmed.slice(4))}
+                  </h5>
+                );
+              }
+              if (trimmed.startsWith("## ")) {
+                return (
+                  <h4 key={lIdx} className="font-bold text-[13px] text-[#49352F] mt-2 mb-1">
+                    {formatInlineStyles(trimmed.slice(3))}
+                  </h4>
+                );
+              }
+
+              return (
+                <p key={lIdx} className="leading-relaxed">
+                  {formatInlineStyles(line)}
+                </p>
+              );
+            })}
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+function FormattedContent({ text }: { text: string }) {
+  const codeBlockRegex = /```([a-zA-Z0-9_-]*)\n([\s\S]*?)```/g;
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = codeBlockRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(
+        <TextSegment key={`text-${lastIndex}`} rawText={text.slice(lastIndex, match.index)} />
+      );
+    }
+    const lang = match[1]?.trim() || "code";
+    const code = match[2]?.trimEnd() || "";
+    parts.push(<CodeBlock key={`code-${match.index}`} language={lang} code={code} />);
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(
+      <TextSegment key={`text-${lastIndex}`} rawText={text.slice(lastIndex)} />
+    );
+  }
+
+  return <div className="space-y-1.5">{parts}</div>;
 }
 
 export function GlobalShikshaBot() {
@@ -51,14 +222,30 @@ export function GlobalShikshaBot() {
     const tourKey = getPageTourKey(pathname);
     triggerPageTour(tourKey);
   };
+
+  const handleNewChat = () => {
+    setMessages([
+      {
+        id: "welcome-" + Date.now(),
+        sender: "bot",
+        text:
+          language === "gu"
+            ? "નમસ્તે! હું ChatGPT જેવો જ જનરલ-પર્પઝ AI સહાયક છું. આપ મને પ્રોગ્રામિંગ, વિજ્ઞાન, ગણિત, શિક્ષણ, આઈડિયા કે કોઈપણ વિષય પર પ્રશ્ન પૂછી શકો છો. હું કેવી રીતે મદદ કરી શકું?"
+            : "Hello! I am your general-purpose AI assistant. You can ask me anything about programming, science, mathematics, education, creative writing, translation, or school queries. How can I help you today?",
+        time: "Just now",
+      },
+    ]);
+    setInputValue("");
+  };
+
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "welcome",
       sender: "bot",
       text:
         language === "gu"
-          ? "નમસ્તે! હું શિક્ષાસેતુ AI સહાયક છું. હું તમને વર્ગખંડ શિક્ષણ, વિદ્યાર્થીઓના લર્નિંગ ગેપ્સ, ઉપચારાત્મક યોજનાઓ અને શાળાકીય પ્રશ્નોના ઉત્તરો આપવામાં મદદ કરી શકું છું. તમે શું જાણવા માંગો છો?"
-          : "Hello! I'm ShikshaSetu AI Assistant. I can help analyze learning gaps, formulate remedial plans, answer educational questions, and query authorized school records. How can I assist you today?",
+          ? "નમસ્તે! હું શિક્ષાસેતુ AI સહાયક છું. આપ મને પ્રોગ્રામિંગ, વિજ્ઞાન, ગણિત, શિક્ષણ, આઈડિયા કે કોઈપણ વિષય પર પ્રશ્ન પૂછી શકો છો. હું કેવી રીતે મદદ કરી શકું?"
+          : "Hello! I am your general-purpose AI assistant. You can ask me anything about programming, science, mathematics, education, creative writing, translation, or school queries. How can I help you today?",
       time: "Just now",
     },
   ]);
@@ -67,16 +254,20 @@ export function GlobalShikshaBot() {
 
   const suggestedPrompts = [
     {
+      label: language === "gu" ? "આર્ટિફિશિયલ ઇન્ટેલિજન્સ શું છે?" : "What is AI?",
+      query: "What is artificial intelligence?",
+    },
+    {
+      label: language === "gu" ? "પાયથોન કેલ્ક્યુલેટર" : "Python Calculator",
+      query: "Write a simple Python calculator.",
+    },
+    {
       label: language === "gu" ? "આજે કોને મદદની જરૂર છે?" : "Who needs help today?",
       query: "Who needs immediate help today in Class 4?",
     },
     {
-      label: language === "gu" ? "આરવ માટે ઉપચારાત્મક યોજના બનાવો" : "Make a plan for Aarav",
-      query: "Generate a 5-step remedial plan for Aarav Patel in Division Basics.",
-    },
-    {
-      label: language === "gu" ? "૬૦% બેન્ચમાર્ક નિયમ સમજાવો" : "Explain 60% threshold",
-      query: "Explain the 60% mastery threshold rule used in ShikshaSetu AI.",
+      label: language === "gu" ? "ગુજરાતી અનુવાદ" : "Translate to Gujarati",
+      query: "Translate Good morning into Gujarati.",
     },
   ];
 
@@ -107,7 +298,7 @@ export function GlobalShikshaBot() {
 
     const historyPayload = messages
       .filter((m) => m.id !== "welcome" && !m.isError)
-      .slice(-6)
+      .slice(-10)
       .map((m) => ({
         role: m.sender === "user" ? ("user" as const) : ("assistant" as const),
         content: m.text,
@@ -215,32 +406,44 @@ export function GlobalShikshaBot() {
 
       {/* Expanded Glassmorphic Chat Panel */}
       {isOpen && (
-        <div className="w-[360px] sm:w-[400px] h-[520px] rounded-3xl bg-white/95 border border-[#49352F]/15 shadow-[0_20px_60px_-15px_rgba(73,53,47,0.18)] backdrop-blur-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 duration-200 text-[#49352F]">
+        <div className="w-[360px] sm:w-[420px] h-[540px] rounded-3xl bg-white/95 border border-[#49352F]/15 shadow-[0_20px_60px_-15px_rgba(73,53,47,0.18)] backdrop-blur-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 duration-200 text-[#49352F]">
           {/* Top Panel Header */}
-          <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#49352F]/10 bg-[#FAF6E9]">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-[#49352F]/10 bg-[#FAF6E9]">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full bg-[#F2CAB3] border border-[#49352F]/15 flex items-center justify-center text-sm shadow-xs">
                 <Bot className="w-4 h-4 text-[#49352F]" aria-hidden="true" />
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <h4 className="text-xs font-bold text-[#49352F]">ShikshaBot AI</h4>
+                  <h4 className="text-xs font-bold text-[#49352F]">ShikshaSetu AI</h4>
                   <span className="px-1.5 py-0.2 rounded-full bg-[#2E7D5E]/15 text-[#2E7D5E] border border-[#2E7D5E]/20 text-[9px] font-extrabold uppercase">
-                    Live Assistant
+                    ChatGPT Powered
                   </span>
                 </div>
-                <p className="text-[10px] text-[#7A6862]">{language === "gu" ? "શિક્ષણ અને સંચાર સહાયક" : "School & Communication AI"}</p>
+                <p className="text-[10px] text-[#7A6862]">{language === "gu" ? "સામાન્ય અને શાળાકીય AI સહાયક" : "General-Purpose AI Assistant"}</p>
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              className="p-1.5 rounded-xl text-[#7A6862] hover:text-[#49352F] hover:bg-white transition-colors cursor-pointer"
-              aria-label="Close assistant"
-            >
-              <Minimize2 className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={handleNewChat}
+                title={language === "gu" ? "નવી વાતચીત શરૂ કરો" : "Start New Chat"}
+                className="flex items-center gap-1 px-2 py-1 rounded-xl bg-white hover:bg-[#FAF6E9] text-[11px] font-semibold text-[#49352F] border border-[#49352F]/15 transition-all shadow-xs active:scale-95 cursor-pointer"
+              >
+                <RotateCcw className="w-3 h-3 text-[#B26A1B]" />
+                <span className="hidden sm:inline">{language === "gu" ? "નવી ચેટ" : "New Chat"}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="p-1.5 rounded-xl text-[#7A6862] hover:text-[#49352F] hover:bg-white transition-colors cursor-pointer"
+                aria-label="Close assistant"
+              >
+                <Minimize2 className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
           {/* Messages Body */}
@@ -256,7 +459,7 @@ export function GlobalShikshaBot() {
                   </div>
                 )}
                 <div
-                  className={`max-w-[80%] rounded-2xl p-3 leading-relaxed shadow-xs ${
+                  className={`max-w-[85%] rounded-2xl p-3 leading-relaxed shadow-xs ${
                     msg.sender === "user"
                       ? "bg-[#F2CAB3] text-[#49352F] font-medium border border-[#49352F]/12 rounded-tr-xs"
                       : msg.isError
@@ -264,7 +467,11 @@ export function GlobalShikshaBot() {
                       : "bg-white text-[#49352F] border border-[#49352F]/12 rounded-tl-xs shadow-xs"
                   }`}
                 >
-                  <p className="whitespace-pre-wrap">{msg.text}</p>
+                  {msg.sender === "bot" && !msg.isError ? (
+                    <FormattedContent text={msg.text} />
+                  ) : (
+                    <p className="whitespace-pre-wrap">{msg.text}</p>
+                  )}
                   {msg.isError && msg.failedText && (
                     <button
                       type="button"
@@ -289,7 +496,7 @@ export function GlobalShikshaBot() {
             {isLoading && (
               <div className="flex items-center gap-2 text-[#7A6862] text-xs italic">
                 <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#B26A1B]" />
-                <span>{language === "gu" ? "શિક્ષાસેતુ AI વિચારી રહ્યું છે..." : "ShikshaSetu AI is generating response..."}</span>
+                <span>{language === "gu" ? "AI ઉત્તર તૈયાર કરી રહ્યું છે..." : "AI is generating response..."}</span>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -304,7 +511,7 @@ export function GlobalShikshaBot() {
               className="shrink-0 text-[11px] font-bold text-white bg-[#49352F] hover:bg-[#2C1F1B] px-3 py-1 rounded-full transition-all flex items-center gap-1 cursor-pointer shadow-xs active:scale-95"
             >
               <Sparkles className="w-3 h-3 text-[#F2CAB3]" />
-              <span>{language === "gu" ? "આ પેજ કેવી રીતે વાપરવું? (ટૂર)" : "Show me how to use this page"}</span>
+              <span>{language === "gu" ? "વેબસાઇટ ટૂર" : "Tour"}</span>
             </button>
             {suggestedPrompts.map((p, idx) => (
               <button
@@ -332,8 +539,8 @@ export function GlobalShikshaBot() {
               onChange={(e) => setInputValue(e.target.value)}
               placeholder={
                 language === "gu"
-                  ? "વિદ્યાર્થી અથવા નિયમ વિશે પૂછો..."
-                  : "Ask about a student, gap, or 5-step plan..."
+                  ? "કંઈપણ પૂછો (પ્રોગ્રામિંગ, વિજ્ઞાન, ગણિત, શિક્ષણ)..."
+                  : "Ask anything (programming, science, math, education)..."
               }
               className="flex-1 px-3 py-2 rounded-xl bg-white border border-[#49352F]/15 text-xs text-[#49352F] placeholder-[#7A6862] focus:outline-hidden focus:border-[#F2CAB3]"
             />
@@ -352,3 +559,4 @@ export function GlobalShikshaBot() {
     </div>
   );
 }
+

@@ -21,6 +21,7 @@ import {
   Sparkles,
   BookOpen,
   Languages,
+  Cpu,
 } from "lucide-react";
 import { triggerPageTour } from "@/components/tutorial/SpotlightTour";
 
@@ -67,6 +68,13 @@ export function AppSidebar() {
       icon: BookOpen,
       badge: "5 Min",
       badgeColor: "bg-[#2E7D5E]/15 text-[#2E7D5E] border border-[#2E7D5E]/20 font-semibold",
+    },
+    {
+      href: "/admin/ai-providers",
+      label: "AI Providers",
+      icon: Cpu,
+      badge: "Admin",
+      badgeColor: "bg-[#2E7D5E]/15 text-[#2E7D5E] border border-[#2E7D5E]/20 font-bold",
     },
     { href: "/settings", label: t.nav.settings, icon: Settings },
   ];
