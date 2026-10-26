@@ -12,6 +12,13 @@ export function sanitizePrompt(text: string): string {
     "[EMAIL]"
   );
   sanitized = sanitized.replace(/\b\d{10}\b/g, "[PHONE]");
+
+  // Neutralize prompt injection attempts and system instruction overrides
+  sanitized = sanitized
+    .replace(/(?:SYSTEM\s+OVERRIDE|SYSTEM_OVERRIDE)\s*:/gi, "[FILTERED_INSTRUCTION]:")
+    .replace(/(?:IGNORE\s+ALL\s+PREVIOUS\s+INSTRUCTIONS)\s*:/gi, "[FILTERED_INSTRUCTION]:")
+    .replace(/\[\s*SYSTEM\s*\]/gi, "[FILTERED_ROLE]");
+
   return sanitized;
 }
 

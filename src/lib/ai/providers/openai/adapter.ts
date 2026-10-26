@@ -72,12 +72,24 @@ export class OpenAiAdapter implements IProviderAdapter {
     try {
       const client = this.getClient();
       const models = await client.models(10000);
+
+      // Perform a minimal 1-token test prompt to verify account balance and generation permissions
+      await client.chatCompletion(
+        {
+          model: config.model || "gpt-4o-mini",
+          messages: [{ role: "user", content: "ping" }],
+          max_tokens: 1,
+          temperature: 0,
+        },
+        8000
+      );
+
       const latencyMs = Date.now() - startTime;
       return {
         success: true,
         status: "Connected",
         latencyMs,
-        message: `Successfully connected to OpenAI. Verified access to ${models.length} models including ${config.model}.`,
+        message: `Successfully connected to OpenAI. Verified access to ${models.length} models and active generation credits with ${config.model}.`,
         details: { model: config.model, modelsAvailable: models.slice(0, 5) },
         timestamp,
       };
@@ -97,7 +109,7 @@ export class OpenAiAdapter implements IProviderAdapter {
           success: false,
           status: "Rate Limited",
           latencyMs,
-          message: `Rate Limit Exceeded: ${err.message}`,
+          message: `Rate Limit / Quota Exceeded: ${err.message}`,
           timestamp,
         };
       }

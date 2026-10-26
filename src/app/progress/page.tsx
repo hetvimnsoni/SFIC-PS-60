@@ -92,7 +92,7 @@ export default function ProgressTrackingPage() {
               Students Showing Growth
             </span>
             <div className="text-2xl sm:text-3xl font-extrabold text-[#2E7D5E] mt-1 font-heading">
-              {progressData?.improvingCount || 2} Students
+              {progressData?.improvingCount ?? 0} Students
             </div>
             <span className="text-[11px] text-[#7A6862] mt-1 block font-medium">
               Positive percentage-point delta
@@ -104,7 +104,7 @@ export default function ProgressTrackingPage() {
               Interventions Completed
             </span>
             <div className="text-2xl sm:text-3xl font-extrabold text-[#B26A1B] mt-1 font-heading">
-              {progressData?.completedPlansCount || 1} Plans
+              {progressData?.completedPlansCount ?? 0} Plans
             </div>
             <span className="text-[11px] text-[#7A6862] mt-1 block font-medium">
               Validated practice sessions
@@ -116,7 +116,7 @@ export default function ProgressTrackingPage() {
               Gaps Resolved
             </span>
             <div className="text-2xl sm:text-3xl font-extrabold text-[#49352F] mt-1 font-heading">
-              {progressData?.resolvedGapsCount || 0} Gaps
+              {progressData?.resolvedGapsCount ?? 0} Gaps
             </div>
             <span className="text-[11px] text-[#7A6862] mt-1 block font-medium">
               Met &ge;80% mastery
@@ -128,7 +128,7 @@ export default function ProgressTrackingPage() {
               Active Interventions
             </span>
             <div className="text-2xl sm:text-3xl font-extrabold text-[#C54738] mt-1 font-heading">
-              {progressData?.activeGapsCount || 3} Gaps
+              {progressData?.activeGapsCount ?? 0} Gaps
             </div>
             <span className="text-[11px] text-[#7A6862] mt-1 block font-medium">
               Ongoing remedial practice

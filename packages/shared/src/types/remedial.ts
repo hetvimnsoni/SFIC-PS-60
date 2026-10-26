@@ -28,6 +28,7 @@ export interface RemedialPlan {
   reassessmentCriteria: string;
   teacherInstructions: string;
   teacherNotes?: string;
+  completedSteps?: number[];
   createdAt: string;
   reviewDate?: string;
 }

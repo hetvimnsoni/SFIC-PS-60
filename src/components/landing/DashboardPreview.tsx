@@ -22,6 +22,39 @@ import {
 
 export function DashboardPreview() {
   const [activeTab, setActiveTab] = useState<"attention" | "bridge" | "subjects">("bridge");
+  const [stats, setStats] = useState({
+    totalStudents: 15,
+    needsSupport: 4,
+    activePlans: 3,
+    reassessedGain: "+50 pp",
+  });
+
+  React.useEffect(() => {
+    async function loadStats() {
+      try {
+        const [repRes, progRes] = await Promise.all([
+          fetch("/api/v1/reports/overview"),
+          fetch("/api/progress"),
+        ]);
+        const [repData, progData] = await Promise.all([repRes.json(), progRes.json()]);
+        if (repData.success && repData.report) {
+          const r = repData.report;
+          const aaravItem = progData.progressItems?.find(
+            (i: any) => i.studentId === "std-aarav" && i.deltaPercentagePoints
+          );
+          setStats({
+            totalStudents: r.totalStudents,
+            needsSupport: r.masteryDistribution?.needsSupport ?? 4,
+            activePlans: r.remedialPlansUnderIntervention ?? 3,
+            reassessedGain: aaravItem ? `+${aaravItem.deltaPercentagePoints} pp` : "+50 pp",
+          });
+        }
+      } catch (e) {
+        console.error("Dashboard preview stat fetch error", e);
+      }
+    }
+    loadStats();
+  }, []);
 
   return (
     <Tilt3DCard glowColor="rgba(242, 202, 179, 0.35)" className="w-full">
@@ -60,31 +93,31 @@ export function DashboardPreview() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <StatTile
               label="Total Enrolled"
-              value={15}
+              value={stats.totalStudents}
               icon={Users}
               variant="indigo"
               description="Classes 3, 4 & 5"
-              sparklineData={[12, 13, 14, 15, 15]}
+              sparklineData={[12, 13, 14, 15, stats.totalStudents]}
             />
             <StatTile
               label="Need Support"
-              value={4}
+              value={stats.needsSupport}
               icon={AlertTriangle}
               variant="coral"
               description="Score < 60% threshold"
-              sparklineData={[7, 6, 5, 4, 4]}
+              sparklineData={[7, 6, 5, 4, stats.needsSupport]}
             />
             <StatTile
               label="Active Plans"
-              value={3}
+              value={stats.activePlans}
               icon={Layers}
               variant="saffron"
               description="5-step manipulatives"
-              sparklineData={[1, 2, 3, 3, 3]}
+              sparklineData={[1, 2, 3, 3, stats.activePlans]}
             />
             <StatTile
               label="Reassessed Gain"
-              value="+50 pp"
+              value={stats.reassessedGain}
               icon={TrendingUp}
               variant="mint"
               description="Aarav: 35% -> 85%"

@@ -121,12 +121,14 @@ export default function RemedialPlansPage() {
 
       if (dataPlans.success) {
         setPlans(dataPlans.plans || []);
-        // Initialize default completed steps from plan data or demo
+        // Initialize completed steps from database record or smart status mapping
         const initialMap: Record<string, number[]> = {};
         (dataPlans.plans || []).forEach((p: any) => {
-          if (p.status === "Completed") {
+          if (Array.isArray(p.completedSteps)) {
+            initialMap[p.id] = p.completedSteps;
+          } else if (p.status === "Completed") {
             initialMap[p.id] = [1, 2, 3, 4, 5];
-          } else if (p.status === "In Progress") {
+          } else if (p.status === "In Progress" || p.status === "Active") {
             initialMap[p.id] = [1, 2];
           } else {
             initialMap[p.id] = [1];
@@ -146,14 +148,25 @@ export default function RemedialPlansPage() {
     fetchPlans();
   }, []);
 
-  const toggleStepCompleted = (planId: string, stepNumber: number) => {
-    setCompletedStepsMap((prev) => {
-      const current = prev[planId] || [];
-      const updated = current.includes(stepNumber)
-        ? current.filter((n) => n !== stepNumber)
-        : [...current, stepNumber];
-      return { ...prev, [planId]: updated };
-    });
+  const toggleStepCompleted = async (planId: string, stepNumber: number) => {
+    const current = completedStepsMap[planId] || [];
+    const updated = current.includes(stepNumber)
+      ? current.filter((n) => n !== stepNumber)
+      : [...current, stepNumber].sort((a, b) => a - b);
+
+    setCompletedStepsMap((prev) => ({ ...prev, [planId]: updated }));
+
+    // Persist step completion and update status in database
+    const newStatus = updated.length === 5 ? "Completed" : updated.length > 0 ? "In Progress" : "Suggested";
+    try {
+      await fetch("/api/remedial-plans", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: planId, completedSteps: updated, status: newStatus }),
+      });
+    } catch (e) {
+      console.error("Failed to persist step progress", e);
+    }
   };
 
   const handleUpdateStatus = async (planId: string, newStatus: string) => {

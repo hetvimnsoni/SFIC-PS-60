@@ -100,10 +100,10 @@ export const SUPPORTED_PROVIDERS_METADATA: Record<AiProviderName, ProviderMetada
 export const DEFAULT_AI_CONFIGS: AiProviderConfig[] = [
   {
     task: "chat",
-    primaryProvider: "openai",
-    fallbackProvider: "gemini",
-    primaryModel: "gpt-4o-mini",
-    fallbackModel: "gemini-3.5-flash-lite",
+    primaryProvider: (process.env.AI_PROVIDER as any) || "gemini",
+    fallbackProvider: "openai",
+    primaryModel: "gemini-3.5-flash-lite",
+    fallbackModel: "gpt-4o-mini",
     enabled: true,
   },
   {

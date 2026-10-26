@@ -112,6 +112,7 @@ export interface AssistantContext {
   userRole?: string;
   studentGrade?: number;
   studentSection?: string;
+  language?: string;
 }
 
 export interface AssistantResponse {

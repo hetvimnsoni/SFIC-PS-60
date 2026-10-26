@@ -335,6 +335,17 @@
       "section": "A",
       "enrollmentStatus": "active",
       "createdAt": "2026-06-17T09:15:00Z"
+    },
+    {
+      "studentCode": "MPS-TEST-2364",
+      "displayName": "Ananya Trivedi",
+      "classroomId": "cls-4a",
+      "grade": 4,
+      "section": "A",
+      "enrollmentStatus": "active",
+      "notes": "Updated enrollment verified by principal.",
+      "id": "std-1793021522364",
+      "createdAt": "2026-10-26T13:32:02.364Z"
     }
   ],
   "assessments": [
@@ -675,7 +686,7 @@
       "subjectCode": "MATH",
       "learningObjective": "Understand division as equal grouping, sharing, and inverse multiplication.",
       "recommendationReason": "Recent assessment performance (35%) is below the configured support threshold (60%), and previous result (40%) also showed persistent difficulty.",
-      "status": "Completed",
+      "status": "In Progress",
       "estimatedMinutes": 20,
       "difficulty": "Beginner",
       "requiredMaterials": [
@@ -720,7 +731,12 @@
       "teacherInstructions": "Use concrete objects first. Avoid abstract long division symbols until the concept of sharing is crystal clear.",
       "teacherNotes": "Aarav enjoys hands-on token activities. Plan approved for daily zero-period session.",
       "createdAt": "2026-09-25T08:30:00Z",
-      "reviewDate": "2026-10-05T08:30:00Z"
+      "reviewDate": "2026-10-05T08:30:00Z",
+      "completedSteps": [
+        1,
+        2,
+        3
+      ]
     },
     {
       "id": "plan-meera-mult-01",
@@ -1248,187 +1264,20 @@
   ],
   "aiMetrics": [
     {
-      "id": "metric-1792677823722-5cwv",
-      "task": "chat",
-      "provider": "gemini",
-      "model": "gemini-3.5-flash-lite",
-      "tokensPrompt": 0,
-      "tokensCompletion": 0,
-      "latencyMs": 13172,
-      "success": true,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T14:03:43.722Z",
-      "error": "Fallback triggered from openai: OpenAI API error (429): You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/."
-    },
-    {
-      "id": "metric-1792677789327-zm99",
-      "task": "chat",
-      "provider": "gemini",
-      "model": "gemini-3.5-flash-lite",
-      "tokensPrompt": 0,
-      "tokensCompletion": 0,
-      "latencyMs": 15812,
-      "success": true,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T14:03:09.327Z",
-      "error": "Fallback triggered from openai: OpenAI API error (429): You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/."
-    },
-    {
-      "id": "metric-1792677686451-p2lt",
+      "id": "metric-1793021523136-iqb2",
       "task": "chat",
       "provider": "openai",
       "model": "gpt-4o-mini",
       "tokensPrompt": 0,
       "tokensCompletion": 0,
-      "latencyMs": 3766,
+      "latencyMs": 758,
       "success": false,
       "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T14:01:26.451Z",
-      "error": "OpenAI API error (429): You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/."
-    },
-    {
-      "id": "metric-1792677479764-5quo",
-      "task": "chat",
-      "provider": "gemini",
-      "model": "gemini-3.5-flash-lite",
-      "tokensPrompt": 0,
-      "tokensCompletion": 0,
-      "latencyMs": 19809,
-      "success": true,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T13:57:59.764Z",
-      "error": "Fallback triggered from openai: OpenAI API error (429): You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/."
-    },
-    {
-      "id": "metric-1792677456275-cemt",
-      "task": "chat",
-      "provider": "openai",
-      "model": "gpt-4o-mini",
-      "tokensPrompt": 0,
-      "tokensCompletion": 0,
-      "latencyMs": 4014,
-      "success": false,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T13:57:36.275Z",
-      "error": "OpenAI API error (429): You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/."
-    },
-    {
-      "id": "metric-1792671216184-sz26",
-      "task": "chat",
-      "provider": "gemini",
-      "model": "gemini-3.5-flash-lite",
-      "tokensPrompt": 0,
-      "tokensCompletion": 0,
-      "latencyMs": 4922,
-      "success": true,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T12:13:36.184Z",
-      "error": "Fallback triggered from openai: OpenAI API error (429): You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/."
-    },
-    {
-      "id": "metric-1792671196879-r2jt",
-      "task": "chat",
-      "provider": "gemini",
-      "model": "gemini-3.5-flash-lite",
-      "tokensPrompt": 0,
-      "tokensCompletion": 0,
-      "latencyMs": 5169,
-      "success": true,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T12:13:16.879Z",
-      "error": "Fallback triggered from openai: OpenAI API error (429): You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/."
-    },
-    {
-      "id": "metric-1792670339359-hsaj",
-      "task": "chat",
-      "provider": "openai",
-      "model": "gpt-4o-mini",
-      "tokensPrompt": 0,
-      "tokensCompletion": 0,
-      "latencyMs": 3958,
-      "success": false,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T11:58:59.359Z",
-      "error": "OpenAI API error (429): You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/."
-    },
-    {
-      "id": "metric-1792670327898-deiu",
-      "task": "chat",
-      "provider": "openai",
-      "model": "gpt-4o-mini",
-      "tokensPrompt": 0,
-      "tokensCompletion": 0,
-      "latencyMs": 3102,
-      "success": false,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T11:58:47.898Z",
-      "error": "OpenAI API error (429): You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/."
-    },
-    {
-      "id": "metric-1792670230103-d7l7",
-      "task": "chat",
-      "provider": "openai",
-      "model": "gpt-4o-mini",
-      "tokensPrompt": 0,
-      "tokensCompletion": 0,
-      "latencyMs": 3115,
-      "success": false,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T11:57:10.103Z",
-      "error": "OpenAI API error (429): You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/."
-    },
-    {
-      "id": "metric-1792670212675-dlot",
-      "task": "chat",
-      "provider": "openai",
-      "model": "gpt-4o-mini",
-      "tokensPrompt": 0,
-      "tokensCompletion": 0,
-      "latencyMs": 3849,
-      "success": false,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T11:56:52.675Z",
-      "error": "OpenAI API error (429): You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/."
-    },
-    {
-      "id": "metric-1792667612843-7ik5",
-      "task": "chat",
-      "provider": "openai",
-      "model": "gpt-4o-mini",
-      "tokensPrompt": 0,
-      "tokensCompletion": 0,
-      "latencyMs": 1216,
-      "success": false,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T11:13:32.843Z",
+      "timestamp": "2026-10-26T13:32:03.136Z",
       "error": "OpenAI API error (401): Incorrect API key provided: sk-inval******************************-401. You can find your API key at https://platform.openai.com/account/api-keys."
     },
     {
-      "id": "metric-1792667611511-xb6s",
-      "task": "translation",
-      "provider": "offline_fallback",
-      "model": "deterministic_pedagogical_rule_engine",
-      "tokensPrompt": 3,
-      "tokensCompletion": 6,
-      "latencyMs": 1,
-      "success": true,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T11:13:31.511Z"
-    },
-    {
-      "id": "metric-1792667611504-57qh",
-      "task": "translation",
-      "provider": "offline_fallback",
-      "model": "deterministic_pedagogical_rule_engine",
-      "tokensPrompt": 8,
-      "tokensCompletion": 12,
-      "latencyMs": 1,
-      "success": true,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T11:13:31.504Z"
-    },
-    {
-      "id": "metric-1792667611489-u4lg",
+      "id": "metric-1793021522223-pho8",
       "task": "chat",
       "provider": "offline_fallback",
       "model": "deterministic_pedagogical_rule_engine",
@@ -1437,10 +1286,10 @@
       "latencyMs": 1,
       "success": true,
       "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T11:13:31.489Z"
+      "timestamp": "2026-10-26T13:32:02.223Z"
     },
     {
-      "id": "metric-1792667611486-y6au",
+      "id": "metric-1793021522218-nj2h",
       "task": "chat",
       "provider": "offline_fallback",
       "model": "deterministic_pedagogical_rule_engine",
@@ -1449,10 +1298,10 @@
       "latencyMs": 1,
       "success": true,
       "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T11:13:31.486Z"
+      "timestamp": "2026-10-26T13:32:02.218Z"
     },
     {
-      "id": "metric-1792667611483-rfrp",
+      "id": "metric-1793021522215-nl6d",
       "task": "chat",
       "provider": "offline_fallback",
       "model": "deterministic_pedagogical_rule_engine",
@@ -1461,10 +1310,10 @@
       "latencyMs": 1,
       "success": true,
       "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T11:13:31.483Z"
+      "timestamp": "2026-10-26T13:32:02.215Z"
     },
     {
-      "id": "metric-1792667611477-fwoy",
+      "id": "metric-1793021522208-zqxu",
       "task": "chat",
       "provider": "offline_fallback",
       "model": "deterministic_pedagogical_rule_engine",
@@ -1473,44 +1322,65 @@
       "latencyMs": 1,
       "success": true,
       "estimatedCostUsd": 0,
-      "timestamp": "2026-10-22T11:13:31.477Z"
+      "timestamp": "2026-10-26T13:32:02.208Z"
     }
   ],
   "aiConfigs": [
     {
+      "task": "chat",
+      "primaryProvider": "gemini",
+      "fallbackProvider": "openai",
+      "primaryModel": "gemini-3.5-flash-lite",
+      "fallbackModel": "gpt-4o-mini",
+      "enabled": true
+    },
+    {
       "task": "simplification",
       "primaryProvider": "gemini",
       "fallbackProvider": "offline_fallback",
-      "primaryModel": "gemini-1.5-flash",
+      "primaryModel": "gemini-3.5-flash-lite",
+      "fallbackModel": "deterministic_pedagogical_rule_engine",
       "enabled": true
     },
     {
       "task": "translation",
       "primaryProvider": "gemini",
       "fallbackProvider": "offline_fallback",
-      "primaryModel": "gemini-1.5-flash",
+      "primaryModel": "gemini-3.5-flash-lite",
+      "fallbackModel": "deterministic_pedagogical_rule_engine",
       "enabled": true
     },
     {
       "task": "speech_to_text",
       "primaryProvider": "gemini",
       "fallbackProvider": "offline_fallback",
-      "primaryModel": "gemini-1.5-flash",
+      "primaryModel": "gemini-3.5-flash-lite",
+      "fallbackModel": "deterministic_pedagogical_rule_engine",
       "enabled": true
     },
     {
       "task": "text_to_speech",
       "primaryProvider": "openai",
-      "fallbackProvider": "offline_fallback",
+      "fallbackProvider": "bhashini",
       "primaryModel": "tts-1",
+      "fallbackModel": "bhashini-tts",
       "enabled": true
     },
     {
       "task": "assistant",
       "primaryProvider": "gemini",
       "fallbackProvider": "offline_fallback",
-      "primaryModel": "gemini-1.5-flash",
+      "primaryModel": "gemini-3.5-flash-lite",
+      "fallbackModel": "deterministic_pedagogical_rule_engine",
       "enabled": true
+    }
+  ],
+  "feedback": [
+    {
+      "id": "fb-1793021522354-fzhe",
+      "email": "teacher.gandhinagar@gujarat.edu.in",
+      "message": "The 5-step concrete manipulatives have shown immediate results in Class 4.",
+      "submittedAt": "2026-10-26T13:32:02.354Z"
     }
   ]
 }

@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
-    const { id, status, teacherNotes, steps, learningObjective } = body;
+    const { id, status, teacherNotes, steps, learningObjective, completedSteps } = body;
 
     if (!id) {
       return NextResponse.json({ success: false, error: "Plan ID is required" }, { status: 400 });
@@ -64,6 +64,7 @@ export async function PUT(request: Request) {
       ...(teacherNotes !== undefined ? { teacherNotes } : {}),
       ...(steps ? { steps } : {}),
       ...(learningObjective ? { learningObjective } : {}),
+      ...(completedSteps !== undefined ? { completedSteps } : {}),
     });
 
     if (!updated) {

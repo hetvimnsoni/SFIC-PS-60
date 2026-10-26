@@ -103,8 +103,9 @@ export class AiRouter {
     const task: AiTaskType = params.task || "chat";
     const config = await this.getTaskConfig(task);
 
-    const primaryName = params.provider || config.primaryProvider;
-    const fallbackName = config.fallbackProvider || "offline_fallback";
+    const envProvider = (process.env.AI_PROVIDER as AiProviderName) || undefined;
+    const primaryName = params.provider || envProvider || config.primaryProvider;
+    const fallbackName = config.fallbackProvider || (envProvider !== "gemini" ? "gemini" : "offline_fallback");
 
     const messages = [...params.messages];
     if (params.prompt && (!messages.length || messages[messages.length - 1].content !== params.prompt)) {
@@ -176,6 +177,27 @@ export class AiRouter {
           }
         } catch (fbErr: any) {
           console.warn(`Fallback chat provider '${fallbackName}' also failed: ${fbErr.message}`);
+        }
+      }
+
+      // If primary was not Gemini and fallback was not Gemini, attempt Gemini as secondary live failover
+      if (primaryAdapter.id !== "gemini" && fallbackName !== "gemini") {
+        try {
+          const geminiAdapter = this.resolveProvider("gemini", "chat");
+          if (geminiAdapter.chat && geminiAdapter.isConfigured()) {
+            const fbResult = await geminiAdapter.chat(chatRequest);
+            recordAiUsage({
+              task,
+              provider: fbResult.provider,
+              model: fbResult.modelUsed,
+              latencyMs: Date.now() - startTime,
+              success: true,
+              error: `Dynamic failover triggered from ${primaryAdapter.id}: ${err.message}`,
+            });
+            return fbResult;
+          }
+        } catch (gErr: any) {
+          console.warn(`Secondary Gemini failover failed: ${gErr.message}`);
         }
       }
 

@@ -50,6 +50,8 @@ export default function HomePage() {
       : "Hi! I'm ShikshaBot. Let's build the glowing bridge from learning gaps to mastery!"
   );
   const [feedbackSent, setFeedbackSent] = useState(false);
+  const [feedbackSending, setFeedbackSending] = useState(false);
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
   const [feedbackEmail, setFeedbackEmail] = useState("");
 
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
@@ -60,12 +62,31 @@ export default function HomePage() {
     }
   };
 
-  const handleFeedbackSubmit = (e: React.FormEvent) => {
+  const handleFeedbackSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (feedbackEmail) {
-      setFeedbackSent(true);
-      setTimeout(() => setFeedbackSent(false), 4000);
-      setFeedbackEmail("");
+    if (!feedbackEmail) return;
+
+    setFeedbackSending(true);
+    setFeedbackError(null);
+
+    try {
+      const res = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: feedbackEmail }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setFeedbackSent(true);
+        setTimeout(() => setFeedbackSent(false), 5000);
+        setFeedbackEmail("");
+      } else {
+        setFeedbackError(data.error || "Failed to submit feedback.");
+      }
+    } catch {
+      setFeedbackError("Network error. Please try again.");
+    } finally {
+      setFeedbackSending(false);
     }
   };
 
@@ -811,13 +832,17 @@ export default function HomePage() {
                   required
                   className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-hidden focus:border-amber-500"
                 />
+                {feedbackError && (
+                  <p className="text-[11px] text-red-400 font-medium">{feedbackError}</p>
+                )}
                 <Button
                   type="submit"
                   variant="saffron"
                   size="sm"
+                  disabled={feedbackSending}
                   className="w-full rounded-xl text-xs"
                 >
-                  {feedbackSent ? "Thank You!" : "Submit Feedback"}
+                  {feedbackSending ? "Submitting..." : feedbackSent ? "Thank You!" : "Submit Feedback"}
                 </Button>
               </form>
             </div>

@@ -42,10 +42,14 @@ export class AuthenticationError extends AiError {
 
 export class RateLimitError extends AiError {
   constructor(message: string, provider?: AiProviderName) {
+    const isQuotaExhausted =
+      message.toLowerCase().includes("credits") ||
+      message.toLowerCase().includes("quota") ||
+      message.toLowerCase().includes("billing");
     super(message, {
       provider,
       statusCode: 429,
-      isRetryable: true,
+      isRetryable: !isQuotaExhausted,
       code: "RATE_LIMIT_ERROR",
     });
     this.name = "RateLimitError";

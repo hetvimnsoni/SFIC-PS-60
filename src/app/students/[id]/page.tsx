@@ -178,64 +178,81 @@ export default function StudentDetailPage({
     setShowReassessModal(true);
   };
 
-  // Build Skill Nodes for 3D Tree
-  const skillNodes: SkillNode[] = [
-    {
-      id: "node-place-val",
-      name: "Place Value 100s",
-      subject: "Math",
-      score: 85,
-      status: "mastered",
-      position: [-1.8, -0.6, 0],
-      connectedTo: ["node-add-sub"],
-    },
-    {
-      id: "node-add-sub",
-      name: "Multi-digit Addition",
-      subject: "Math",
-      score: 90,
-      status: "mastered",
-      position: [-1.2, 0.4, 0.4],
-      connectedTo: ["node-multiplication"],
-    },
-    {
-      id: "node-multiplication",
-      name: "Multiplication Tables",
-      subject: "Math",
-      score: 82,
-      status: "mastered",
-      position: [-0.3, 0.8, -0.2],
-      connectedTo: ["node-division"],
-    },
-    {
-      id: "node-division",
-      name: divisionGap ? divisionGap.conceptName : "Division Basics",
-      subject: "Math",
-      score: divisionGap ? divisionGap.latestPercentage : 35,
-      status: (divisionGap && divisionGap.latestPercentage >= 80) ? "mastered" : "gap",
-      reason: divisionGap ? divisionGap.reason : "Fails equal sharing with remainders without visual aid.",
-      baselineScore: divisionGap?.previousPercentage || 35,
-      position: [0.7, 0.2, 0.3],
-      connectedTo: ["node-fractions"],
-    },
-    {
-      id: "node-fractions",
-      name: "Fractions Addition",
-      subject: "Math",
-      score: 65,
-      status: "developing",
-      position: [1.6, -0.4, -0.3],
-      connectedTo: ["node-decimals"],
-    },
-    {
-      id: "node-decimals",
-      name: "Decimals (Term 2)",
-      subject: "Math",
-      score: 0,
-      status: "locked",
-      position: [2.3, 0.5, 0.2],
-    },
+  // Build Skill Nodes dynamically for 3D Tree based on student's actual records
+  const defaultLayoutPositions: [number, number, number][] = [
+    [-1.8, -0.6, 0],
+    [-1.2, 0.4, 0.4],
+    [-0.3, 0.8, -0.2],
+    [0.7, 0.2, 0.3],
+    [1.6, -0.4, -0.3],
+    [2.3, 0.5, 0.2],
   ];
+
+  const studentEvaluatedConcepts = Array.from(new Set(results.map((r) => r.conceptId)));
+  const studentGapConceptIds = gaps.map((g) => g.conceptId);
+  const allStudentConceptIds = Array.from(new Set([...studentGapConceptIds, ...studentEvaluatedConcepts]));
+
+  let skillNodes: SkillNode[] = [];
+
+  if (allStudentConceptIds.length > 0) {
+    const subset = allStudentConceptIds.slice(0, 6);
+    skillNodes = subset.map((cId, idx) => {
+      const gap = gaps.find((g) => g.conceptId === cId);
+      const studentResults = results
+        .filter((r) => r.conceptId === cId)
+        .sort((a, b) => new Date(b.recordedAt).getTime() - new Date(a.recordedAt).getTime());
+
+      const latestScore = studentResults[0]?.percentage ?? gap?.latestPercentage ?? 75;
+      const conceptName = gap?.conceptName || (cId.replace("c-", "").replace("-01", "").toUpperCase());
+      const subject = gap?.subjectCode || "Math";
+
+      const isMastered = latestScore >= 80;
+      const isGap = latestScore < 60;
+      const nodeStatus: "mastered" | "developing" | "gap" | "locked" = isMastered
+        ? "mastered"
+        : isGap
+        ? "gap"
+        : "developing";
+
+      const pos = defaultLayoutPositions[idx] || [idx * 0.8 - 1.5, idx % 2 === 0 ? 0.3 : -0.3, 0];
+      const nextId = idx < subset.length - 1 ? `node-${subset[idx + 1]}` : undefined;
+
+      return {
+        id: `node-${cId}`,
+        name: conceptName,
+        subject,
+        score: latestScore,
+        status: nodeStatus,
+        reason: gap?.reason,
+        baselineScore: gap?.previousPercentage || latestScore,
+        position: pos,
+        connectedTo: nextId ? [nextId] : undefined,
+      };
+    });
+  }
+
+  // If student has no recorded concepts yet, provide foundational progression nodes
+  if (skillNodes.length === 0) {
+    skillNodes = [
+      {
+        id: "node-place-val",
+        name: "Place Value 100s",
+        subject: "Math",
+        score: avgScore || 80,
+        status: (avgScore || 80) >= 80 ? "mastered" : "developing",
+        position: [-1.8, -0.6, 0],
+        connectedTo: ["node-add-sub"],
+      },
+      {
+        id: "node-add-sub",
+        name: "Multi-digit Addition",
+        subject: "Math",
+        score: avgScore ? Math.min(100, avgScore + 5) : 85,
+        status: "mastered",
+        position: [-1.2, 0.4, 0.4],
+      },
+    ];
+  }
 
   return (
     <AppLayout>
@@ -291,6 +308,16 @@ export default function StudentDetailPage({
 
           {/* Quick Intervention Actions */}
           <div className="flex flex-wrap items-center gap-2.5 self-start md:self-center">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowEditModal(true)}
+              className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15"
+            >
+              <Edit className="w-3.5 h-3.5 mr-1" />
+              <span>Edit Profile</span>
+            </Button>
+
             {divisionActivity && (
               <Button
                 variant="outline"

@@ -1,9 +1,13 @@
-import { describe, it, beforeEach } from "node:test";
+import { describe, it, beforeEach, after } from "node:test";
 import assert from "node:assert/strict";
 import { db } from "./database";
 
 describe("Database & Learning Gap Integration Flow", () => {
   beforeEach(() => {
+    db.resetToDemoData();
+  });
+
+  after(() => {
     db.resetToDemoData();
   });
 

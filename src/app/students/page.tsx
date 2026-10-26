@@ -23,6 +23,7 @@ import {
   Sparkles,
   CheckCircle2,
   X,
+  Trash2,
 } from "lucide-react";
 
 export default function StudentsPage() {
@@ -104,6 +105,19 @@ export default function StudentsPage() {
     document.body.removeChild(link);
   };
 
+  const handleDeleteStudent = async (studentId: string, studentName: string) => {
+    if (!window.confirm(`Are you sure you want to remove ${studentName}?`)) return;
+    try {
+      const res = await fetch(`/api/students/${studentId}`, { method: "DELETE" });
+      const data = await res.json();
+      if (data.success) {
+        fetchStudents();
+      }
+    } catch (e) {
+      console.error("Failed to delete student", e);
+    }
+  };
+
   return (
     <AppLayout>
       <div className="space-y-6">
@@ -115,7 +129,7 @@ export default function StudentsPage() {
                 {language === "gu" ? "વિદ્યાર્થી ડિરેક્ટરી અને પ્રોફાઇલ્સ" : "Student Directory & 3D Profiles"}
               </h1>
               <Badge variant="saffron" size="sm">
-                15 Enrolled
+                {students.length} Enrolled
               </Badge>
             </div>
             <p className="text-xs sm:text-sm text-[#7A6862] mt-1">
@@ -272,11 +286,22 @@ export default function StudentsPage() {
                     )}
                   </div>
 
-                  <Link href={`/students/${std.id}`} aria-label={`View 3D Profile for ${std.displayName}`}>
-                    <Button variant="ghost" size="sm" className="text-xs text-[#B26A1B] hover:text-[#49352F]">
-                      <span>3D Profile &rarr;</span>
-                    </Button>
-                  </Link>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteStudent(std.id, std.displayName)}
+                      className="p-1.5 rounded-lg text-[#7A6862]/60 hover:text-[#C54738] hover:bg-[#C54738]/10 transition-colors cursor-pointer"
+                      title={`Remove ${std.displayName}`}
+                      aria-label={`Remove ${std.displayName}`}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                    <Link href={`/students/${std.id}`} aria-label={`View 3D Profile for ${std.displayName}`}>
+                      <Button variant="ghost" size="sm" className="text-xs text-[#B26A1B] hover:text-[#49352F]">
+                        <span>3D Profile &rarr;</span>
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </Card>
             );

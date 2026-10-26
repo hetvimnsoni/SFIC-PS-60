@@ -61,6 +61,7 @@ interface DataStore {
   deliveries: NoticeDelivery[];
   aiMetrics: AiUsageMetric[];
   aiConfigs: AiProviderConfig[];
+  feedback?: { id: string; email: string; message?: string; submittedAt: string }[];
 }
 
 const DATA_DIR = path.join(process.cwd(), "data");
@@ -70,22 +71,23 @@ function getInitialStore(): DataStore {
   return {
     school: { ...SEED_SCHOOL },
     settings: { ...SEED_SETTINGS },
-    classrooms: [...SEED_CLASSROOMS],
-    subjects: [...SEED_SUBJECTS],
-    concepts: [...SEED_CONCEPTS],
-    students: [...SEED_STUDENTS],
-    assessments: [...SEED_ASSESSMENTS],
-    results: [...SEED_RESULTS],
-    learningGaps: [...SEED_LEARNING_GAPS],
-    remedialPlans: [...SEED_REMEDIAL_PLANS],
-    activities: [...SEED_ACTIVITIES],
+    classrooms: JSON.parse(JSON.stringify(SEED_CLASSROOMS)),
+    subjects: JSON.parse(JSON.stringify(SEED_SUBJECTS)),
+    concepts: JSON.parse(JSON.stringify(SEED_CONCEPTS)),
+    students: JSON.parse(JSON.stringify(SEED_STUDENTS)),
+    assessments: JSON.parse(JSON.stringify(SEED_ASSESSMENTS)),
+    results: JSON.parse(JSON.stringify(SEED_RESULTS)),
+    learningGaps: JSON.parse(JSON.stringify(SEED_LEARNING_GAPS)),
+    remedialPlans: JSON.parse(JSON.stringify(SEED_REMEDIAL_PLANS)),
+    activities: JSON.parse(JSON.stringify(SEED_ACTIVITIES)),
     attempts: [],
-    parents: [...SEED_PARENTS],
-    notices: [...SEED_NOTICES],
-    translations: [...SEED_NOTICE_TRANSLATIONS],
-    deliveries: [...SEED_NOTICE_DELIVERIES],
+    parents: JSON.parse(JSON.stringify(SEED_PARENTS)),
+    notices: JSON.parse(JSON.stringify(SEED_NOTICES)),
+    translations: JSON.parse(JSON.stringify(SEED_NOTICE_TRANSLATIONS)),
+    deliveries: JSON.parse(JSON.stringify(SEED_NOTICE_DELIVERIES)),
     aiMetrics: [],
-    aiConfigs: [...SEED_AI_CONFIGS],
+    aiConfigs: JSON.parse(JSON.stringify(SEED_AI_CONFIGS)),
+    feedback: [],
   };
 }
 
@@ -782,6 +784,25 @@ export const db = {
       store.aiMetrics = store.aiMetrics.slice(0, 200);
     }
     saveStore(store);
+  },
+
+  getFeedback(): { id: string; email: string; message?: string; submittedAt: string }[] {
+    const store = loadStore();
+    return store.feedback || [];
+  },
+
+  saveFeedback(email: string, message?: string): { id: string; email: string; message?: string; submittedAt: string } {
+    const store = loadStore();
+    if (!store.feedback) store.feedback = [];
+    const item = {
+      id: `fb-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      email,
+      message,
+      submittedAt: new Date().toISOString(),
+    };
+    store.feedback.unshift(item);
+    saveStore(store);
+    return item;
   },
 
   resetToDemoData(): void {
