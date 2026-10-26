@@ -94,7 +94,7 @@ export function AppHeader({
   // Keyboard shortcut: Ctrl+K or Cmd+K to focus search & Escape to close menus
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
         e.preventDefault();
         searchInputRef.current?.focus();
       } else if (e.key === "Escape") {
@@ -139,7 +139,7 @@ export function AppHeader({
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[#49352F]/10 bg-[#F4F1E1]/90 px-3 sm:px-4 lg:px-6 backdrop-blur-md print:hidden transition-colors relative text-[#49352F]">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[#49352F]/10 bg-[#F4F1E1]/90 px-2 sm:px-4 lg:px-6 backdrop-blur-md print:hidden transition-colors relative text-[#49352F]">
       {/* Mobile Full-Width Search Overlay */}
       {isMobileSearchOpen && (
         <div className="sm:hidden absolute inset-0 z-50 bg-[#FAF6E9] px-3 flex items-center gap-2 border-b border-[#49352F]/15 shadow-md">
@@ -175,10 +175,13 @@ export function AppHeader({
       )}
 
       {/* 1. Left section: School info & Class selector */}
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0">
-        <div className="hidden md:flex items-center gap-2 text-[#49352F] shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 min-w-0">
+        <div className="hidden md:flex items-center gap-1.5 text-[#49352F] shrink-0">
           <Building className="h-4 w-4 text-[#B26A1B] shrink-0" />
-          <span className="font-semibold text-xs lg:text-sm tracking-tight text-[#49352F] truncate max-w-[150px] lg:max-w-[190px] xl:max-w-none">
+          <span
+            className="font-semibold text-xs lg:text-sm tracking-tight text-[#49352F] truncate max-w-[120px] lg:max-w-[150px] 2xl:max-w-none"
+            title={`${t.app.demoSchoolName} (GUJ-GNR-042)`}
+          >
             {t.app.demoSchoolName}
           </span>
           <span className="hidden 2xl:inline-block text-[11px] text-[#7A6862] font-normal shrink-0">
@@ -187,13 +190,13 @@ export function AppHeader({
         </div>
 
         {/* Current Class Selector */}
-        <div className="flex items-center gap-1.5 bg-white border border-[#49352F]/15 rounded-xl px-2.5 py-1 shadow-xs shrink-0">
+        <div className="flex items-center gap-1 bg-white border border-[#49352F]/15 rounded-xl px-1.5 sm:px-2 py-1 shadow-xs shrink-0 max-w-[90px] sm:max-w-[140px] xl:max-w-none">
           <GraduationCap className="h-3.5 w-3.5 text-[#7A6862] shrink-0" />
           <select
             value={currentClass}
             aria-label="Filter by class"
             onChange={(e) => handleClassChange(e.target.value)}
-            className="bg-transparent text-xs font-semibold text-[#49352F] outline-hidden cursor-pointer"
+            className="bg-transparent text-xs font-semibold text-[#49352F] outline-hidden cursor-pointer max-w-[65px] sm:max-w-[110px] xl:max-w-none truncate"
           >
             <option value="all">{t.dashboard.allClasses}</option>
             <option value="cls-3a">Class 3 - Section A</option>
@@ -204,7 +207,7 @@ export function AppHeader({
       </div>
 
       {/* 2. Center Search - Prominent, Large, and Accessible */}
-      <div className="hidden sm:flex items-center flex-1 min-w-0 max-w-xs md:max-w-sm lg:max-w-md mx-2 md:mx-3">
+      <div className="hidden xl:flex items-center flex-1 min-w-0 max-w-xs md:max-w-sm lg:max-w-md mx-2">
         <div className="relative w-full min-w-0">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#7A6862] pointer-events-none" />
           <input
@@ -238,12 +241,12 @@ export function AppHeader({
       </div>
 
       {/* 3. Right section: Demo tag, Language, Theme Toggle, Notifications, User Role */}
-      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-auto">
-        {/* Mobile Search Toggle Button */}
+      <div className="flex items-center gap-1 sm:gap-1.5 2xl:gap-2 shrink-0 ml-auto">
+        {/* Mobile / Tablet Search Toggle Button */}
         <button
           type="button"
           onClick={() => setIsMobileSearchOpen(true)}
-          className="sm:hidden p-2 rounded-xl border border-[#49352F]/15 bg-white text-[#49352F] hover:bg-[#FAF6E9] cursor-pointer shrink-0"
+          className="xl:hidden p-2 rounded-xl border border-[#49352F]/15 bg-white text-[#49352F] hover:bg-[#FAF6E9] cursor-pointer shrink-0"
           aria-label="Open Search"
           title="Search"
         >
@@ -257,14 +260,14 @@ export function AppHeader({
           className="inline-flex items-center gap-1.5 bg-[#F2CAB3] hover:bg-white text-[#49352F] border border-[#49352F]/15 px-2.5 py-1.5 rounded-xl text-xs font-bold shadow-xs transition-all whitespace-nowrap shrink-0"
         >
           <Sparkles className="w-3.5 h-3.5 text-[#B26A1B] shrink-0" aria-hidden="true" />
-          <span className="hidden sm:inline">AI Hub</span>
+          <span className="hidden xl:inline">AI Hub</span>
         </Link>
 
         {/* Hackathon Demo Tag */}
         <div className="hidden xl:inline-flex items-center gap-1 bg-[#F2DCB5]/60 border border-[#49352F]/15 text-[#49352F] px-2.5 py-1 rounded-full text-[11px] font-semibold whitespace-nowrap shrink-0">
           <Sparkles className="w-3 h-3 text-[#B26A1B] shrink-0" aria-hidden="true" />
           <span className="hidden 2xl:inline">SFIC Gujarat Hackathon Demo</span>
-          <span className="inline 2xl:hidden">SFIC Demo</span>
+          <span className="hidden xl:inline 2xl:hidden">SFIC Demo</span>
         </div>
 
         {/* Replay Tour Button */}
@@ -277,25 +280,23 @@ export function AppHeader({
             }
             triggerPageTour(pageKey);
           }}
-          className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-[#49352F]/15 bg-white hover:bg-[#F2CAB3] text-[#49352F] text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 whitespace-nowrap shrink-0"
+          className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-[#49352F]/15 bg-white hover:bg-[#F2CAB3] text-[#49352F] text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 whitespace-nowrap shrink-0"
           aria-label={t.tutorial?.replayTour || "Start Page Guided Tour"}
           title={t.tutorial?.replayTour || "Start Page Guided Tour"}
         >
           <RotateCcw className="w-3.5 h-3.5 text-[#B26A1B] shrink-0" aria-hidden="true" />
-          <span className="hidden md:inline xl:hidden 2xl:inline">{t.tutorial?.replayTour || "Replay Tour"}</span>
-          <span className="hidden xl:inline 2xl:hidden">Tour</span>
+          <span className="hidden 2xl:inline whitespace-nowrap">{t.tutorial?.replayTour || "Replay Tour"}</span>
         </button>
 
         {/* Tutorial & Help Center Link */}
         <Link
           href="/tutorial"
           aria-label={t.tutorial?.pageTitle || "Help & Tutorial Center"}
-          className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-[#49352F]/15 bg-white hover:bg-[#F2CAB3] text-[#49352F] text-xs font-bold transition-all shadow-xs whitespace-nowrap shrink-0"
+          className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-[#49352F]/15 bg-white hover:bg-[#F2CAB3] text-[#49352F] text-xs font-bold transition-all shadow-xs whitespace-nowrap shrink-0"
           title={t.tutorial?.pageTitle || "Help & Tutorial Center"}
         >
           <HelpCircle className="w-3.5 h-3.5 text-[#B26A1B] shrink-0" aria-hidden="true" />
-          <span className="hidden md:inline xl:hidden 2xl:inline">{t.nav?.tutorial || "Tutorial & Help"}</span>
-          <span className="hidden xl:inline 2xl:hidden">Tutorial</span>
+          <span className="hidden 2xl:inline whitespace-nowrap">{t.nav?.tutorial || "Tutorial & Help"}</span>
         </Link>
 
         {/* Language Selector */}
@@ -365,20 +366,20 @@ export function AppHeader({
             aria-expanded={showRoleMenu}
             aria-haspopup="true"
             aria-label="Account Center and Role Switcher"
-            className="flex items-center gap-2 pl-2 pr-2.5 py-1.5 rounded-xl border border-[#49352F]/15 bg-white hover:bg-[#FAF6E9] transition-colors cursor-pointer shadow-xs whitespace-nowrap shrink-0"
+            className="flex items-center gap-1 sm:gap-2 p-1.5 sm:pl-2 sm:pr-2.5 rounded-xl border border-[#49352F]/15 bg-white hover:bg-[#FAF6E9] transition-colors cursor-pointer shadow-xs whitespace-nowrap shrink-0"
           >
             <div className="w-6 h-6 rounded-full bg-[#F2CAB3] border border-[#49352F]/15 text-[#49352F] flex items-center justify-center text-xs font-bold shrink-0">
               {role === "admin" ? "A" : role === "parent" ? "P" : "T"}
             </div>
-            <div className="text-left hidden md:block shrink-0">
-              <div className="text-xs font-semibold text-[#49352F] leading-tight truncate max-w-[100px] xl:max-w-none">
+            <div className="text-left hidden xl:block shrink-0">
+              <div className="text-xs font-semibold text-[#49352F] leading-tight truncate max-w-[80px] 2xl:max-w-none">
                 {user?.name || "Teacher"}
               </div>
-              <div className="text-[10px] text-[#B26A1B] font-medium capitalize truncate max-w-[100px] xl:max-w-none">
+              <div className="text-[10px] text-[#B26A1B] font-medium capitalize truncate max-w-[80px] 2xl:max-w-none">
                 {role === "admin" ? t.app.adminRole : role === "parent" ? "Guardian/Parent" : t.app.teacherRole}
               </div>
             </div>
-            <ChevronDown className="w-3.5 h-3.5 text-[#7A6862] shrink-0" />
+            <ChevronDown className="hidden sm:block w-3.5 h-3.5 text-[#7A6862] shrink-0" />
           </button>
 
           {showRoleMenu && (
