@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import os from "os";
 import {
   SEED_SCHOOL,
   SEED_SETTINGS,
@@ -64,8 +65,10 @@ interface DataStore {
   feedback?: { id: string; email: string; message?: string; submittedAt: string }[];
 }
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const STORE_FILE = path.join(DATA_DIR, "shikshasetu_store.json");
+const DEFAULT_DATA_DIR = path.join(process.cwd(), "data");
+const DEFAULT_STORE_FILE = path.join(DEFAULT_DATA_DIR, "shikshasetu_store.json");
+const TMP_DATA_DIR = path.join(os.tmpdir(), "shikshasetu_data");
+const TMP_STORE_FILE = path.join(TMP_DATA_DIR, "shikshasetu_store.json");
 
 function getInitialStore(): DataStore {
   return {
@@ -93,54 +96,87 @@ function getInitialStore(): DataStore {
 
 let memoryStore: DataStore | null = null;
 
-function ensureDataDirectory() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+function ensureDirectory(dirPath: string): boolean {
+  try {
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    }
+    return true;
+  } catch {
+    return false;
   }
+}
+
+function getWritableStorePath(): string {
+  // If running in Vercel or standard serverless Lambda, /var/task is read-only so write to /tmp
+  if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+    ensureDirectory(TMP_DATA_DIR);
+    return TMP_STORE_FILE;
+  }
+
+  // Local or standard Node environment
+  if (ensureDirectory(DEFAULT_DATA_DIR)) {
+    return DEFAULT_STORE_FILE;
+  }
+
+  ensureDirectory(TMP_DATA_DIR);
+  return TMP_STORE_FILE;
 }
 
 function loadStore(): DataStore {
   if (memoryStore) return memoryStore;
 
-  ensureDataDirectory();
+  // Candidates in priority: writable tmp file, then bundled data file
+  const candidates = [TMP_STORE_FILE, DEFAULT_STORE_FILE];
 
-  if (fs.existsSync(STORE_FILE)) {
-    try {
-      const content = fs.readFileSync(STORE_FILE, "utf-8");
-      memoryStore = JSON.parse(content) as DataStore;
-      return memoryStore;
-    } catch (e) {
-      console.error("Failed to load store from disk, initializing fresh seed:", e);
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      try {
+        const content = fs.readFileSync(candidate, "utf-8");
+        memoryStore = JSON.parse(content) as DataStore;
+        return memoryStore;
+      } catch (e) {
+        console.warn(`Could not read store from ${candidate}:`, e);
+      }
     }
   }
 
   memoryStore = getInitialStore();
-  saveStore(memoryStore);
+  try {
+    saveStore(memoryStore);
+  } catch {}
   return memoryStore;
 }
 
 function saveStore(store: DataStore) {
-  ensureDataDirectory();
+  memoryStore = store;
   const json = JSON.stringify(store, null, 2);
-  const tempFile = `${STORE_FILE}.tmp.${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+  const targetFile = getWritableStorePath();
+  const tempFile = `${targetFile}.tmp.${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+
   try {
     fs.writeFileSync(tempFile, json, "utf-8");
     try {
-      fs.copyFileSync(tempFile, STORE_FILE);
+      fs.copyFileSync(tempFile, targetFile);
       try {
         fs.unlinkSync(tempFile);
       } catch {}
     } catch {
-      // Fallback direct write
-      fs.writeFileSync(STORE_FILE, json, "utf-8");
+      fs.writeFileSync(targetFile, json, "utf-8");
       try {
         if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
       } catch {}
     }
-  } catch {
-    fs.writeFileSync(STORE_FILE, json, "utf-8");
+  } catch (primaryErr) {
+    // If writing to target failed (e.g. EROFS on read-only system), attempt writing to os.tmpdir directly
+    try {
+      const fallbackFile = path.join(os.tmpdir(), "shikshasetu_store.json");
+      fs.writeFileSync(fallbackFile, json, "utf-8");
+    } catch {
+      // Memory store is already updated in memoryStore; do not crash serverless execution
+      console.warn("Storage notice: Persistent disk write skipped, store held in active memory.");
+    }
   }
-  memoryStore = store;
 }
 
 export const db = {

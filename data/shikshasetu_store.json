@@ -335,17 +335,6 @@
       "section": "A",
       "enrollmentStatus": "active",
       "createdAt": "2026-06-17T09:15:00Z"
-    },
-    {
-      "studentCode": "MPS-TEST-2364",
-      "displayName": "Ananya Trivedi",
-      "classroomId": "cls-4a",
-      "grade": 4,
-      "section": "A",
-      "enrollmentStatus": "active",
-      "notes": "Updated enrollment verified by principal.",
-      "id": "std-1793021522364",
-      "createdAt": "2026-10-26T13:32:02.364Z"
     }
   ],
   "assessments": [
@@ -686,7 +675,7 @@
       "subjectCode": "MATH",
       "learningObjective": "Understand division as equal grouping, sharing, and inverse multiplication.",
       "recommendationReason": "Recent assessment performance (35%) is below the configured support threshold (60%), and previous result (40%) also showed persistent difficulty.",
-      "status": "In Progress",
+      "status": "Approved",
       "estimatedMinutes": 20,
       "difficulty": "Beginner",
       "requiredMaterials": [
@@ -731,12 +720,7 @@
       "teacherInstructions": "Use concrete objects first. Avoid abstract long division symbols until the concept of sharing is crystal clear.",
       "teacherNotes": "Aarav enjoys hands-on token activities. Plan approved for daily zero-period session.",
       "createdAt": "2026-09-25T08:30:00Z",
-      "reviewDate": "2026-10-05T08:30:00Z",
-      "completedSteps": [
-        1,
-        2,
-        3
-      ]
+      "reviewDate": "2026-10-05T08:30:00Z"
     },
     {
       "id": "plan-meera-mult-01",
@@ -1264,65 +1248,17 @@
   ],
   "aiMetrics": [
     {
-      "id": "metric-1793021523136-iqb2",
+      "id": "metric-1793022594092-kctk",
       "task": "chat",
       "provider": "openai",
       "model": "gpt-4o-mini",
       "tokensPrompt": 0,
       "tokensCompletion": 0,
-      "latencyMs": 758,
+      "latencyMs": 678,
       "success": false,
       "estimatedCostUsd": 0,
-      "timestamp": "2026-10-26T13:32:03.136Z",
+      "timestamp": "2026-10-26T13:49:54.092Z",
       "error": "OpenAI API error (401): Incorrect API key provided: sk-inval******************************-401. You can find your API key at https://platform.openai.com/account/api-keys."
-    },
-    {
-      "id": "metric-1793021522223-pho8",
-      "task": "chat",
-      "provider": "offline_fallback",
-      "model": "deterministic_pedagogical_rule_engine",
-      "tokensPrompt": 4,
-      "tokensCompletion": 45,
-      "latencyMs": 1,
-      "success": true,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-26T13:32:02.223Z"
-    },
-    {
-      "id": "metric-1793021522218-nj2h",
-      "task": "chat",
-      "provider": "offline_fallback",
-      "model": "deterministic_pedagogical_rule_engine",
-      "tokensPrompt": 31,
-      "tokensCompletion": 45,
-      "latencyMs": 1,
-      "success": true,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-26T13:32:02.218Z"
-    },
-    {
-      "id": "metric-1793021522215-nl6d",
-      "task": "chat",
-      "provider": "offline_fallback",
-      "model": "deterministic_pedagogical_rule_engine",
-      "tokensPrompt": 10,
-      "tokensCompletion": 53,
-      "latencyMs": 1,
-      "success": true,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-26T13:32:02.215Z"
-    },
-    {
-      "id": "metric-1793021522208-zqxu",
-      "task": "chat",
-      "provider": "offline_fallback",
-      "model": "deterministic_pedagogical_rule_engine",
-      "tokensPrompt": 7,
-      "tokensCompletion": 10,
-      "latencyMs": 1,
-      "success": true,
-      "estimatedCostUsd": 0,
-      "timestamp": "2026-10-26T13:32:02.208Z"
     }
   ],
   "aiConfigs": [
@@ -1375,12 +1311,5 @@
       "enabled": true
     }
   ],
-  "feedback": [
-    {
-      "id": "fb-1793021522354-fzhe",
-      "email": "teacher.gandhinagar@gujarat.edu.in",
-      "message": "The 5-step concrete manipulatives have shown immediate results in Class 4.",
-      "submittedAt": "2026-10-26T13:32:02.354Z"
-    }
-  ]
+  "feedback": []
 }
