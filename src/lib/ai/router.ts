@@ -201,6 +201,34 @@ export class AiRouter {
         }
       }
 
+      // If all cloud providers failed or timed out (excluding explicit authentication errors), attempt offline pedagogical engine
+      const isAuthError =
+        err.message?.includes("401") ||
+        err.message?.includes("Incorrect API key") ||
+        err.message?.includes("Invalid API key") ||
+        err.message?.includes("authentication") ||
+        err.name === "AuthenticationError";
+
+      if (!isAuthError && primaryAdapter.id !== "offline_fallback" && fallbackName !== "offline_fallback") {
+        try {
+          const offlineAdapter = this.resolveProvider("offline_fallback", "chat");
+          if (offlineAdapter.chat) {
+            const fbResult = await offlineAdapter.chat(chatRequest);
+            recordAiUsage({
+              task,
+              provider: fbResult.provider,
+              model: fbResult.modelUsed,
+              latencyMs: Date.now() - startTime,
+              success: true,
+              error: `Local pedagogical fallback triggered after cloud provider failure: ${err.message}`,
+            });
+            return fbResult;
+          }
+        } catch (offErr: any) {
+          console.warn(`Offline fallback failed: ${offErr.message}`);
+        }
+      }
+
       recordAiUsage({
         task,
         provider: primaryAdapter.id,

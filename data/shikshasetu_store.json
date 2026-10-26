@@ -1248,16 +1248,16 @@
   ],
   "aiMetrics": [
     {
-      "id": "metric-1793022594092-kctk",
+      "id": "metric-1793022933793-vetz",
       "task": "chat",
       "provider": "openai",
       "model": "gpt-4o-mini",
       "tokensPrompt": 0,
       "tokensCompletion": 0,
-      "latencyMs": 678,
+      "latencyMs": 386,
       "success": false,
       "estimatedCostUsd": 0,
-      "timestamp": "2026-10-26T13:49:54.092Z",
+      "timestamp": "2026-10-26T13:55:33.793Z",
       "error": "OpenAI API error (401): Incorrect API key provided: sk-inval******************************-401. You can find your API key at https://platform.openai.com/account/api-keys."
     }
   ],

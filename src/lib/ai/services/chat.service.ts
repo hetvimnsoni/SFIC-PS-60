@@ -101,7 +101,7 @@ ${schoolTelemetryContext}`;
         success: false,
         message: "",
         isAiGenerated: false,
-        provider: options.provider || "openai",
+        provider: options.provider || (process.env.AI_PROVIDER as any) || "gemini",
         modelUsed: "none",
         latencyMs: 0,
         error: err.message || "Failed to process chat message",
