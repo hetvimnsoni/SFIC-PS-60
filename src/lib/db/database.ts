@@ -130,9 +130,9 @@ function loadStore(): DataStore {
   const candidates = [TMP_STORE_FILE, DEFAULT_STORE_FILE];
 
   for (const candidate of candidates) {
-    if (fs.existsSync(candidate)) {
+    if (fs.existsSync(/*turbopackIgnore: true*/ candidate)) {
       try {
-        const content = fs.readFileSync(candidate, "utf-8");
+        const content = fs.readFileSync(/*turbopackIgnore: true*/ candidate, "utf-8");
         memoryStore = JSON.parse(content) as DataStore;
         return memoryStore;
       } catch (e) {

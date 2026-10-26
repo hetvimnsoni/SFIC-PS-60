@@ -1248,17 +1248,29 @@
   ],
   "aiMetrics": [
     {
-      "id": "metric-1793022933793-vetz",
+      "id": "metric-1793024198248-gu15",
       "task": "chat",
       "provider": "openai",
       "model": "gpt-4o-mini",
       "tokensPrompt": 0,
       "tokensCompletion": 0,
-      "latencyMs": 386,
+      "latencyMs": 608,
       "success": false,
       "estimatedCostUsd": 0,
-      "timestamp": "2026-10-26T13:55:33.793Z",
+      "timestamp": "2026-10-26T14:16:38.248Z",
       "error": "OpenAI API error (401): Incorrect API key provided: sk-inval******************************-401. You can find your API key at https://platform.openai.com/account/api-keys."
+    },
+    {
+      "id": "metric-1793024197623-h9hx",
+      "task": "chat",
+      "provider": "offline_fallback",
+      "model": "deterministic_pedagogical_rule_engine",
+      "tokensPrompt": 7,
+      "tokensCompletion": 10,
+      "latencyMs": 1,
+      "success": true,
+      "estimatedCostUsd": 0,
+      "timestamp": "2026-10-26T14:16:37.623Z"
     }
   ],
   "aiConfigs": [
