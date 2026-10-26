@@ -22,11 +22,10 @@ import {
   LogOut,
   RotateCcw,
   HelpCircle,
-  X,
   Users,
   MoreHorizontal,
-  Compass,
   Check,
+  Settings,
 } from "lucide-react";
 
 interface AppHeaderProps {
@@ -43,7 +42,7 @@ export function AppHeader({
   const router = useRouter();
   const pathname = usePathname();
   const { user, role, switchRole, logout } = useAuth();
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [showRoleMenu, setShowRoleMenu] = useState(false);
@@ -130,8 +129,8 @@ export function AppHeader({
   // Role display helper
   const getRoleBadgeInitial = () => {
     if (role === "admin") return "A";
-    if (role === "parent") return "P";
-    return "T";
+    if (role === "parent") return "D"; // Dineshbhai Patel
+    return "P"; // Pooja Sharma
   };
 
   const getRoleLabel = () => {
@@ -141,7 +140,7 @@ export function AppHeader({
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[#49352F]/10 bg-[#F4F1E1]/95 px-3 sm:px-4 lg:px-6 backdrop-blur-md print:hidden transition-colors text-[#49352F] gap-2 lg:gap-4">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[#49352F]/10 bg-[#F4F1E1]/95 pl-3 sm:pl-4 lg:pl-6 pr-4 sm:pr-6 lg:pr-8 backdrop-blur-md print:hidden transition-colors text-[#49352F]">
       {/* Mobile Full-Width Search Drawer */}
       {isMobileSearchOpen && (
         <div className="sm:hidden absolute inset-0 z-50 bg-[#FAF6E9] px-3 flex items-center gap-2 border-b border-[#49352F]/15 shadow-md">
@@ -164,35 +163,37 @@ export function AppHeader({
       )}
 
       {/* ========================================================================= */}
-      {/* SECTION 1: LEFT — SCHOOL IDENTITY & CLASS SELECTION                       */}
+      {/* 1. LEFT SECTION: SCHOOL IDENTITY (Logo, Name, Code)                       */}
       {/* ========================================================================= */}
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-        {/* School Identity */}
+      <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 min-w-0 max-w-[180px] sm:max-w-[220px] xl:max-w-[260px]">
+        <div className="w-8 h-8 rounded-xl bg-white border border-[#49352F]/15 flex items-center justify-center shrink-0 shadow-2xs">
+          <Building className="h-4 w-4 text-[#B26A1B]" />
+        </div>
         <div
-          className="flex items-center gap-2 text-[#49352F] group cursor-default"
+          className="min-w-0"
           title={`${t.app?.demoSchoolName || "Model Primary School, Gandhinagar"} (GUJ-GNR-042)`}
         >
-          <div className="w-8 h-8 rounded-xl bg-white border border-[#49352F]/15 flex items-center justify-center shrink-0 shadow-2xs">
-            <Building className="h-4 w-4 text-[#B26A1B]" />
-          </div>
-          <div className="hidden sm:block max-w-[150px] md:max-w-[190px] xl:max-w-[230px]">
-            <span className="font-semibold text-xs tracking-tight text-[#49352F] block truncate">
-              {t.app?.demoSchoolName || "Model Primary School, Gandhinagar"}
-            </span>
-            <span className="text-[10px] text-[#7A6862] font-mono block leading-none mt-0.5">
-              GUJ-GNR-042
-            </span>
-          </div>
+          <span className="font-bold text-xs tracking-tight text-[#49352F] block truncate">
+            {t.app?.demoSchoolName || "Model Primary School, Gandhinagar"}
+          </span>
+          <span className="text-[10px] text-[#7A6862] font-mono block leading-none mt-0.5">
+            GUJ-GNR-042
+          </span>
         </div>
+      </div>
 
-        {/* Current Class Selector Dropdown */}
-        <div className="flex items-center gap-1.5 bg-white border border-[#49352F]/15 rounded-xl px-2.5 py-1.5 shadow-xs shrink-0">
-          <GraduationCap className="h-3.5 w-3.5 text-[#7A6862]" />
+      {/* ========================================================================= */}
+      {/* 2. CENTER SECTION: CLASS SELECTOR & EXPANDED SEARCH BAR                  */}
+      {/* ========================================================================= */}
+      <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0 max-w-[560px] mx-2 sm:mx-3 lg:mx-4">
+        {/* Class Selector Dropdown */}
+        <div className="flex items-center gap-1.5 bg-white border border-[#49352F]/15 rounded-xl px-2.5 py-2 shadow-xs shrink-0">
+          <GraduationCap className="h-4 w-4 text-[#7A6862] shrink-0" />
           <select
             value={currentClass}
             aria-label="Filter by class"
             onChange={(e) => handleClassChange(e.target.value)}
-            className="bg-transparent text-xs font-semibold text-[#49352F] outline-hidden cursor-pointer"
+            className="bg-transparent text-xs font-bold text-[#49352F] outline-hidden cursor-pointer"
           >
             <option value="all">{t.dashboard?.allClasses || "All Classes"}</option>
             <option value="cls-3a">Class 3 - Section A</option>
@@ -200,24 +201,22 @@ export function AppHeader({
             <option value="cls-5a">Class 5 - Section A</option>
           </select>
         </div>
+
+        {/* Expanded, Usable Global Search Bar */}
+        <div className="hidden sm:block flex-1 min-w-[180px] max-w-[420px]">
+          <GlobalSearch
+            onSearchChange={(val) => {
+              if (onSearchChange) onSearchChange(val);
+            }}
+            className="w-full"
+          />
+        </div>
       </div>
 
       {/* ========================================================================= */}
-      {/* SECTION 2: CENTER — PROMINENT GLOBAL SEARCH BAR                           */}
+      {/* 3. MAIN ACTIONS: AI Hub, Tour, Demo, Help, Lang, Theme, Notifications    */}
       {/* ========================================================================= */}
-      <div className="hidden sm:flex items-center justify-center flex-1 max-w-[420px] min-w-[200px] sm:min-w-[240px] md:min-w-[280px] mx-1 md:mx-3">
-        <GlobalSearch
-          onSearchChange={(val) => {
-            if (onSearchChange) onSearchChange(val);
-          }}
-          className="w-full"
-        />
-      </div>
-
-      {/* ========================================================================= */}
-      {/* SECTION 3: RIGHT — ACTIONS & DEDICATED ACCOUNT CENTER                     */}
-      {/* ========================================================================= */}
-      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-auto">
         {/* Mobile Search Toggle Icon */}
         <button
           type="button"
@@ -229,7 +228,7 @@ export function AppHeader({
           <Search className="w-4 h-4" />
         </button>
 
-        {/* AI Workspace Quick Launch */}
+        {/* AI Hub Quick Link */}
         <Link
           href="/ai"
           aria-label="AI Hub Workspace"
@@ -240,7 +239,7 @@ export function AppHeader({
           <span className="hidden md:inline">AI Hub</span>
         </Link>
 
-        {/* Secondary Actions: Visible on Wide (2xl), otherwise in "More" Menu */}
+        {/* Secondary Actions (Visible on 2xl, otherwise in "More Tools" menu) */}
         <div className="hidden 2xl:flex items-center gap-2">
           {/* Hackathon Demo Tag */}
           <div className="inline-flex items-center gap-1 bg-[#F2DCB5]/60 border border-[#49352F]/15 text-[#49352F] px-2.5 py-1 rounded-full text-[11px] font-semibold whitespace-nowrap">
@@ -398,177 +397,201 @@ export function AppHeader({
             </div>
           )}
         </div>
+      </div>
 
-        {/* ========================================================================= */}
-        {/* DEDICATED, FULLY VISIBLE ACCOUNT CENTER                                    */}
-        {/* ========================================================================= */}
-        <div ref={roleMenuRef} className="relative shrink-0">
-          <button
-            type="button"
-            onClick={() => setShowRoleMenu(!showRoleMenu)}
-            aria-expanded={showRoleMenu}
-            aria-haspopup="menu"
-            aria-label="Account Center and Role Switcher"
-            className={`flex items-center gap-2 pl-2 pr-2.5 py-1.5 rounded-xl border transition-all cursor-pointer shadow-xs whitespace-nowrap ${
-              showRoleMenu
-                ? "bg-[#FAF6E9] border-[#B26A1B] ring-2 ring-[#F2CAB3]/40"
-                : "bg-white border-[#49352F]/15 hover:bg-[#FAF6E9] hover:border-[#49352F]/30"
+      {/* ========================================================================= */}
+      {/* 4. SEPARATE ACCOUNT SECTION (Dedicated Space with Vertical Divider)        */}
+      {/* ========================================================================= */}
+      {/* Visual Vertical Divider */}
+      <div
+        className="hidden sm:block h-7 w-px bg-[#49352F]/20 mx-2 sm:mx-3 lg:mx-4 shrink-0"
+        aria-hidden="true"
+      />
+
+      {/* Dedicated Account Section Container */}
+      <div ref={roleMenuRef} className="relative shrink-0 pl-0.5 sm:pl-1">
+        <button
+          type="button"
+          onClick={() => setShowRoleMenu(!showRoleMenu)}
+          aria-expanded={showRoleMenu}
+          aria-haspopup="menu"
+          aria-label="Account Center and Role Switcher"
+          className={`flex items-center gap-2 pl-2 pr-2.5 sm:pr-3 py-1.5 rounded-2xl border transition-all cursor-pointer shadow-xs whitespace-nowrap ${
+            showRoleMenu
+              ? "bg-[#FAF6E9] border-[#B26A1B] ring-2 ring-[#F2CAB3]/40 shadow-sm"
+              : "bg-white border-[#49352F]/15 hover:bg-[#FAF6E9] hover:border-[#B26A1B]/40 hover:shadow-sm"
+          }`}
+        >
+          {/* Circular Profile Avatar */}
+          <div className="w-7 h-7 rounded-full bg-[#F2CAB3] border border-[#49352F]/20 text-[#49352F] flex items-center justify-center text-xs font-bold shrink-0 shadow-2xs">
+            {getRoleBadgeInitial()}
+          </div>
+
+          {/* Account Details Label */}
+          <div className="text-left hidden md:block">
+            <div className="text-xs font-bold text-[#49352F] leading-tight block truncate max-w-[110px] xl:max-w-[130px]">
+              {user?.name || "Pooja Sharma"}
+            </div>
+            <div className="text-[10px] text-[#B26A1B] font-semibold leading-tight block truncate max-w-[110px] xl:max-w-[130px]">
+              {getRoleLabel()}
+            </div>
+          </div>
+
+          <ChevronDown
+            className={`w-3.5 h-3.5 text-[#7A6862] shrink-0 transition-transform duration-150 ${
+              showRoleMenu ? "rotate-180" : ""
             }`}
+          />
+        </button>
+
+        {/* Account Center Dropdown Menu */}
+        {showRoleMenu && (
+          <div
+            role="menu"
+            className="absolute right-0 mt-2 w-72 sm:w-80 rounded-2xl bg-white p-3 shadow-2xl border border-[#49352F]/15 z-50 animate-in fade-in-50 zoom-in-95 duration-100 max-w-[calc(100vw-24px)]"
           >
-            {/* Circular Profile Avatar */}
-            <div className="w-7 h-7 rounded-full bg-[#F2CAB3] border border-[#49352F]/20 text-[#49352F] flex items-center justify-center text-xs font-bold shrink-0 shadow-2xs">
-              {getRoleBadgeInitial()}
-            </div>
-
-            {/* Account Details Label */}
-            <div className="text-left hidden lg:block">
-              <div className="text-xs font-semibold text-[#49352F] leading-tight">
-                {user?.name || "Pooja Sharma"}
-              </div>
-              <div className="text-[10px] text-[#B26A1B] font-medium">
-                {getRoleLabel()}
-              </div>
-            </div>
-
-            <ChevronDown
-              className={`w-3.5 h-3.5 text-[#7A6862] shrink-0 transition-transform duration-150 ${
-                showRoleMenu ? "rotate-180" : ""
-              }`}
-            />
-          </button>
-
-          {/* Account Center Dropdown Menu */}
-          {showRoleMenu && (
-            <div
-              role="menu"
-              className="absolute right-0 mt-2 w-72 rounded-2xl bg-white p-2.5 shadow-2xl border border-[#49352F]/15 z-50 animate-in fade-in-50 zoom-in-95 duration-100"
-            >
-              {/* Account Details Header */}
-              <div className="p-3 bg-[#FAF6E9] rounded-xl border border-[#49352F]/10 mb-2">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-full bg-[#F2CAB3] border border-[#49352F]/20 text-[#49352F] flex items-center justify-center text-sm font-bold shrink-0 shadow-xs">
-                    {getRoleBadgeInitial()}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-xs text-[#49352F] truncate">
-                      {user?.name || "Pooja Sharma"}
-                    </p>
-                    <p className="text-[11px] text-[#7A6862] truncate">
-                      {user?.email || "teacher@shikshasetu.edu.in"}
-                    </p>
-                    <span className="inline-block mt-1 text-[10px] font-semibold text-[#B26A1B] bg-white border border-[#49352F]/15 px-1.5 py-0.5 rounded-md">
+            {/* Account Details Header */}
+            <div className="p-3 bg-[#FAF6E9] rounded-xl border border-[#49352F]/10 mb-2.5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-full bg-[#F2CAB3] border border-[#49352F]/20 text-[#49352F] flex items-center justify-center text-sm font-bold shrink-0 shadow-xs">
+                  {getRoleBadgeInitial()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-bold text-xs text-[#49352F] truncate">
+                    {user?.name || "Pooja Sharma"}
+                  </p>
+                  <p className="text-[11px] text-[#7A6862] truncate">
+                    {user?.email || "teacher@shikshasetu.edu.in"}
+                  </p>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <span className="text-[10px] font-bold text-[#B26A1B] bg-white border border-[#49352F]/15 px-1.5 py-0.5 rounded-md">
                       {getRoleLabel()}
+                    </span>
+                    <span className="text-[10px] text-[#7A6862] truncate">
+                      Model Primary School
                     </span>
                   </div>
                 </div>
               </div>
-
-              {/* Role Switcher Section */}
-              <div className="px-2 py-1 text-[11px] font-semibold text-[#7A6862] uppercase tracking-wider">
-                Switch Active Persona
-              </div>
-
-              <div className="space-y-1 mt-1">
-                {/* Teacher Role */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    switchRole("teacher");
-                    setShowRoleMenu(false);
-                  }}
-                  className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-colors cursor-pointer ${
-                    role === "teacher"
-                      ? "bg-[#F2CAB3]/50 text-[#49352F] font-semibold"
-                      : "text-[#49352F] hover:bg-[#FAF6E9]"
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="p-1.5 rounded-lg bg-white border border-[#49352F]/10 shrink-0">
-                      <UserCheck className="w-3.5 h-3.5 text-[#2E7D5E]" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-xs font-semibold text-[#49352F] truncate">Pooja Sharma</div>
-                      <div className="text-[10px] text-[#7A6862] truncate">Class Teacher (Class 4-A)</div>
-                    </div>
-                  </div>
-                  {role === "teacher" && (
-                    <Check className="w-4 h-4 text-[#B26A1B] shrink-0" />
-                  )}
-                </button>
-
-                {/* Administrator Role */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    switchRole("admin");
-                    setShowRoleMenu(false);
-                  }}
-                  className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-colors cursor-pointer ${
-                    role === "admin"
-                      ? "bg-[#F2CAB3]/50 text-[#49352F] font-semibold"
-                      : "text-[#49352F] hover:bg-[#FAF6E9]"
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="p-1.5 rounded-lg bg-white border border-[#49352F]/10 shrink-0">
-                      <ShieldAlert className="w-3.5 h-3.5 text-[#B26A1B]" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-xs font-semibold text-[#49352F] truncate">Principal R.K. Trivedi</div>
-                      <div className="text-[10px] text-[#7A6862] truncate">School Administrator</div>
-                    </div>
-                  </div>
-                  {role === "admin" && (
-                    <Check className="w-4 h-4 text-[#B26A1B] shrink-0" />
-                  )}
-                </button>
-
-                {/* Parent Role */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    switchRole("parent");
-                    setShowRoleMenu(false);
-                  }}
-                  className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-colors cursor-pointer ${
-                    role === "parent"
-                      ? "bg-[#F2CAB3]/50 text-[#49352F] font-semibold"
-                      : "text-[#49352F] hover:bg-[#FAF6E9]"
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="p-1.5 rounded-lg bg-white border border-[#49352F]/10 shrink-0">
-                      <Users className="w-3.5 h-3.5 text-[#49352F]" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-xs font-semibold text-[#49352F] truncate">Dineshbhai Patel</div>
-                      <div className="text-[10px] text-[#7A6862] truncate">Parent (Aarav Patel, Class 4-A)</div>
-                    </div>
-                  </div>
-                  {role === "parent" && (
-                    <Check className="w-4 h-4 text-[#B26A1B] shrink-0" />
-                  )}
-                </button>
-              </div>
-
-              {/* Account Actions Footer */}
-              <div className="border-t border-[#49352F]/10 mt-2 pt-1.5">
-                <button
-                  type="button"
-                  onClick={() => {
-                    logout();
-                    setShowRoleMenu(false);
-                    router.push("/");
-                  }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-[#C54738] hover:bg-[#C54738]/10 rounded-xl text-left transition-colors cursor-pointer"
-                >
-                  <LogOut className="w-4 h-4 text-[#C54738]" />
-                  <span>{t.nav?.logout || "Sign Out"}</span>
-                </button>
-              </div>
             </div>
-          )}
-        </div>
+
+            {/* Role Switcher Section */}
+            <div className="px-2 py-1 text-[11px] font-bold text-[#7A6862] uppercase tracking-wider">
+              Switch Active Persona
+            </div>
+
+            <div className="space-y-1 mt-1">
+              {/* Teacher Role */}
+              <button
+                type="button"
+                onClick={() => {
+                  switchRole("teacher");
+                  setShowRoleMenu(false);
+                }}
+                className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-colors cursor-pointer ${
+                  role === "teacher"
+                    ? "bg-[#F2CAB3]/50 text-[#49352F] font-bold"
+                    : "text-[#49352F] hover:bg-[#FAF6E9]"
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="p-1.5 rounded-lg bg-white border border-[#49352F]/10 shrink-0">
+                    <UserCheck className="w-3.5 h-3.5 text-[#2E7D5E]" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-xs font-bold text-[#49352F] truncate">Pooja Sharma</div>
+                    <div className="text-[10px] text-[#7A6862] truncate">Class Teacher (Class 4-A)</div>
+                  </div>
+                </div>
+                {role === "teacher" && (
+                  <Check className="w-4 h-4 text-[#B26A1B] shrink-0" />
+                )}
+              </button>
+
+              {/* Administrator Role */}
+              <button
+                type="button"
+                onClick={() => {
+                  switchRole("admin");
+                  setShowRoleMenu(false);
+                }}
+                className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-colors cursor-pointer ${
+                  role === "admin"
+                    ? "bg-[#F2CAB3]/50 text-[#49352F] font-bold"
+                    : "text-[#49352F] hover:bg-[#FAF6E9]"
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="p-1.5 rounded-lg bg-white border border-[#49352F]/10 shrink-0">
+                    <ShieldAlert className="w-3.5 h-3.5 text-[#B26A1B]" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-xs font-bold text-[#49352F] truncate">Principal R.K. Trivedi</div>
+                    <div className="text-[10px] text-[#7A6862] truncate">School Administrator</div>
+                  </div>
+                </div>
+                {role === "admin" && (
+                  <Check className="w-4 h-4 text-[#B26A1B] shrink-0" />
+                )}
+              </button>
+
+              {/* Parent Role */}
+              <button
+                type="button"
+                onClick={() => {
+                  switchRole("parent");
+                  setShowRoleMenu(false);
+                }}
+                className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-colors cursor-pointer ${
+                  role === "parent"
+                    ? "bg-[#F2CAB3]/50 text-[#49352F] font-bold"
+                    : "text-[#49352F] hover:bg-[#FAF6E9]"
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="p-1.5 rounded-lg bg-white border border-[#49352F]/10 shrink-0">
+                    <Users className="w-3.5 h-3.5 text-[#49352F]" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-xs font-bold text-[#49352F] truncate">Dineshbhai Patel</div>
+                    <div className="text-[10px] text-[#7A6862] truncate">Parent (Aarav Patel, Class 4-A)</div>
+                  </div>
+                </div>
+                {role === "parent" && (
+                  <Check className="w-4 h-4 text-[#B26A1B] shrink-0" />
+                )}
+              </button>
+            </div>
+
+            {/* Quick Preferences Links */}
+            <div className="border-t border-[#49352F]/10 mt-2 pt-2">
+              <Link
+                href="/settings"
+                onClick={() => setShowRoleMenu(false)}
+                className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-[#49352F] hover:bg-[#FAF6E9] rounded-xl transition-colors cursor-pointer"
+              >
+                <Settings className="w-3.5 h-3.5 text-[#7A6862]" />
+                <span>Portal Settings & Preferences</span>
+              </Link>
+            </div>
+
+            {/* Account Actions Footer */}
+            <div className="border-t border-[#49352F]/10 mt-1.5 pt-1.5">
+              <button
+                type="button"
+                onClick={() => {
+                  logout();
+                  setShowRoleMenu(false);
+                  router.push("/");
+                }}
+                className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#C54738] hover:bg-[#C54738]/10 rounded-xl text-left transition-colors cursor-pointer"
+              >
+                <LogOut className="w-4 h-4 text-[#C54738]" />
+                <span>{t.nav?.logout || "Sign Out"}</span>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );
