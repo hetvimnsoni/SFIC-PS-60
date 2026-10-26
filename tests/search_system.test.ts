@@ -78,4 +78,15 @@ describe("Global Search API & Data Integration Suite", () => {
     assert.equal(data.count, 0);
     assert.equal(data.results.length, 0);
   });
+
+  it("7. Searches school notices and announcements", async () => {
+    const req = createMockSearchRequest("http://localhost:3000/api/search?q=notices");
+    const res = await searchHandler(req);
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.success, true);
+    assert.ok(data.count > 0);
+    assert.ok(data.results.some((r: any) => r.category === "notices"));
+  });
 });
+

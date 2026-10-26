@@ -189,6 +189,7 @@ export async function GET(req: NextRequest) {
         else if (titleLower.startsWith(q)) score += 50;
         else if (titleLower.includes(q)) score += 30;
         else if (contentLower.includes(q) || catLower.includes(q)) score += 15;
+        else if (q === "notice" || q === "notices" || q === "announcement" || q === "announcements") score += 25;
 
         if (score > 0) {
           matchedResults.push({
