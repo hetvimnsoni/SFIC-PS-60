@@ -6,6 +6,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { Dialog } from "@/components/ui/Dialog";
 import { useLanguage } from "@/context/LanguageContext";
 import { useFilter } from "@/context/FilterContext";
 import { StudentFormModal } from "@/components/student/StudentFormModal";
@@ -24,6 +25,8 @@ import {
   CheckCircle2,
   X,
   Trash2,
+  Edit,
+  AlertCircle,
 } from "lucide-react";
 
 export default function StudentsPage() {
@@ -33,10 +36,24 @@ export default function StudentsPage() {
   const [students, setStudents] = useState<any[]>([]);
   const [gaps, setGaps] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [notification, setNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   // Modals
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editingStudent, setEditingStudent] = useState<any | null>(null);
   const [showCsvModal, setShowCsvModal] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const showToast = (message: string, type: "success" | "error" = "success") => {
+    setNotification({ message, type });
+    setTimeout(() => {
+      setNotification(null);
+    }, 4500);
+  };
 
   const fetchStudents = async () => {
     setLoading(true);
@@ -46,10 +63,16 @@ export default function StudentsPage() {
         fetch("/api/learning-gaps"),
       ]);
       const [stdData, gapsData] = await Promise.all([stdRes.json(), gapsRes.json()]);
-      if (stdData.success) setStudents(stdData.students);
-      if (gapsData.success) setGaps(gapsData.gaps);
+      if (stdData.success) setStudents(stdData.students || []);
+      if (gapsData.success) setGaps(gapsData.gaps || []);
     } catch (e) {
       console.error("Failed to load students", e);
+      showToast(
+        language === "gu"
+          ? "વિદ્યાર્થીઓ લાવવામાં નિષ્ફળતા"
+          : "Failed to load students from database",
+        "error"
+      );
     } finally {
       setLoading(false);
     }
@@ -82,7 +105,11 @@ export default function StudentsPage() {
   });
 
   const getStudentGapCount = (studentId: string) => {
-    return gaps.filter((g) => g.studentId === studentId && (g.status === "Active" || g.status === "Under Intervention")).length;
+    return gaps.filter(
+      (g) =>
+        g.studentId === studentId &&
+        (g.status === "Active" || g.status === "Under Intervention")
+    ).length;
   };
 
   const handleExportCsv = () => {
@@ -95,7 +122,9 @@ export default function StudentsPage() {
       s.enrollmentStatus,
       getStudentGapCount(s.id),
     ]);
-    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -105,22 +134,67 @@ export default function StudentsPage() {
     document.body.removeChild(link);
   };
 
-  const handleDeleteStudent = async (studentId: string, studentName: string) => {
-    if (!window.confirm(`Are you sure you want to remove ${studentName}?`)) return;
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
     try {
-      const res = await fetch(`/api/students/${studentId}`, { method: "DELETE" });
+      const res = await fetch(`/api/students/${deleteTarget.id}`, { method: "DELETE" });
       const data = await res.json();
       if (data.success) {
-        fetchStudents();
+        showToast(
+          language === "gu"
+            ? `${deleteTarget.name} ને સફળતાપૂર્વક દૂર કરવામાં આવ્યા.`
+            : `${deleteTarget.name} was successfully removed from database.`,
+          "success"
+        );
+        setDeleteTarget(null);
+        await fetchStudents();
+      } else {
+        showToast(
+          data.error ||
+            (language === "gu" ? "વિદ્યાર્થી દૂર કરવામાં નિષ્ફળ" : "Failed to remove student"),
+          "error"
+        );
       }
-    } catch (e) {
-      console.error("Failed to delete student", e);
+    } catch {
+      showToast(
+        language === "gu" ? "નેટવર્ક ભૂલ: દૂર કરી શકાયું નથી" : "Network error deleting student",
+        "error"
+      );
+    } finally {
+      setIsDeleting(false);
     }
   };
 
   return (
     <AppLayout>
       <div className="space-y-6">
+        {/* Dynamic Notification Toast Banner */}
+        {notification && (
+          <div
+            className={`p-4 rounded-2xl border flex items-center justify-between text-sm shadow-sm transition-all ${
+              notification.type === "success"
+                ? "bg-emerald-50 text-emerald-900 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-200 dark:border-emerald-800"
+                : "bg-rose-50 text-rose-900 border-rose-200 dark:bg-rose-950/40 dark:text-rose-200 dark:border-rose-800"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              {notification.type === "success" ? (
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              ) : (
+                <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0" />
+              )}
+              <span className="font-semibold">{notification.message}</span>
+            </div>
+            <button
+              onClick={() => setNotification(null)}
+              className="p-1 hover:opacity-70 transition-opacity cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
         {/* Header and Actions */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -133,7 +207,8 @@ export default function StudentsPage() {
               </Badge>
             </div>
             <p className="text-xs sm:text-sm text-[#7A6862] mt-1">
-              {t.students.subtitle || "Manage primary school enrollments, track 3D skill trees, and coordinate 5-step remedial plans."}
+              {t.students.subtitle ||
+                "Manage primary school enrollments, track 3D skill trees, and coordinate 5-step remedial plans."}
             </p>
           </div>
 
@@ -170,8 +245,11 @@ export default function StudentsPage() {
           </div>
         </div>
 
-        {/* Filter & Search Bar - Big, Showable & Clearable */}
-        <Card variant="glass" className="p-4 sm:p-5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 border-[#49352F]/15 bg-white text-[#49352F]">
+        {/* Filter & Search Bar */}
+        <Card
+          variant="glass"
+          className="p-4 sm:p-5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 border-[#49352F]/15 bg-white text-[#49352F]"
+        >
           <div data-tour="students-search" className="relative flex-1 max-w-xl">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#B26A1B] pointer-events-none" />
             <input
@@ -209,7 +287,9 @@ export default function StudentsPage() {
               onChange={(e) => handleGradeFilterChange(e.target.value)}
               className="rounded-xl border border-[#49352F]/15 bg-[#FAF6E9] px-3.5 py-2 text-xs font-bold text-[#49352F] outline-hidden cursor-pointer"
             >
-              <option value="all">{language === "gu" ? "બધા વર્ગો (૧-૫)" : "All Classes (1-5)"}</option>
+              <option value="all">
+                {language === "gu" ? "બધા વર્ગો (૧-૫)" : "All Classes (1-5)"}
+              </option>
               <option value="3">{language === "gu" ? "ધોરણ ૩" : "Class 3"}</option>
               <option value="4">{language === "gu" ? "ધોરણ ૪" : "Class 4"}</option>
               <option value="5">{language === "gu" ? "ધોરણ ૫" : "Class 5"}</option>
@@ -222,8 +302,77 @@ export default function StudentsPage() {
           </div>
         </Card>
 
+        {/* Loading State */}
+        {loading && students.length === 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div
+                key={i}
+                className="h-44 rounded-2xl bg-white/60 dark:bg-stone-900/40 border border-[#49352F]/10 p-5 animate-pulse flex flex-col justify-between"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-[#F2CAB3]/40" />
+                  <div className="space-y-2 flex-1">
+                    <div className="h-4 bg-[#49352F]/15 rounded-md w-3/4" />
+                    <div className="h-3 bg-[#49352F]/10 rounded-md w-1/2" />
+                  </div>
+                </div>
+                <div className="h-8 bg-[#49352F]/10 rounded-xl w-full" />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && filteredStudents.length === 0 && (
+          <Card
+            variant="glass"
+            className="py-16 px-6 text-center border-dashed border-2 border-[#49352F]/20 bg-white/70"
+          >
+            <div className="w-16 h-16 mx-auto rounded-3xl bg-[#FAF6E9] border border-[#49352F]/15 flex items-center justify-center text-[#B26A1B] mb-4">
+              <Users className="w-8 h-8" />
+            </div>
+            <h3 className="font-heading text-lg font-bold text-[#49352F]">
+              {language === "gu" ? "કોઈ વિદ્યાર્થી મળ્યા નથી" : "No Students Found"}
+            </h3>
+            <p className="text-xs sm:text-sm text-[#7A6862] max-w-md mx-auto mt-1 mb-5">
+              {searchTerm
+                ? language === "gu"
+                  ? `"${searchTerm}" માટે કોઈ મેળ ખાતો વિદ્યાર્થી નથી. તમારી શોધ સાફ કરવાનો પ્રયાસ કરો.`
+                  : `No students match the search term "${searchTerm}". Try adjusting your filters.`
+                : language === "gu"
+                ? "આ વર્ગ માટે હજી સુધી કોઈ વિદ્યાર્થી નોંધાયા નથી. પ્રથમ વિદ્યાર્થી ઉમેરો."
+                : "No students are enrolled for this selection. Register your first student to begin."}
+            </p>
+            <div className="flex items-center justify-center gap-3">
+              {searchTerm && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSearchTerm("")}
+                  className="rounded-full text-xs"
+                >
+                  {language === "gu" ? "શોધ સાફ કરો" : "Clear Search"}
+                </Button>
+              )}
+              <Button
+                variant="saffron"
+                size="sm"
+                onClick={() => setShowAddModal(true)}
+                className="rounded-full text-xs font-bold"
+              >
+                <PlusCircle className="w-3.5 h-3.5 mr-1" />
+                <span>{language === "gu" ? "વિદ્યાર્થી ઉમેરો" : "Add Student"}</span>
+              </Button>
+            </div>
+          </Card>
+        )}
+
         {/* Student Cards Grid */}
-        <div data-tour="students-table" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          data-tour="students-table"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+        >
           {filteredStudents.map((std) => {
             const gapCount = getStudentGapCount(std.id);
             const isDemoCase = std.id === "std-aarav";
@@ -265,7 +414,9 @@ export default function StudentsPage() {
                     </div>
 
                     <Badge variant="outline" size="sm">
-                      {language === "gu" ? `ધોરણ ${std.grade}-${std.section}` : `Class ${std.grade}-${std.section}`}
+                      {language === "gu"
+                        ? `ધોરણ ${std.grade}-${std.section}`
+                        : `Class ${std.grade}-${std.section}`}
                     </Badge>
                   </div>
 
@@ -295,17 +446,40 @@ export default function StudentsPage() {
                   </div>
 
                   <div className="flex items-center gap-1">
+                    {/* Inline Edit Button */}
                     <button
                       type="button"
-                      onClick={() => handleDeleteStudent(std.id, std.displayName)}
+                      onClick={() => setEditingStudent(std)}
+                      className="p-1.5 rounded-lg text-[#7A6862]/60 hover:text-[#B26A1B] hover:bg-[#F2CAB3]/30 transition-colors cursor-pointer"
+                      title={
+                        language === "gu"
+                          ? `${std.displayName} ની વિગતો સંપાદિત કરો`
+                          : `Edit ${std.displayName}`
+                      }
+                      aria-label={`Edit ${std.displayName}`}
+                    >
+                      <Edit className="w-3.5 h-3.5" />
+                    </button>
+
+                    {/* Delete Button */}
+                    <button
+                      type="button"
+                      onClick={() => setDeleteTarget({ id: std.id, name: std.displayName })}
                       className="p-1.5 rounded-lg text-[#7A6862]/60 hover:text-[#C54738] hover:bg-[#C54738]/10 transition-colors cursor-pointer"
-                      title={`Remove ${std.displayName}`}
+                      title={
+                        language === "gu" ? `${std.displayName} ને દૂર કરો` : `Remove ${std.displayName}`
+                      }
                       aria-label={`Remove ${std.displayName}`}
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
+
                     <Link href={`/students/${std.id}`} aria-label={`View 3D Profile for ${std.displayName}`}>
-                      <Button variant="ghost" size="sm" className="text-xs text-[#B26A1B] hover:text-[#49352F]">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs text-[#B26A1B] hover:text-[#49352F]"
+                      >
                         <span>{t.students.viewProfile || "3D Profile →"}</span>
                       </Button>
                     </Link>
@@ -318,19 +492,106 @@ export default function StudentsPage() {
       </div>
 
       {/* Add Student Modal */}
-      <StudentFormModal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        onSuccess={fetchStudents}
-      />
+      {showAddModal && (
+        <StudentFormModal
+          isOpen={showAddModal}
+          onClose={() => setShowAddModal(false)}
+          onSuccess={() => {
+            fetchStudents();
+            showToast(
+              language === "gu"
+                ? "નવો વિદ્યાર્થી સફળતાપૂર્વક સાચવવામાં આવ્યો."
+                : "New student saved successfully to database.",
+              "success"
+            );
+          }}
+        />
+      )}
+
+      {/* Edit Student Modal */}
+      {editingStudent && (
+        <StudentFormModal
+          isOpen={Boolean(editingStudent)}
+          student={editingStudent}
+          onClose={() => setEditingStudent(null)}
+          onSuccess={() => {
+            fetchStudents();
+            showToast(
+              language === "gu"
+                ? "વિદ્યાર્થીની માહિતી સફળતાપૂર્વક અપડેટ કરવામાં આવી."
+                : "Student details successfully updated.",
+              "success"
+            );
+          }}
+        />
+      )}
 
       {/* CSV Import Modal */}
-      <StudentCsvModal
-        isOpen={showCsvModal}
-        onClose={() => setShowCsvModal(false)}
-        existingCodes={students.map((s) => s.studentCode)}
-        onSuccess={fetchStudents}
-      />
+      {showCsvModal && (
+        <StudentCsvModal
+          isOpen={showCsvModal}
+          onClose={() => setShowCsvModal(false)}
+          existingCodes={students.map((s) => s.studentCode)}
+          onSuccess={() => {
+            fetchStudents();
+            showToast(
+              language === "gu"
+                ? "વિદ્યાર્થીઓની બેચ સફળતાપૂર્વક આયાત કરવામાં આવી."
+                : "Student roster imported successfully.",
+              "success"
+            );
+          }}
+        />
+      )}
+
+      {/* Deletion Confirmation Dialog */}
+      {deleteTarget && (
+        <Dialog
+          isOpen={Boolean(deleteTarget)}
+          onClose={() => setDeleteTarget(null)}
+          title={
+            language === "gu" ? "વિદ્યાર્થી કાઢી નાખવાની પુષ્ટિ કરો" : "Confirm Student Deletion"
+          }
+          description={
+            language === "gu"
+              ? `શું તમે ખરેખર ${deleteTarget.name} ને કાયમ માટે કાઢી નાખવા માંગો છો? આ ક્રિયા તેમના તમામ લર્નિંગ ગેપ્સ, એસેસમેન્ટ રેકોર્ડ્સ અને રિમીડિયલ પ્લાનને પણ ડેટાબેઝમાંથી સુરક્ષિત રીતે દૂર કરશે.`
+              : `Are you sure you want to permanently delete ${deleteTarget.name}? This will also safely cascade-remove their learning gaps, assessment records, and remedial plans from the database.`
+          }
+          maxWidth="sm"
+        >
+          <div className="pt-4 flex items-center justify-end gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setDeleteTarget(null)}
+              disabled={isDeleting}
+              className="rounded-full text-xs"
+            >
+              {language === "gu" ? "રદ કરો" : "Cancel"}
+            </Button>
+            <Button
+              variant="coral"
+              size="sm"
+              onClick={confirmDelete}
+              disabled={isDeleting}
+              className="rounded-full text-xs font-bold"
+            >
+              {isDeleting ? (
+                <>
+                  <Sparkles className="w-3.5 h-3.5 animate-spin mr-1" />
+                  <span>{language === "gu" ? "કાઢી રહ્યું છે..." : "Deleting..."}</span>
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-3.5 h-3.5 mr-1" />
+                  <span>{language === "gu" ? "હા, કાઢી નાખો" : "Delete Student"}</span>
+                </>
+              )}
+            </Button>
+          </div>
+        </Dialog>
+      )}
+
       {/* Guided Tour */}
       <SpotlightTour page="students" />
     </AppLayout>

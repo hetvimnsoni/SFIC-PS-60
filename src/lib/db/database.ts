@@ -22,6 +22,7 @@ import {
 import { detectLearningGap } from "../engine/gapDetection";
 import { generateRemedialPlan } from "../engine/remedialEngine";
 import { calculatePercentage } from "../engine/calculations";
+import { isPostgresConfigured, postgresStudentDb } from "./postgres";
 import type {
   School,
   SchoolSettings,
@@ -215,24 +216,83 @@ export const db = {
 
   getStudents(classroomId?: string): Student[] {
     const store = loadStore();
-    if (!classroomId) return store.students;
+    if (!classroomId || classroomId === "all") return store.students;
     return store.students.filter((s) => s.classroomId === classroomId);
+  },
+
+  async getStudentsAsync(filters?: { classroomId?: string; grade?: number; search?: string }): Promise<Student[]> {
+    if (isPostgresConfigured()) {
+      try {
+        const pgStudents = await postgresStudentDb.getStudents(filters);
+        // Sync local memory store with latest PostgreSQL records
+        const store = loadStore();
+        if (pgStudents && pgStudents.length > 0) {
+          store.students = pgStudents;
+        }
+        return pgStudents;
+      } catch (err) {
+        console.warn("[PostgreSQL] Query failed, falling back to persistent store:", err);
+      }
+    }
+    let students = this.getStudents(filters?.classroomId);
+    if (filters?.grade) {
+      students = students.filter((s) => s.grade === filters.grade);
+    }
+    if (filters?.search) {
+      const q = filters.search.toLowerCase().trim();
+      students = students.filter(
+        (s) => s.displayName.toLowerCase().includes(q) || s.studentCode.toLowerCase().includes(q)
+      );
+    }
+    return students;
   },
 
   getStudentById(id: string): Student | undefined {
     return loadStore().students.find((s) => s.id === id);
   },
 
+  async getStudentByIdAsync(id: string): Promise<Student | undefined> {
+    if (isPostgresConfigured()) {
+      try {
+        const student = await postgresStudentDb.getStudentById(id);
+        if (student) return student;
+      } catch (err) {
+        console.warn("[PostgreSQL] Query failed, falling back to persistent store:", err);
+      }
+    }
+    return this.getStudentById(id);
+  },
+
   addStudent(studentData: Omit<Student, "id" | "createdAt">): Student {
     const store = loadStore();
     const newStudent: Student = {
       ...studentData,
-      id: `std-${Date.now()}`,
+      id: `std-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       createdAt: new Date().toISOString(),
     };
     store.students.push(newStudent);
     saveStore(store);
+    if (isPostgresConfigured()) {
+      postgresStudentDb.createStudent(newStudent).catch((e) =>
+        console.error("[PostgreSQL addStudent async sync error]:", e)
+      );
+    }
     return newStudent;
+  },
+
+  async addStudentAsync(studentData: Omit<Student, "id" | "createdAt">): Promise<Student> {
+    if (isPostgresConfigured()) {
+      try {
+        const newStudent = await postgresStudentDb.createStudent(studentData);
+        const store = loadStore();
+        store.students.push(newStudent);
+        saveStore(store);
+        return newStudent;
+      } catch (err) {
+        console.warn("[PostgreSQL] Error in addStudentAsync, falling back to local store:", err);
+      }
+    }
+    return this.addStudent(studentData);
   },
 
   updateStudent(id: string, updates: Partial<Student>): Student | null {
@@ -241,7 +301,32 @@ export const db = {
     if (index === -1) return null;
     store.students[index] = { ...store.students[index], ...updates };
     saveStore(store);
+    if (isPostgresConfigured()) {
+      postgresStudentDb.updateStudent(id, updates).catch((e) =>
+        console.error("[PostgreSQL updateStudent async sync error]:", e)
+      );
+    }
     return store.students[index];
+  },
+
+  async updateStudentAsync(id: string, updates: Partial<Student>): Promise<Student | null> {
+    if (isPostgresConfigured()) {
+      try {
+        const updated = await postgresStudentDb.updateStudent(id, updates);
+        if (updated) {
+          const store = loadStore();
+          const index = store.students.findIndex((s) => s.id === id);
+          if (index !== -1) {
+            store.students[index] = updated;
+            saveStore(store);
+          }
+          return updated;
+        }
+      } catch (err) {
+        console.warn("[PostgreSQL] Error in updateStudentAsync, falling back to local store:", err);
+      }
+    }
+    return this.updateStudent(id, updates);
   },
 
   deleteStudent(id: string): boolean {
@@ -249,10 +334,41 @@ export const db = {
     const beforeLen = store.students.length;
     store.students = store.students.filter((s) => s.id !== id);
     if (store.students.length !== beforeLen) {
+      // Cascading relational cleanups
+      store.learningGaps = store.learningGaps.filter((g) => g.studentId !== id);
+      store.remedialPlans = store.remedialPlans.filter((p) => p.studentId !== id);
+      store.results = store.results.filter((r) => r.studentId !== id);
+      store.attempts = store.attempts.filter((a) => a.studentId !== id);
+      store.deliveries = store.deliveries.filter((d) => d.studentId !== id);
       saveStore(store);
+      if (isPostgresConfigured()) {
+        postgresStudentDb.deleteStudent(id).catch((e) =>
+          console.error("[PostgreSQL deleteStudent async sync error]:", e)
+        );
+      }
       return true;
     }
     return false;
+  },
+
+  async deleteStudentAsync(id: string): Promise<boolean> {
+    if (isPostgresConfigured()) {
+      try {
+        const deleted = await postgresStudentDb.deleteStudent(id);
+        const store = loadStore();
+        store.students = store.students.filter((s) => s.id !== id);
+        store.learningGaps = store.learningGaps.filter((g) => g.studentId !== id);
+        store.remedialPlans = store.remedialPlans.filter((p) => p.studentId !== id);
+        store.results = store.results.filter((r) => r.studentId !== id);
+        store.attempts = store.attempts.filter((a) => a.studentId !== id);
+        store.deliveries = store.deliveries.filter((d) => d.studentId !== id);
+        saveStore(store);
+        return deleted;
+      } catch (err) {
+        console.warn("[PostgreSQL] Error in deleteStudentAsync, falling back to local store:", err);
+      }
+    }
+    return this.deleteStudent(id);
   },
 
   getAssessments(classroomId?: string): Assessment[] {

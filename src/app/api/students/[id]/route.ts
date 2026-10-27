@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const student = db.getStudentById(id);
+    const student = await db.getStudentByIdAsync(id);
 
     if (!student) {
       return NextResponse.json({ success: false, error: "Student not found" }, { status: 404 });
@@ -39,7 +39,27 @@ export async function PUT(
   try {
     const { id } = await params;
     const updates = await request.json();
-    const updated = db.updateStudent(id, updates);
+
+    // Check duplicate roll code if changed
+    if (updates.studentCode) {
+      const all = await db.getStudentsAsync();
+      const duplicate = all.find(
+        (s) =>
+          s.id !== id &&
+          s.studentCode.trim().toLowerCase() === String(updates.studentCode).trim().toLowerCase()
+      );
+      if (duplicate) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: `Student code '${updates.studentCode}' is already in use by ${duplicate.displayName}.`,
+          },
+          { status: 409 }
+        );
+      }
+    }
+
+    const updated = await db.updateStudentAsync(id, updates);
 
     if (!updated) {
       return NextResponse.json({ success: false, error: "Student not found" }, { status: 404 });
@@ -58,7 +78,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const deleted = db.deleteStudent(id);
+    const deleted = await db.deleteStudentAsync(id);
 
     if (!deleted) {
       return NextResponse.json({ success: false, error: "Student not found" }, { status: 404 });
