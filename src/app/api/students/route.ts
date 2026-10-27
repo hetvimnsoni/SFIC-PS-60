@@ -1,6 +1,15 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db/database";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+const noCacheHeaders = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+  Pragma: "no-cache",
+  Expires: "0",
+};
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -9,10 +18,16 @@ export async function GET(request: Request) {
     const search = searchParams.get("search") || undefined;
 
     const students = await db.getStudentsAsync({ classroomId, grade, search });
-    return NextResponse.json({ success: true, count: students.length, students });
+    return NextResponse.json(
+      { success: true, count: students.length, students },
+      { headers: noCacheHeaders }
+    );
   } catch (error) {
     console.error("API /api/students error:", error);
-    return NextResponse.json({ success: false, error: "Failed to fetch students" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Failed to fetch students" },
+      { status: 500, headers: noCacheHeaders }
+    );
   }
 }
 
@@ -24,7 +39,7 @@ export async function POST(request: Request) {
     if (!studentCode?.trim() || !displayName?.trim() || !grade) {
       return NextResponse.json(
         { success: false, error: "Missing required student fields (name, student code, grade)" },
-        { status: 400 }
+        { status: 400, headers: noCacheHeaders }
       );
     }
 
@@ -42,7 +57,7 @@ export async function POST(request: Request) {
     if (isDuplicate) {
       return NextResponse.json(
         { success: false, error: `Student with code '${trimmedCode}' already exists.` },
-        { status: 409 }
+        { status: 409, headers: noCacheHeaders }
       );
     }
 
@@ -56,9 +71,15 @@ export async function POST(request: Request) {
       notes: notes?.trim() || "",
     });
 
-    return NextResponse.json({ success: true, student: newStudent }, { status: 200 });
+    return NextResponse.json(
+      { success: true, student: newStudent },
+      { status: 200, headers: noCacheHeaders }
+    );
   } catch (error) {
     console.error("API POST /api/students error:", error);
-    return NextResponse.json({ success: false, error: "Failed to add student" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Failed to add student" },
+      { status: 500, headers: noCacheHeaders }
+    );
   }
 }

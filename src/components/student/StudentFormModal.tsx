@@ -24,10 +24,10 @@ export function StudentFormModal({
   const [displayName, setDisplayName] = useState(student?.displayName || "");
   const [grade, setGrade] = useState<number>(student?.grade || 4);
   const [section, setSection] = useState(student?.section || "A");
-  const [classroomId, setClassroomId] = useState(student?.classroomId || "cls-4a");
   const [notes, setNotes] = useState(student?.notes || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isCustomCode, setIsCustomCode] = useState(false);
 
   useEffect(() => {
     if (student) {
@@ -36,10 +36,34 @@ export function StudentFormModal({
       setGrade(student.grade);
       setSection(student.section);
       setNotes(student.notes || "");
+      setIsCustomCode(true);
     } else if (isOpen) {
-      setStudentCode(`MPS-4A-${Date.now().toString().slice(-4)}`);
+      setIsCustomCode(false);
+      const randomSuffix = Math.floor(100 + Math.random() * 900);
+      setStudentCode(`MPS-4A-${randomSuffix}`);
+      setDisplayName("");
+      setNotes("");
+      setGrade(4);
+      setSection("A");
+      setError(null);
     }
   }, [student, isOpen]);
+
+  const handleGradeChange = (newGrade: number) => {
+    setGrade(newGrade);
+    if (!student && !isCustomCode) {
+      const randomSuffix = Math.floor(100 + Math.random() * 900);
+      setStudentCode(`MPS-${newGrade}${section}-${randomSuffix}`);
+    }
+  };
+
+  const handleSectionChange = (newSec: string) => {
+    setSection(newSec);
+    if (!student && !isCustomCode) {
+      const randomSuffix = Math.floor(100 + Math.random() * 900);
+      setStudentCode(`MPS-${grade}${newSec}-${randomSuffix}`);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,26 +86,37 @@ export function StudentFormModal({
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
+        cache: "no-store",
         body: JSON.stringify({
-          studentCode,
-          displayName,
+          studentCode: studentCode.trim(),
+          displayName: displayName.trim(),
           grade: Number(grade),
-          section,
+          section: section.trim().toUpperCase(),
           classroomId: `cls-${grade}${section.toLowerCase()}`,
-          notes,
+          notes: notes.trim(),
           enrollmentStatus: "active",
         }),
       });
 
       const data = await res.json();
       if (data.success) {
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("shikshasetu_student_updated", { detail: data.student })
+          );
+        }
         onSuccess();
         onClose();
       } else {
-        setError(data.error || (language === "gu" ? "વિદ્યાર્થી રેકોર્ડ સાચવવામાં નિષ્ફળ" : "Failed to save student record"));
+        setError(
+          data.error ||
+            (language === "gu" ? "વિદ્યાર્થી રેકોર્ડ સાચવવામાં નિષ્ફળ" : "Failed to save student record")
+        );
       }
     } catch {
-      setError(language === "gu" ? "નેટવર્ક ભૂલ: વિદ્યાર્થી સાચવી શકાયો નથી" : "Network error saving student");
+      setError(
+        language === "gu" ? "નેટવર્ક ભૂલ: વિદ્યાર્થી સાચવી શકાયો નથી" : "Network error saving student"
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -133,7 +168,10 @@ export function StudentFormModal({
               type="text"
               required
               value={studentCode}
-              onChange={(e) => setStudentCode(e.target.value)}
+              onChange={(e) => {
+                setStudentCode(e.target.value);
+                setIsCustomCode(true);
+              }}
               placeholder="e.g. MPS-4A-12"
               className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-sm font-mono text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden"
             />
@@ -144,7 +182,7 @@ export function StudentFormModal({
             </label>
             <select
               value={grade}
-              onChange={(e) => setGrade(Number(e.target.value))}
+              onChange={(e) => handleGradeChange(Number(e.target.value))}
               className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-sm text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden cursor-pointer"
             >
               <option value={1}>{language === "gu" ? "ધોરણ ૧" : "Class 1"}</option>
@@ -162,7 +200,7 @@ export function StudentFormModal({
           </label>
           <select
             value={section}
-            onChange={(e) => setSection(e.target.value)}
+            onChange={(e) => handleSectionChange(e.target.value)}
             className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-sm text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden cursor-pointer"
           >
             <option value="A">{language === "gu" ? "વિભાગ અ (Section A)" : "Section A"}</option>

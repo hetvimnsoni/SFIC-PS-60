@@ -59,8 +59,8 @@ export default function StudentsPage() {
     setLoading(true);
     try {
       const [stdRes, gapsRes] = await Promise.all([
-        fetch("/api/students"),
-        fetch("/api/learning-gaps"),
+        fetch("/api/students", { cache: "no-store" }),
+        fetch("/api/learning-gaps", { cache: "no-store" }),
       ]);
       const [stdData, gapsData] = await Promise.all([stdRes.json(), gapsRes.json()]);
       if (stdData.success) setStudents(stdData.students || []);
@@ -80,6 +80,17 @@ export default function StudentsPage() {
 
   useEffect(() => {
     fetchStudents();
+
+    const handleUpdate = () => {
+      fetchStudents();
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("shikshasetu_student_updated", handleUpdate);
+      return () => {
+        window.removeEventListener("shikshasetu_student_updated", handleUpdate);
+      };
+    }
   }, []);
 
   const activeGrade = gradeNumber ? String(gradeNumber) : "all";

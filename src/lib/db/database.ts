@@ -96,6 +96,8 @@ function getInitialStore(): DataStore {
 }
 
 let memoryStore: DataStore | null = null;
+let lastLoadedMtime = 0;
+let lastLoadedPath = "";
 
 function ensureDirectory(dirPath: string): boolean {
   try {
@@ -125,16 +127,20 @@ function getWritableStorePath(): string {
 }
 
 function loadStore(): DataStore {
-  if (memoryStore) return memoryStore;
-
-  // Candidates in priority: writable tmp file, then bundled data file
-  const candidates = [TMP_STORE_FILE, DEFAULT_STORE_FILE];
+  const targetFile = getWritableStorePath();
+  const candidates = [targetFile, TMP_STORE_FILE, DEFAULT_STORE_FILE];
 
   for (const candidate of candidates) {
     if (fs.existsSync(/*turbopackIgnore: true*/ candidate)) {
       try {
+        const stat = fs.statSync(/*turbopackIgnore: true*/ candidate);
+        if (memoryStore && lastLoadedPath === candidate && lastLoadedMtime === stat.mtimeMs) {
+          return memoryStore;
+        }
         const content = fs.readFileSync(/*turbopackIgnore: true*/ candidate, "utf-8");
         memoryStore = JSON.parse(content) as DataStore;
+        lastLoadedMtime = stat.mtimeMs;
+        lastLoadedPath = candidate;
         return memoryStore;
       } catch (e) {
         console.warn(`Could not read store from ${candidate}:`, e);
@@ -142,6 +148,7 @@ function loadStore(): DataStore {
     }
   }
 
+  if (memoryStore) return memoryStore;
   memoryStore = getInitialStore();
   try {
     saveStore(memoryStore);
@@ -168,11 +175,21 @@ function saveStore(store: DataStore) {
         if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
       } catch {}
     }
+    try {
+      const stat = fs.statSync(targetFile);
+      lastLoadedMtime = stat.mtimeMs;
+      lastLoadedPath = targetFile;
+    } catch {}
   } catch (primaryErr) {
     // If writing to target failed (e.g. EROFS on read-only system), attempt writing to os.tmpdir directly
     try {
       const fallbackFile = path.join(os.tmpdir(), "shikshasetu_store.json");
       fs.writeFileSync(fallbackFile, json, "utf-8");
+      try {
+        const stat = fs.statSync(fallbackFile);
+        lastLoadedMtime = stat.mtimeMs;
+        lastLoadedPath = fallbackFile;
+      } catch {}
     } catch {
       // Memory store is already updated in memoryStore; do not crash serverless execution
       console.warn("Storage notice: Persistent disk write skipped, store held in active memory.");

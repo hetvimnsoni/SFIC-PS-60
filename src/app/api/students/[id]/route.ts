@@ -1,6 +1,15 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db/database";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+const noCacheHeaders = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+  Pragma: "no-cache",
+  Expires: "0",
+};
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -10,7 +19,10 @@ export async function GET(
     const student = await db.getStudentByIdAsync(id);
 
     if (!student) {
-      return NextResponse.json({ success: false, error: "Student not found" }, { status: 404 });
+      return NextResponse.json(
+        { success: false, error: "Student not found" },
+        { status: 404, headers: noCacheHeaders }
+      );
     }
 
     const results = db.getResults(id);
@@ -18,17 +30,23 @@ export async function GET(
     const remedialPlans = db.getRemedialPlans(id);
     const attempts = db.getAttempts(id);
 
-    return NextResponse.json({
-      success: true,
-      student,
-      results,
-      gaps,
-      remedialPlans,
-      attempts,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        student,
+        results,
+        gaps,
+        remedialPlans,
+        attempts,
+      },
+      { headers: noCacheHeaders }
+    );
   } catch (error) {
     console.error("API GET /api/students/[id] error:", error);
-    return NextResponse.json({ success: false, error: "Server error" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Server error" },
+      { status: 500, headers: noCacheHeaders }
+    );
   }
 }
 
@@ -54,7 +72,7 @@ export async function PUT(
             success: false,
             error: `Student code '${updates.studentCode}' is already in use by ${duplicate.displayName}.`,
           },
-          { status: 409 }
+          { status: 409, headers: noCacheHeaders }
         );
       }
     }
@@ -62,13 +80,22 @@ export async function PUT(
     const updated = await db.updateStudentAsync(id, updates);
 
     if (!updated) {
-      return NextResponse.json({ success: false, error: "Student not found" }, { status: 404 });
+      return NextResponse.json(
+        { success: false, error: "Student not found" },
+        { status: 404, headers: noCacheHeaders }
+      );
     }
 
-    return NextResponse.json({ success: true, student: updated });
+    return NextResponse.json(
+      { success: true, student: updated },
+      { headers: noCacheHeaders }
+    );
   } catch (error) {
     console.error("API PUT /api/students/[id] error:", error);
-    return NextResponse.json({ success: false, error: "Update failed" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Update failed" },
+      { status: 500, headers: noCacheHeaders }
+    );
   }
 }
 
@@ -81,12 +108,21 @@ export async function DELETE(
     const deleted = await db.deleteStudentAsync(id);
 
     if (!deleted) {
-      return NextResponse.json({ success: false, error: "Student not found" }, { status: 404 });
+      return NextResponse.json(
+        { success: false, error: "Student not found" },
+        { status: 404, headers: noCacheHeaders }
+      );
     }
 
-    return NextResponse.json({ success: true, message: "Student removed successfully" });
+    return NextResponse.json(
+      { success: true, message: "Student removed successfully" },
+      { headers: noCacheHeaders }
+    );
   } catch (error) {
     console.error("API DELETE /api/students/[id] error:", error);
-    return NextResponse.json({ success: false, error: "Delete failed" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Delete failed" },
+      { status: 500, headers: noCacheHeaders }
+    );
   }
 }

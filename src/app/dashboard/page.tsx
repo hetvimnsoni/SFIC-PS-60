@@ -101,12 +101,12 @@ export default function DashboardPage() {
     setLoading(true);
     try {
       const [stdRes, gapsRes, plansRes, asmRes, progRes, resultsRes] = await Promise.all([
-        fetch("/api/students"),
-        fetch("/api/learning-gaps"),
-        fetch("/api/remedial-plans"),
-        fetch("/api/assessments"),
-        fetch("/api/progress"),
-        fetch("/api/assessments/results"),
+        fetch("/api/students", { cache: "no-store" }),
+        fetch("/api/learning-gaps", { cache: "no-store" }),
+        fetch("/api/remedial-plans", { cache: "no-store" }),
+        fetch("/api/assessments", { cache: "no-store" }),
+        fetch("/api/progress", { cache: "no-store" }),
+        fetch("/api/assessments/results", { cache: "no-store" }),
       ]);
 
       const [stdData, gapsData, plansData, asmData, progData, resultsData] = await Promise.all([
@@ -136,6 +136,17 @@ export default function DashboardPage() {
 
   useEffect(() => {
     fetchDashboardData();
+
+    const handleUpdate = () => {
+      fetchDashboardData();
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("shikshasetu_student_updated", handleUpdate);
+      return () => {
+        window.removeEventListener("shikshasetu_student_updated", handleUpdate);
+      };
+    }
   }, []);
 
   const handleCelebrate = () => {

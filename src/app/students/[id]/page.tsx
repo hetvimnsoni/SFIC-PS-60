@@ -101,8 +101,8 @@ export default function StudentDetailPage({
     setLoading(true);
     try {
       const [resStd, resAct] = await Promise.all([
-        fetch(`/api/students/${id}`),
-        fetch("/api/activities"),
+        fetch(`/api/students/${id}`, { cache: "no-store" }),
+        fetch("/api/activities", { cache: "no-store" }),
       ]);
 
       const [dataStd, dataAct] = await Promise.all([resStd.json(), resAct.json()]);

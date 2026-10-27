@@ -60,6 +60,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   }
 
   const config: RequestInit = {
+    cache: "no-store",
     ...options,
     headers: {
       ...authHeaders,
