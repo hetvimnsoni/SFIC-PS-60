@@ -533,7 +533,7 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
             }`}
           >
             <GraduationCap className="w-4 h-4 text-[#B26A1B]" />
-            <span>1. AI Tutor</span>
+            <span>{language === "gu" ? "૧. AI ટ્યુટર" : "1. AI Tutor"}</span>
           </button>
 
           <button
@@ -546,7 +546,7 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
             }`}
           >
             <AlertTriangle className="w-4 h-4 text-[#C54738]" />
-            <span>2. Learning-Gap Analyzer</span>
+            <span>{language === "gu" ? "૨. અધ્યયન ત્રુટિ વિશ્લેષક" : "2. Learning-Gap Analyzer"}</span>
           </button>
 
           <button
@@ -559,7 +559,7 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
             }`}
           >
             <ClipboardList className="w-4 h-4 text-[#2E7D5E]" />
-            <span>3. Remedial Plan Generator</span>
+            <span>{language === "gu" ? "૩. ઉપચાર યોજના નિર્માતા" : "3. Remedial Plan Generator"}</span>
           </button>
 
           <button
@@ -572,7 +572,7 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
             }`}
           >
             <FileSpreadsheet className="w-4 h-4 text-[#B26A1B]" />
-            <span>4. Worksheet Generator</span>
+            <span>{language === "gu" ? "૪. વર્કશીટ નિર્માતા" : "4. Worksheet Generator"}</span>
           </button>
 
           <button
@@ -585,7 +585,7 @@ export function AiWorkspaceView({ defaultTab = "tutor", embedded = false }: AiWo
             }`}
           >
             <Bot className="w-4 h-4 text-[#2E7D5E]" />
-            <span>5. Teacher Assistant</span>
+            <span>{language === "gu" ? "૫. શિક્ષક સહાયક" : "5. Teacher Assistant"}</span>
           </button>
         </div>
       </div>

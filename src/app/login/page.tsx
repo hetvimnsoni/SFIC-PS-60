@@ -122,15 +122,27 @@ export default function LoginPage() {
             <div className="space-y-3 pt-2 text-xs text-[#7A6862]">
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-[#2E7D5E] shrink-0" />
-                <span>Deterministic 60% developing &amp; 80% mastery benchmarks</span>
+                <span>
+                  {language === "gu"
+                    ? "નિશ્ચિત ૬૦% વિકાસશીલ અને ૮૦% નિપુણતા બેન્ચમાર્ક્સ"
+                    : "Deterministic 60% developing & 80% mastery benchmarks"}
+                </span>
               </div>
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-[#B26A1B] shrink-0" />
-                <span>Interactive 3D class mastery heatmap &amp; student skill progression trees</span>
+                <span>
+                  {language === "gu"
+                    ? "ઇન્ટરેક્ટિવ ૩D વર્ગ નિપુણતા હીટમેપ અને કૌશલ્ય પ્રગતિ વૃક્ષ"
+                    : "Interactive 3D class mastery heatmap & student skill progression trees"}
+                </span>
               </div>
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-[#2E7D5E] shrink-0" />
-                <span>Zero paid APIs required; operates completely offline in rural schools</span>
+                <span>
+                  {language === "gu"
+                    ? "કોઈ ચૂકવણી કરેલ API જરૂરી નથી; ગ્રામીણ શાળાઓમાં સંપૂર્ણ ઑફલાઇન ચાલે છે"
+                    : "Zero paid APIs required; operates completely offline in rural schools"}
+                </span>
               </div>
             </div>
           </div>
@@ -143,7 +155,9 @@ export default function LoginPage() {
                   {language === "gu" ? "શિક્ષાસેતુમાં પ્રવેશ કરો" : "Sign In to ShikshaSetu AI"}
                 </h2>
                 <p className="text-xs text-[#7A6862]">
-                  Primary School Pedagogical Remedial System
+                  {language === "gu"
+                    ? "પ્રાથમિક શાળા શિક્ષણ ઉપચારાત્મક પ્રણાલી"
+                    : "Primary School Pedagogical Remedial System"}
                 </p>
               </div>
 
@@ -152,14 +166,16 @@ export default function LoginPage() {
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-[#49352F] flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-[#B26A1B]" />
-                    Hackathon Jury 1-Click Access
+                    {language === "gu" ? "હેકાથોન જ્યુરી ૧-ક્લિક પ્રવેશ" : "Hackathon Jury 1-Click Access"}
                   </span>
                   <Badge variant="mint" size="sm">
-                    No Sign Up
+                    {language === "gu" ? "સાઇન-અપ મુક્ત" : "No Sign Up"}
                   </Badge>
                 </div>
                 <p className="text-[11px] text-[#7A6862] leading-relaxed">
-                  Select a pre-configured role to immediately explore the live primary cohort:
+                  {language === "gu"
+                    ? "લાઇવ પ્રાથમિક સમૂહનું સીધું અન્વેષણ કરવા માટે પૂર્વ-રૂપરેખાંકિત ભૂમિકા પસંદ કરો:"
+                    : "Select a pre-configured role to immediately explore the live primary cohort:"}
                 </p>
 
                 <div className="grid grid-cols-2 gap-2.5 pt-1">
@@ -171,7 +187,7 @@ export default function LoginPage() {
                     className="rounded-xl text-xs font-black shadow-xs"
                   >
                     <UserCheck className="w-3.5 h-3.5 mr-1" />
-                    <span>Teacher Role</span>
+                    <span>{language === "gu" ? "શિક્ષક ભૂમિકા" : "Teacher Role"}</span>
                   </Button>
 
                   <Button
@@ -182,7 +198,7 @@ export default function LoginPage() {
                     className="rounded-xl text-xs font-bold border-[#49352F]/15 hover:border-[#49352F]/30 bg-white text-[#49352F]"
                   >
                     <ShieldCheck className="w-3.5 h-3.5 mr-1 text-[#B26A1B]" />
-                    <span>Admin Role</span>
+                    <span>{language === "gu" ? "પ્રશાસક ભૂમિકા" : "Admin Role"}</span>
                   </Button>
                 </div>
               </div>
@@ -193,7 +209,7 @@ export default function LoginPage() {
                   <div className="w-full border-t border-[#49352F]/10" />
                 </div>
                 <span className="relative bg-white px-3 text-[11px] font-semibold text-[#7A6862] uppercase">
-                  Or enter credentials
+                  {language === "gu" ? "અથવા ઓળખપત્રો દાખલ કરો" : "Or enter credentials"}
                 </span>
               </div>
 
@@ -201,7 +217,7 @@ export default function LoginPage() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label className="block text-xs font-semibold text-[#49352F] mb-1">
-                    Email Address
+                    {language === "gu" ? "ઈમેલ સરનામું" : "Email Address"}
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-3.5 top-3 h-4 w-4 text-[#7A6862]" />
@@ -217,7 +233,7 @@ export default function LoginPage() {
 
                 <div>
                   <label className="block text-xs font-semibold text-[#49352F] mb-1">
-                    Password
+                    {language === "gu" ? "પાસવર્ડ" : "Password"}
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3.5 top-3 h-4 w-4 text-[#7A6862]" />
@@ -250,7 +266,15 @@ export default function LoginPage() {
                   disabled={loading}
                   className="w-full rounded-full text-xs font-black shadow-xs"
                 >
-                  <span>{loading ? "Signing In..." : "Sign In to Dashboard"}</span>
+                  <span>
+                    {loading
+                      ? language === "gu"
+                        ? "પ્રવેશ થઈ રહ્યો છે..."
+                        : "Signing In..."
+                      : language === "gu"
+                      ? "ડેશબોર્ડમાં પ્રવેશ કરો"
+                      : "Sign In to Dashboard"}
+                  </span>
                   <ArrowRight className="w-4 h-4 ml-1.5" />
                 </Button>
               </form>

@@ -78,7 +78,7 @@ const StudentFormModal = dynamic(
 );
 
 export default function DashboardPage() {
-  const { t, language } = useLanguage();
+  const { t, language, formatSubject, formatClass, formatPriority } = useLanguage();
 
   const [loading, setLoading] = useState(true);
   const [students, setStudents] = useState<any[]>([]);
@@ -200,15 +200,15 @@ export default function DashboardPage() {
   const curriculumData =
     progressData?.subjectAverages && progressData.subjectAverages.length > 0
       ? progressData.subjectAverages.map((sub: any) => ({
-          subject: sub.code || sub.subjectName,
+          subject: formatSubject(sub.code || sub.subjectName),
           score: Math.round(sub.averageScore || 0),
           baseline: Math.max(30, Math.round((sub.averageScore || 0) * 0.75)),
         }))
       : [
-          { subject: "MATH", score: 68, baseline: 52 },
-          { subject: "ENG", score: 74, baseline: 58 },
-          { subject: "GUJ", score: 78, baseline: 60 },
-          { subject: "EVS", score: 80, baseline: 65 },
+          { subject: formatSubject("MATH"), score: 68, baseline: 52 },
+          { subject: formatSubject("ENG"), score: 74, baseline: 58 },
+          { subject: formatSubject("GUJ"), score: 78, baseline: 60 },
+          { subject: formatSubject("EVS"), score: 80, baseline: 65 },
         ];
 
   return (
@@ -219,16 +219,14 @@ export default function DashboardPage() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#49352F] tracking-tight">
-                {language === "gu" ? "શિક્ષક ડેશબોર્ડ" : "Teacher Command Center"}
+                {t.dashboard.title || "Teacher Overview & Action Center"}
               </h1>
               <Badge variant="saffron" size="sm" pulse>
                 PS-60 Live
               </Badge>
             </div>
             <p className="text-xs sm:text-sm text-[#7A6862] mt-1">
-              {language === "gu"
-                ? "પ્રાથમિક શાળાના વિદ્યાર્થીઓની લર્નિંગ ગેપ્સ અને ૫-પગલાંની ઉપચારાત્મક પ્રગતિ."
-                : "Tracking student learning gap detection, 5-step concrete manipulatives, and reassessment deltas."}
+              {t.dashboard.subtitle || "Track real-time student competencies, flag learning gaps, and trigger targeted remediation."}
             </p>
           </div>
 
@@ -244,7 +242,7 @@ export default function DashboardPage() {
                     : "text-[#7A6862] hover:text-[#49352F]"
                 }`}
               >
-                Overview
+                {t.dashboard.overviewTab || "Overview"}
               </button>
               <button
                 type="button"
@@ -256,7 +254,7 @@ export default function DashboardPage() {
                 }`}
               >
                 <Sparkles className="w-3.5 h-3.5 text-[#B26A1B]" />
-                <span>AI Workspace</span>
+                <span>{t.dashboard.aiWorkspaceTab || "AI Workspace"}</span>
               </button>
             </div>
 
@@ -267,9 +265,9 @@ export default function DashboardPage() {
               className="rounded-xl border border-[#49352F]/15 bg-white px-3 py-1.5 text-xs font-semibold text-[#49352F] shadow-xs outline-hidden cursor-pointer"
             >
               <option value="all">{t.dashboard.allClasses}</option>
-              <option value="cls-3a">Class 3-A</option>
-              <option value="cls-4a">Class 4-A</option>
-              <option value="cls-5a">Class 5-A</option>
+              <option value="cls-3a">{formatClass("Class 3-A")}</option>
+              <option value="cls-4a">{formatClass("Class 4-A")}</option>
+              <option value="cls-5a">{formatClass("Class 5-A")}</option>
             </select>
 
             <Button
@@ -371,41 +369,49 @@ export default function DashboardPage() {
             {/* 1. KPI Stat Tiles Row with Sparklines */}
             <div data-tour="kpi-tiles" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <StatTile
-                label="Total Enrolled"
+                label={t.dashboard.totalEnrolled || "Total Enrolled"}
                 value={totalStudents}
                 icon={Users}
                 variant="indigo"
-                description="Classes 3, 4 & 5"
+                description={language === "gu" ? "ધોરણ ૩, ૪ અને ૫" : "Classes 3, 4 & 5"}
                 sparklineData={[12, 13, 14, 15, 15]}
               />
 
               <StatTile
-                label="Need Support"
+                label={t.dashboard.needSupport || "Need Support"}
                 value={studentsWithGaps}
                 icon={AlertTriangle}
                 variant="coral"
-                description="Score < 60% threshold"
+                description={language === "gu" ? "સ્કોર < ૬૦% મર્યાદા" : "Score < 60% threshold"}
                 sparklineData={[6, 5, 5, 4, 4]}
-                change={{ value: "-20%", trend: "down", label: "gaps closing" }}
+                change={{
+                  value: "-20%",
+                  trend: "down",
+                  label: language === "gu" ? "ખામીઓ ઘટી રહી છે" : "gaps closing",
+                }}
               />
 
               <StatTile
-                label="Active Plans"
+                label={t.dashboard.activePlans || "Active Plans"}
                 value={activePlansCount}
                 icon={Layers}
                 variant="saffron"
-                description="5-step manipulatives"
+                description={language === "gu" ? "૫-પગલાં પ્રવૃત્તિ આધારિત" : "5-step manipulatives"}
                 sparklineData={[1, 2, 3, 3, 3]}
               />
 
               <StatTile
-                label="Reassessed Gain"
+                label={t.dashboard.reassessedGain || "Reassessed Gain"}
                 value="+50 pp"
                 icon={TrendingUp}
                 variant="mint"
-                description="Aarav: 35% -> 85%"
+                description={language === "gu" ? "આરવ: ૩૫% -> ૮૫%" : "Aarav: 35% -> 85%"}
                 sparklineData={[35, 45, 60, 75, 85]}
-                change={{ value: "+50 pp", trend: "up", label: "mastery breakthrough" }}
+                change={{
+                  value: "+50 pp",
+                  trend: "up",
+                  label: language === "gu" ? "સિદ્ધિમાં વધારો" : "mastery breakthrough",
+                }}
               />
             </div>
 
@@ -419,17 +425,21 @@ export default function DashboardPage() {
                   <div className="flex items-center gap-2">
                     <span className="p-1.5 rounded-xl bg-[#F2DCB5]/80 border border-[#49352F]/15 text-[#49352F] text-xs font-bold flex items-center gap-1 shadow-xs">
                       <Sparkles className="w-3.5 h-3.5 text-[#B26A1B]" />
-                      Pedagogical Win
+                      {language === "gu" ? "શિક્ષણ સિદ્ધિ" : "Pedagogical Win"}
                     </span>
                     <Badge variant="mint" size="sm">
-                      Mastery Verified
+                      {language === "gu" ? "પ્રભુત્વ પ્રમાણિત" : "Mastery Verified"}
                     </Badge>
                   </div>
                   <h3 className="font-heading text-lg font-bold text-[#49352F]">
-                    Aarav Patel (Class 4A) Crosses The Bridge: 35% &rarr; 85% (+50 pp)
+                    {language === "gu"
+                      ? "આરવ પટેલ (ધોરણ ૪-અ) સેતુ પાર કર્યો: ૩૫% → ૮૫% (+૫૦ ગુણ)"
+                      : "Aarav Patel (Class 4A) Crosses The Bridge: 35% → 85% (+50 pp)"}
                   </h3>
                   <p className="text-xs text-[#7A6862] max-w-2xl leading-relaxed">
-                    Following 5-step concrete division remediation with counters and number line worksheets, Aarav mastered equal sharing with remainders during formative reassessment.
+                    {language === "gu"
+                      ? "મૂર્ત સાધનો અને સંખ્યા રેખા કાર્યપત્રિકા સાથે ૫-પગલાંના ઉપચારાત્મક કાર્ય બાદ, આરવે રચનાત્મક પુનઃમૂલ્યાંકનમાં શેષ સાથે સમાન વહેંચણીમાં સિદ્ધિ મેળવી."
+                      : "Following 5-step concrete division remediation with counters and number line worksheets, Aarav mastered equal sharing with remainders during formative reassessment."}
                   </p>
                 </div>
 
@@ -441,12 +451,20 @@ export default function DashboardPage() {
                     className="rounded-full shadow-xs text-xs px-4"
                   >
                     <PartyPopper className="w-4 h-4 mr-1.5" aria-hidden="true" />
-                    <span>{hasCelebrated ? "Celebrated!" : "Celebrate Win"}</span>
+                    <span>
+                      {hasCelebrated
+                        ? language === "gu"
+                          ? "ઉજવણી કરી!"
+                          : "Celebrated!"
+                        : language === "gu"
+                        ? "ઉજવણી કરો"
+                        : "Celebrate Win"}
+                    </span>
                   </Button>
 
                   <Link href="/students/std-aarav">
                     <Button variant="outline" size="sm" className="rounded-full text-xs">
-                      Inspect Aarav &rarr;
+                      {language === "gu" ? "આરવનું વિશ્લેષણ →" : "Inspect Aarav →"}
                     </Button>
                   </Link>
                 </div>
@@ -457,7 +475,7 @@ export default function DashboardPage() {
                 <BridgeProgress
                   score={85}
                   previousScore={35}
-                  studentName="Aarav Patel"
+                  studentName={language === "gu" ? "આરવ પટેલ" : "Aarav Patel"}
                   height="md"
                 />
               </div>
@@ -470,14 +488,16 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <h3 className="font-heading text-base font-bold text-[#49352F]">
-                      Class Mastery Heatmap (Students × Concepts)
+                      {language === "gu"
+                        ? "વર્ગ પ્રભુત્વ હીટમેપ (વિદ્યાર્થીઓ × સંકલ્પનાઓ)"
+                        : "Class Mastery Heatmap (Students × Concepts)"}
                     </h3>
                     <Badge variant="saffron" size="sm">
-                      Interactive 3D
+                      {language === "gu" ? "ઇન્ટરેક્ટિવ 3D" : "Interactive 3D"}
                     </Badge>
                   </div>
                   <span className="text-[11px] text-[#7A6862]">
-                    Drag to rotate 3D view
+                    {language === "gu" ? "3D વ્યુ ફેરવવા ડ્રેગ કરો" : "Drag to rotate 3D view"}
                   </span>
                 </div>
 
@@ -494,10 +514,12 @@ export default function DashboardPage() {
                 <Card variant="glass" className="p-5 flex flex-col justify-between h-full">
                   <div>
                     <h3 className="font-heading text-base font-bold text-[#49352F]">
-                      Subject Proficiency
+                      {t.dashboard.subjectProficiency || "Subject Proficiency"}
                     </h3>
                     <p className="text-xs text-[#7A6862] mt-0.5">
-                      Current cohort average vs baseline
+                      {language === "gu"
+                        ? "હાલની સરેરાશ વિરુદ્ધ મૂળ આધાર"
+                        : "Current cohort average vs baseline"}
                     </p>
 
                     <div className="h-[220px] w-full mt-4">
@@ -516,8 +538,18 @@ export default function DashboardPage() {
                               boxShadow: "0 4px 16px rgba(73,53,47,0.1)",
                             }}
                           />
-                          <Bar dataKey="score" fill="#2E7D5E" radius={[6, 6, 0, 0]} name="Current Score" />
-                          <Bar dataKey="baseline" fill="#F2CAB3" radius={[6, 6, 0, 0]} name="Baseline" />
+                          <Bar
+                            dataKey="score"
+                            fill="#2E7D5E"
+                            radius={[6, 6, 0, 0]}
+                            name={language === "gu" ? "વર્તમાન સ્કોર" : "Current Score"}
+                          />
+                          <Bar
+                            dataKey="baseline"
+                            fill="#F2CAB3"
+                            radius={[6, 6, 0, 0]}
+                            name={language === "gu" ? "મૂળ સ્કોર" : "Baseline"}
+                          />
                         </BarChart>
                       </ResponsiveContainer>
                     </div>
@@ -526,14 +558,14 @@ export default function DashboardPage() {
                   <div className="pt-3 border-t border-[#49352F]/10 flex items-center justify-between text-[11px] text-[#7A6862]">
                     <div className="flex items-center gap-1.5">
                       <span className="w-2.5 h-2.5 rounded-xs bg-[#2E7D5E]" />
-                      <span>Current %</span>
+                      <span>{language === "gu" ? "વર્તમાન %" : "Current %"}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <span className="w-2.5 h-2.5 rounded-xs bg-[#F2CAB3] border border-[#49352F]/15" />
-                      <span>Baseline %</span>
+                      <span>{language === "gu" ? "મૂળ આધાર %" : "Baseline %"}</span>
                     </div>
                     <Link href="/reports" className="text-[#8D4E10] hover:underline font-bold">
-                      Full Reports &rarr;
+                      {language === "gu" ? "સંપૂર્ણ અહેવાલ →" : "Full Reports →"}
                     </Link>
                   </div>
                 </Card>
@@ -546,17 +578,19 @@ export default function DashboardPage() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="font-heading text-base font-bold text-[#49352F]">
-                      Immediate Attention Required
+                      {t.dashboard.immediateAttention || "Immediate Attention Required"}
                     </h3>
                     <ContextualHelp termKey="masteryThreshold" />
                   </div>
                   <p className="text-xs text-[#7A6862]">
-                    Students flagged below the 60% developing threshold needing active intervention
+                    {language === "gu"
+                      ? "૬૦% મર્યાદાથી નીચે ચિહ્નિત થયેલા વિદ્યાર્થીઓ કે જેમને સક્રિય સહાયની જરૂર છે"
+                      : "Students flagged below the 60% developing threshold needing active intervention"}
                   </p>
                 </div>
                 <Link href="/learning-gaps">
                   <Button variant="outline" size="sm" className="rounded-full text-xs">
-                    View All Gaps &rarr;
+                    {language === "gu" ? "બધી ખામીઓ જુઓ →" : "View All Gaps →"}
                   </Button>
                 </Link>
               </div>
@@ -571,8 +605,14 @@ export default function DashboardPage() {
                     concept: "Vowel Blends (જોડાક્ષર)",
                     score: 42,
                     priority: "High",
-                    reason: "Consistently misses consonant-vowel combinations during dictation.",
-                    suggestedAction: "Step 2: Tactile Gujarati letter cards with pictorial word association.",
+                    reason:
+                      language === "gu"
+                        ? "શ્રુતલેખન દરમિયાન સતત જોડાક્ષરો ચૂકી જાય છે."
+                        : "Consistently misses consonant-vowel combinations during dictation.",
+                    suggestedAction:
+                      language === "gu"
+                        ? "પગલું ૨: સચિત્ર શબ્દ સાહચર્ય સાથે સ્પર્શક્ષમ ગુજરાતી મૂળાક્ષર કાર્ડ્સ."
+                        : "Step 2: Tactile Gujarati letter cards with pictorial word association.",
                   },
                   {
                     id: "std-karan",
@@ -582,8 +622,14 @@ export default function DashboardPage() {
                     concept: "Fractions Addition",
                     score: 48,
                     priority: "High",
-                    reason: "Directly adds denominators (1/2 + 1/4 = 2/6) without finding common base.",
-                    suggestedAction: "Step 2: Fraction strips and circle cutouts for physical equivalence.",
+                    reason:
+                      language === "gu"
+                        ? "સામાન્ય છેદ શોધ્યા વગર સીધા છેદનો સરવાળો (૧/૨ + ૧/૪ = ૨/૬) કરે છે."
+                        : "Directly adds denominators (1/2 + 1/4 = 2/6) without finding common base.",
+                    suggestedAction:
+                      language === "gu"
+                        ? "પગલું ૨: વાસ્તવિક સમાનતા માટે અપૂર્ણાંક પટ્ટીઓ અને વર્તુળ કટઆઉટ્સ."
+                        : "Step 2: Fraction strips and circle cutouts for physical equivalence.",
                   },
                   {
                     id: "std-diya",
@@ -593,8 +639,14 @@ export default function DashboardPage() {
                     concept: "Reading Comprehension",
                     score: 52,
                     priority: "Medium",
-                    reason: "Decodes single words accurately but loses context in compound sentences.",
-                    suggestedAction: "Step 3: Guided paired reading with comprehension question prompts.",
+                    reason:
+                      language === "gu"
+                        ? "એકલા શબ્દો ચોકસાઈથી વાંચે છે પરંતુ સંયુક્ત વાક્યોમાં અર્થ ગુમાવે છે."
+                        : "Decodes single words accurately but loses context in compound sentences.",
+                    suggestedAction:
+                      language === "gu"
+                        ? "પગલું ૩: સમજણ પ્રશ્નો સાથે માર્ગદર્શિત જોડી વાંચન."
+                        : "Step 3: Guided paired reading with comprehension question prompts.",
                   },
                   {
                     id: "std-dev",
@@ -604,8 +656,14 @@ export default function DashboardPage() {
                     concept: "Place Value 100s",
                     score: 55,
                     priority: "Medium",
-                    reason: "Reverses tens and units column during borrowing in subtraction.",
-                    suggestedAction: "Step 2: Dienes blocks (bundles of 10 and 100s) for regrouping.",
+                    reason:
+                      language === "gu"
+                        ? "બાદબાકીમાં દસકો લેતી વખતે દશક અને એકમનું સ્થાન ઉલટાવે છે."
+                        : "Reverses tens and units column during borrowing in subtraction.",
+                    suggestedAction:
+                      language === "gu"
+                        ? "પગલું ૨: જૂથ પુનઃરચના માટે ડીનેસ બ્લોક્સ (૧૦ અને ૧૦૦ ના બંડલ)."
+                        : "Step 2: Dienes blocks (bundles of 10 and 100s) for regrouping.",
                   },
                 ].map((item) => (
                   <Card
@@ -621,10 +679,12 @@ export default function DashboardPage() {
                         <div>
                           <div className="flex items-center gap-2">
                             <h4 className="font-bold text-[#49352F] text-sm">{item.name}</h4>
-                            <span className="text-[11px] text-[#7A6862] font-medium">{item.class}</span>
+                            <span className="text-[11px] text-[#7A6862] font-medium">
+                              {formatClass(item.class)}
+                            </span>
                           </div>
                           <p className="text-xs text-[#8D4E10] font-medium mt-0.5">
-                            {item.subject} • {item.concept}
+                            {formatSubject(item.subject)} • {item.concept}
                           </p>
                         </div>
                       </div>
@@ -634,12 +694,14 @@ export default function DashboardPage() {
                         size="sm"
                         dot
                       >
-                        {item.priority} Priority
+                        {formatPriority(item.priority)} {language === "gu" ? "અગ્રતા" : "Priority"}
                       </Badge>
                     </div>
 
                     <p className="text-xs text-[#49352F] leading-relaxed bg-[#FAF6E9] p-2.5 rounded-xl border border-[#49352F]/10">
-                      <span className="text-[#7A6862] font-semibold block text-[10px] uppercase">Why Flagged:</span>
+                      <span className="text-[#7A6862] font-semibold block text-[10px] uppercase">
+                        {language === "gu" ? "શા માટે ચિહ્નિત:" : "Why Flagged:"}
+                      </span>
                       {item.reason}
                     </p>
 
@@ -649,7 +711,7 @@ export default function DashboardPage() {
                       </span>
                       <Link href="/remedial-plans">
                         <Button variant="saffron" size="sm" className="rounded-full text-xs h-7 px-3">
-                          Generate Plan &rarr;
+                          {language === "gu" ? "યોજના બનાવો →" : "Generate Plan →"}
                         </Button>
                       </Link>
                     </div>

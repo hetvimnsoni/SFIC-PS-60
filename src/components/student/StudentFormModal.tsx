@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Dialog } from "../ui/Dialog";
 import { AlertCircle } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 import type { Student } from "@/lib/types";
 
 interface StudentFormModalProps {
@@ -18,6 +19,7 @@ export function StudentFormModal({
   student,
   onSuccess,
 }: StudentFormModalProps) {
+  const { language } = useLanguage();
   const [studentCode, setStudentCode] = useState(student?.studentCode || "");
   const [displayName, setDisplayName] = useState(student?.displayName || "");
   const [grade, setGrade] = useState<number>(student?.grade || 4);
@@ -42,7 +44,11 @@ export function StudentFormModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!displayName.trim() || !studentCode.trim()) {
-      setError("Please provide both student name and roll code.");
+      setError(
+        language === "gu"
+          ? "કૃપા કરીને વિદ્યાર્થીનું નામ અને રોલ કોડ બંને આપો."
+          : "Please provide both student name and roll code."
+      );
       return;
     }
 
@@ -72,10 +78,10 @@ export function StudentFormModal({
         onSuccess();
         onClose();
       } else {
-        setError(data.error || "Failed to save student record");
+        setError(data.error || (language === "gu" ? "વિદ્યાર્થી રેકોર્ડ સાચવવામાં નિષ્ફળ" : "Failed to save student record"));
       }
     } catch {
-      setError("Network error saving student");
+      setError(language === "gu" ? "નેટવર્ક ભૂલ: વિદ્યાર્થી સાચવી શકાયો નથી" : "Network error saving student");
     } finally {
       setIsSubmitting(false);
     }
@@ -85,21 +91,34 @@ export function StudentFormModal({
     <Dialog
       isOpen={isOpen}
       onClose={onClose}
-      title={student ? "Edit Student Details" : "Register New Student"}
-      description="Record primary school enrollment information. Sensitive family/biometric data is not collected."
+      title={
+        student
+          ? language === "gu"
+            ? "વિદ્યાર્થી વિગતો સંપાદિત કરો"
+            : "Edit Student Details"
+          : language === "gu"
+          ? "નવા વિદ્યાર્થીની નોંધણી કરો"
+          : "Register New Student"
+      }
+      description={
+        language === "gu"
+          ? "પ્રાથમિક શાળા પ્રવેશ માહિતી નોંધો. સંવેદનશીલ પારિવારિક/બાયોમેટ્રિક ડેટા એકત્રિત કરવામાં આવતો નથી."
+          : "Record primary school enrollment information. Sensitive family/biometric data is not collected."
+      }
       maxWidth="md"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-xs font-semibold text-[#49352F] mb-1">
-            Student Full Name <span className="text-rose-500">*</span>
+            {language === "gu" ? "વિદ્યાર્થીનું પૂરું નામ" : "Student Full Name"}{" "}
+            <span className="text-rose-500">*</span>
           </label>
           <input
             type="text"
             required
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            placeholder="e.g. Aarav Patel"
+            placeholder={language === "gu" ? "દા.ત. આરવ પટેલ" : "e.g. Aarav Patel"}
             className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-sm text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden"
           />
         </div>
@@ -107,7 +126,8 @@ export function StudentFormModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-xs font-semibold text-[#49352F] mb-1">
-              Student Code / Roll <span className="text-rose-500">*</span>
+              {language === "gu" ? "વિદ્યાર્થી કોડ / રોલ" : "Student Code / Roll"}{" "}
+              <span className="text-rose-500">*</span>
             </label>
             <input
               type="text"
@@ -119,43 +139,51 @@ export function StudentFormModal({
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-[#49352F] mb-1">Grade (Class)</label>
+            <label className="block text-xs font-semibold text-[#49352F] mb-1">
+              {language === "gu" ? "ધોરણ (વર્ગ)" : "Grade (Class)"}
+            </label>
             <select
               value={grade}
               onChange={(e) => setGrade(Number(e.target.value))}
               className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-sm text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden cursor-pointer"
             >
-              <option value={1}>Class 1</option>
-              <option value={2}>Class 2</option>
-              <option value={3}>Class 3</option>
-              <option value={4}>Class 4</option>
-              <option value={5}>Class 5</option>
+              <option value={1}>{language === "gu" ? "ધોરણ ૧" : "Class 1"}</option>
+              <option value={2}>{language === "gu" ? "ધોરણ ૨" : "Class 2"}</option>
+              <option value={3}>{language === "gu" ? "ધોરણ ૩" : "Class 3"}</option>
+              <option value={4}>{language === "gu" ? "ધોરણ ૪" : "Class 4"}</option>
+              <option value={5}>{language === "gu" ? "ધોરણ ૫" : "Class 5"}</option>
             </select>
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-[#49352F] mb-1">Section</label>
+          <label className="block text-xs font-semibold text-[#49352F] mb-1">
+            {language === "gu" ? "વિભાગ" : "Section"}
+          </label>
           <select
             value={section}
             onChange={(e) => setSection(e.target.value)}
             className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-sm text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden cursor-pointer"
           >
-            <option value="A">Section A</option>
-            <option value="B">Section B</option>
-            <option value="C">Section C</option>
+            <option value="A">{language === "gu" ? "વિભાગ અ (Section A)" : "Section A"}</option>
+            <option value="B">{language === "gu" ? "વિભાગ બ (Section B)" : "Section B"}</option>
+            <option value="C">{language === "gu" ? "વિભાગ ક (Section C)" : "Section C"}</option>
           </select>
         </div>
 
         <div>
           <label className="block text-xs font-semibold text-[#49352F] mb-1">
-            Teacher Notes & Observations
+            {language === "gu" ? "શિક્ષકની નોંધ અને અવલોકનો" : "Teacher Notes & Observations"}
           </label>
           <textarea
             rows={2}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="e.g. Responsive to visual charts; needs extra time for reading."
+            placeholder={
+              language === "gu"
+                ? "દા.ત. વિઝ્યુઅલ ચાર્ટ્સ દ્વારા ઝડપી શીખે છે; વાંચન માટે વધારાના સમયની જરૂર છે."
+                : "e.g. Responsive to visual charts; needs extra time for reading."
+            }
             className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-xs text-[#49352F] placeholder-[#7A6862]/60 focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden"
           />
         </div>
@@ -173,14 +201,24 @@ export function StudentFormModal({
             onClick={onClose}
             className="px-4 py-2 text-xs font-semibold text-[#7A6862] hover:bg-[#FAF6E9] hover:text-[#49352F] rounded-xl cursor-pointer transition-colors"
           >
-            Cancel
+            {language === "gu" ? "રદ કરો" : "Cancel"}
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
             className="px-5 py-2 text-xs font-bold bg-[#F2CAB3] hover:bg-white text-[#49352F] border border-[#49352F]/16 rounded-xl shadow-xs transition-colors cursor-pointer disabled:opacity-50"
           >
-            {isSubmitting ? "Saving..." : student ? "Update Student" : "Register Student"}
+            {isSubmitting
+              ? language === "gu"
+                ? "સાચવી રહ્યું છે..."
+                : "Saving..."
+              : student
+              ? language === "gu"
+                ? "વિદ્યાર્થી અપડેટ કરો"
+                : "Update Student"
+              : language === "gu"
+              ? "વિદ્યાર્થી નોંધણી કરો"
+              : "Register Student"}
           </button>
         </div>
       </form>

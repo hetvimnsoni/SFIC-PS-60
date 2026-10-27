@@ -126,14 +126,14 @@ export default function StudentsPage() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#49352F] tracking-tight">
-                {language === "gu" ? "વિદ્યાર્થી ડિરેક્ટરી અને પ્રોફાઇલ્સ" : "Student Directory & 3D Profiles"}
+                {t.students.title || "Student Directory & 3D Profiles"}
               </h1>
               <Badge variant="saffron" size="sm">
-                {students.length} Enrolled
+                {students.length} {t.students.enrolledBadge || "Enrolled"}
               </Badge>
             </div>
             <p className="text-xs sm:text-sm text-[#7A6862] mt-1">
-              Manage primary school enrollments, track 3D skill trees, and coordinate 5-step remedial plans.
+              {t.students.subtitle || "Manage primary school enrollments, track 3D skill trees, and coordinate 5-step remedial plans."}
             </p>
           </div>
 
@@ -200,20 +200,24 @@ export default function StudentsPage() {
           </div>
 
           <div data-tour="students-filter" className="flex items-center gap-3 shrink-0 flex-wrap">
-            <span className="text-xs font-bold text-[#49352F]">Class:</span>
+            <span className="text-xs font-bold text-[#49352F]">
+              {language === "gu" ? "વર્ગ:" : "Class:"}
+            </span>
             <select
               value={activeGrade}
               aria-label="Filter students by class"
               onChange={(e) => handleGradeFilterChange(e.target.value)}
               className="rounded-xl border border-[#49352F]/15 bg-[#FAF6E9] px-3.5 py-2 text-xs font-bold text-[#49352F] outline-hidden cursor-pointer"
             >
-              <option value="all">All Classes (1-5)</option>
-              <option value="3">Class 3</option>
-              <option value="4">Class 4</option>
-              <option value="5">Class 5</option>
+              <option value="all">{language === "gu" ? "બધા વર્ગો (૧-૫)" : "All Classes (1-5)"}</option>
+              <option value="3">{language === "gu" ? "ધોરણ ૩" : "Class 3"}</option>
+              <option value="4">{language === "gu" ? "ધોરણ ૪" : "Class 4"}</option>
+              <option value="5">{language === "gu" ? "ધોરણ ૫" : "Class 5"}</option>
             </select>
             <span className="text-xs font-semibold text-[#7A6862] ml-1">
-              Showing {filteredStudents.length} students
+              {language === "gu"
+                ? `${filteredStudents.length} વિદ્યાર્થીઓ દર્શાવે છે`
+                : `Showing ${filteredStudents.length} students`}
             </span>
           </div>
         </Card>
@@ -250,7 +254,7 @@ export default function StudentsPage() {
                           </Link>
                           {isDemoCase && (
                             <Badge variant="saffron" size="sm">
-                              Demo Case
+                              {language === "gu" ? "ડેમો કેસ" : "Demo Case"}
                             </Badge>
                           )}
                         </div>
@@ -261,7 +265,7 @@ export default function StudentsPage() {
                     </div>
 
                     <Badge variant="outline" size="sm">
-                      Class {std.grade}-{std.section}
+                      {language === "gu" ? `ધોરણ ${std.grade}-${std.section}` : `Class ${std.grade}-${std.section}`}
                     </Badge>
                   </div>
 
@@ -277,11 +281,15 @@ export default function StudentsPage() {
                     {gapCount > 0 ? (
                       <Badge variant="needsSupport" size="sm" dot>
                         <AlertTriangle className="w-3 h-3 mr-1 text-[#C54738]" aria-hidden="true" />
-                        <span>{gapCount} Active Gap{gapCount > 1 ? "s" : ""}</span>
+                        <span>
+                          {language === "gu"
+                            ? `${gapCount} સક્રિય ખામીઓ`
+                            : `${gapCount} Active Gap${gapCount > 1 ? "s" : ""}`}
+                        </span>
                       </Badge>
                     ) : (
                       <Badge variant="mastered" size="sm" dot>
-                        <span>On Track</span>
+                        <span>{language === "gu" ? "પ્રગતિશીલ" : "On Track"}</span>
                       </Badge>
                     )}
                   </div>
@@ -298,7 +306,7 @@ export default function StudentsPage() {
                     </button>
                     <Link href={`/students/${std.id}`} aria-label={`View 3D Profile for ${std.displayName}`}>
                       <Button variant="ghost" size="sm" className="text-xs text-[#B26A1B] hover:text-[#49352F]">
-                        <span>3D Profile &rarr;</span>
+                        <span>{t.students.viewProfile || "3D Profile →"}</span>
                       </Button>
                     </Link>
                   </div>

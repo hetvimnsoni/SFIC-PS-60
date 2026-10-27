@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 
 export default function LearningGapsPage() {
-  const { t, language } = useLanguage();
+  const { t, language, formatSubject, formatPriority, formatStatus } = useLanguage();
 
   const [gaps, setGaps] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -114,14 +114,14 @@ export default function LearningGapsPage() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#49352F] tracking-tight">
-                {language === "gu" ? "સ્માર્ટ લર્નિંગ ગેપ ડિટેક્શન એન્જિન" : "Smart Learning-Gap Detection Engine"}
+                {t.learningGaps.title || "Smart Learning-Gap Detection Engine"}
               </h1>
               <Badge variant="saffron" size="sm" pulse>
-                Deterministic AI
+                {language === "gu" ? "ચોક્કસ નિયમ આધારિત AI" : "Deterministic AI"}
               </Badge>
             </div>
             <p className="text-xs sm:text-sm text-[#7A6862] mt-1">
-              Transparent, explainable pedagogical rule engine identifying student conceptual roadblocks with plain-language reasons.
+              {t.learningGaps.subtitle || "Transparent, explainable pedagogical rule engine identifying student conceptual roadblocks with plain-language reasons."}
             </p>
           </div>
         </div>
@@ -132,14 +132,16 @@ export default function LearningGapsPage() {
             <div className="flex items-center gap-2">
               <Sliders className="w-5 h-5 text-[#B26A1B]" />
               <h3 className="font-heading text-sm font-bold text-[#49352F]">
-                Interactive Threshold Sandbox Demo
+                {language === "gu" ? "ઇન્ટરેક્ટિવ મર્યાદા સેન્ડબોક્સ ડેમો" : "Interactive Threshold Sandbox Demo"}
               </h3>
               <Badge variant="mint" size="sm">
-                Jury Sandbox
+                {language === "gu" ? "મૂલ્યાંકન સેન્ડબોક્સ" : "Jury Sandbox"}
               </Badge>
             </div>
             <span className="text-[11px] text-[#7A6862]">
-              Slide to simulate real-time rule engine threshold adjustments
+              {language === "gu"
+                ? "રીઅલ-ટાઇમ નિયમ એન્જિન મર્યાદા ફેરફારોનું અનુકરણ કરવા સ્લાઇડ કરો"
+                : "Slide to simulate real-time rule engine threshold adjustments"}
             </span>
           </div>
 
@@ -149,11 +151,11 @@ export default function LearningGapsPage() {
               <div className="flex items-center justify-between text-xs">
                 <span className="font-semibold text-[#C54738] flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#C54738]" />
-                  <span>Developing / Support Threshold:</span>
+                  <span>{language === "gu" ? "પ્રગતિશીલ / સહાય મર્યાદા:" : "Developing / Support Threshold:"}</span>
                   <ContextualHelp termKey="masteryThreshold" />
                 </span>
                 <span className="font-heading font-black text-[#C54738] text-sm">
-                  {supportThreshold}% Benchmark
+                  {supportThreshold}% {language === "gu" ? "બેન્ચમાર્ક" : "Benchmark"}
                 </span>
               </div>
               <input
@@ -166,7 +168,9 @@ export default function LearningGapsPage() {
                 className="w-full h-2 bg-white rounded-lg appearance-none cursor-pointer accent-[#C54738] border border-[#49352F]/15"
               />
               <p className="text-[11px] text-[#7A6862]">
-                Any student scoring below {supportThreshold}% is flagged for immediate 5-step concrete remediation.
+                {language === "gu"
+                  ? `${supportThreshold}% થી ઓછો સ્કોર ધરાવતા કોઈપણ વિદ્યાર્થીને તાત્કાલિક ૫-પગલાંના ઉપચાર માટે ચિહ્નિત કરવામાં આવે છે.`
+                  : `Any student scoring below ${supportThreshold}% is flagged for immediate 5-step concrete remediation.`}
               </p>
             </div>
 
@@ -175,10 +179,10 @@ export default function LearningGapsPage() {
               <div className="flex items-center justify-between text-xs">
                 <span className="font-semibold text-[#2E7D5E] flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#2E7D5E]" />
-                  Mastery Threshold:
+                  {language === "gu" ? "પ્રભુત્વ મર્યાદા:" : "Mastery Threshold:"}
                 </span>
                 <span className="font-heading font-black text-[#2E7D5E] text-sm">
-                  {masteryThreshold}% Benchmark
+                  {masteryThreshold}% {language === "gu" ? "બેન્ચમાર્ક" : "Benchmark"}
                 </span>
               </div>
               <input
@@ -191,7 +195,9 @@ export default function LearningGapsPage() {
                 className="w-full h-2 bg-white rounded-lg appearance-none cursor-pointer accent-[#2E7D5E] border border-[#49352F]/15"
               />
               <p className="text-[11px] text-[#7A6862]">
-                Students scoring &ge; {masteryThreshold}% cross the bridge into certified independent mastery.
+                {language === "gu"
+                  ? `≥ ${masteryThreshold}% સ્કોર મેળવનાર વિદ્યાર્થીઓ પ્રમાણિત સ્વતંત્ર પ્રભુત્વ તરફ સેતુ પાર કરે છે.`
+                  : `Students scoring ≥ ${masteryThreshold}% cross the bridge into certified independent mastery.`}
               </p>
             </div>
           </div>
@@ -199,19 +205,33 @@ export default function LearningGapsPage() {
           {/* Sandbox Live Impact Stat Banner */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-[#49352F]/10 text-xs">
             <div className="p-2.5 rounded-xl bg-white/90 border border-[#49352F]/10 text-center shadow-xs">
-              <span className="text-[10px] text-[#7A6862] block font-semibold">Flagged Under Threshold</span>
-              <span className="text-lg font-black text-[#C54738]">{flaggedCount} Gaps</span>
+              <span className="text-[10px] text-[#7A6862] block font-semibold">
+                {language === "gu" ? "મર્યાદા નીચે ચિહ્નિત" : "Flagged Under Threshold"}
+              </span>
+              <span className="text-lg font-black text-[#C54738]">
+                {flaggedCount} {language === "gu" ? "ખામીઓ" : "Gaps"}
+              </span>
             </div>
             <div className="p-2.5 rounded-xl bg-white/90 border border-[#49352F]/10 text-center shadow-xs">
-              <span className="text-[10px] text-[#7A6862] block font-semibold">Over Mastery Threshold</span>
-              <span className="text-lg font-black text-[#2E7D5E]">{masteredCount} Concepts</span>
+              <span className="text-[10px] text-[#7A6862] block font-semibold">
+                {language === "gu" ? "પ્રભુત્વ મર્યાદાથી વધુ" : "Over Mastery Threshold"}
+              </span>
+              <span className="text-lg font-black text-[#2E7D5E]">
+                {masteredCount} {language === "gu" ? "સંકલ્પનાઓ" : "Concepts"}
+              </span>
             </div>
             <div className="p-2.5 rounded-xl bg-white/90 border border-[#49352F]/10 text-center shadow-xs">
-              <span className="text-[10px] text-[#7A6862] block font-semibold">Decision Engine</span>
-              <span className="text-lg font-black text-[#B26A1B]">Deterministic</span>
+              <span className="text-[10px] text-[#7A6862] block font-semibold">
+                {language === "gu" ? "નિર્ણય એન્જિન" : "Decision Engine"}
+              </span>
+              <span className="text-lg font-black text-[#B26A1B]">
+                {language === "gu" ? "ચોક્કસ નિયમ આધારિત" : "Deterministic"}
+              </span>
             </div>
             <div className="p-2.5 rounded-xl bg-white/90 border border-[#49352F]/10 text-center shadow-xs">
-              <span className="text-[10px] text-[#7A6862] block font-semibold">API Latency / Cost</span>
+              <span className="text-[10px] text-[#7A6862] block font-semibold">
+                {language === "gu" ? "API વિલંબ / ખર્ચ" : "API Latency / Cost"}
+              </span>
               <span className="text-lg font-black text-[#2E7D5E]">0ms • $0.00</span>
             </div>
           </div>
@@ -221,38 +241,44 @@ export default function LearningGapsPage() {
         <Card variant="glass" className="p-3.5 flex flex-wrap items-center justify-between gap-3 border-[#49352F]/15 bg-white text-[#49352F] shadow-xs">
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-[#7A6862]">Priority:</span>
+              <span className="text-xs font-semibold text-[#7A6862]">
+                {language === "gu" ? "અગ્રતા:" : "Priority:"}
+              </span>
               <select
                 value={priorityFilter}
                 aria-label="Filter learning gaps by priority"
                 onChange={(e) => setPriorityFilter(e.target.value)}
                 className="rounded-full border border-[#49352F]/15 bg-[#FAF6E9] px-3 py-1.5 text-xs font-semibold text-[#49352F] outline-hidden cursor-pointer"
               >
-                <option value="all">All Priorities</option>
-                <option value="High">High Priority</option>
-                <option value="Medium">Medium Priority</option>
-                <option value="Low">Low Priority</option>
+                <option value="all">{language === "gu" ? "બધી અગ્રતા" : "All Priorities"}</option>
+                <option value="High">{language === "gu" ? "ઉચ્ચ અગ્રતા" : "High Priority"}</option>
+                <option value="Medium">{language === "gu" ? "મધ્યમ અગ્રતા" : "Medium Priority"}</option>
+                <option value="Low">{language === "gu" ? "ઓછી અગ્રતા" : "Low Priority"}</option>
               </select>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-[#7A6862]">Status:</span>
+              <span className="text-xs font-semibold text-[#7A6862]">
+                {language === "gu" ? "સ્થિતિ:" : "Status:"}
+              </span>
               <select
                 value={statusFilter}
                 aria-label="Filter learning gaps by status"
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="rounded-full border border-[#49352F]/15 bg-[#FAF6E9] px-3 py-1.5 text-xs font-semibold text-[#49352F] outline-hidden cursor-pointer"
               >
-                <option value="all">All Statuses</option>
-                <option value="Active">Active</option>
-                <option value="Under Intervention">Under Intervention</option>
-                <option value="Resolved">Resolved</option>
+                <option value="all">{language === "gu" ? "બધી સ્થિતિ" : "All Statuses"}</option>
+                <option value="Active">{language === "gu" ? "સક્રિય" : "Active"}</option>
+                <option value="Under Intervention">{language === "gu" ? "હસ્તક્ષેપ હેઠળ" : "Under Intervention"}</option>
+                <option value="Resolved">{language === "gu" ? "ઉકેલાયેલ" : "Resolved"}</option>
               </select>
             </div>
           </div>
 
           <span className="text-xs text-[#7A6862]">
-            Showing {filteredGaps.length} detected learning gaps
+            {language === "gu"
+              ? `${filteredGaps.length} શોધાયેલી શીખવાની ખામીઓ દર્શાવે છે`
+              : `Showing ${filteredGaps.length} detected learning gaps`}
           </span>
         </Card>
 
@@ -281,13 +307,13 @@ export default function LearningGapsPage() {
                         size="sm"
                         dot
                       >
-                        {gap.priority} Priority
+                        {formatPriority(gap.priority)} {language === "gu" ? "અગ્રતા" : "Priority"}
                       </Badge>
                       <Badge
                         variant={gap.dynamicIsGap ? "needsSupport" : "mastered"}
                         size="sm"
                       >
-                        {gap.dynamicStatus}
+                        {formatStatus(gap.dynamicStatus)}
                       </Badge>
                     </div>
 
@@ -299,9 +325,9 @@ export default function LearningGapsPage() {
                         {gap.studentName}
                       </Link>
                       <span>•</span>
-                      <span>Class {gap.grade}-{gap.section}</span>
+                      <span>{language === "gu" ? `ધોરણ ${gap.grade}-${gap.section}` : `Class ${gap.grade}-${gap.section}`}</span>
                       <span>•</span>
-                      <span>{gap.subjectName || "Mathematics"}</span>
+                      <span>{formatSubject(gap.subjectName || "Mathematics")}</span>
                     </div>
                   </div>
 
@@ -315,7 +341,15 @@ export default function LearningGapsPage() {
                       className="rounded-full text-xs font-bold"
                     >
                       <Layers className="w-3.5 h-3.5 mr-1" />
-                      <span>{generatingPlanId === gap.id ? "Generating..." : "Generate 5-Step Plan"}</span>
+                      <span>
+                        {generatingPlanId === gap.id
+                          ? language === "gu"
+                            ? "બનાવી રહ્યું છે..."
+                            : "Generating..."
+                          : language === "gu"
+                          ? "૫-પગલાં યોજના બનાવો"
+                          : "Generate 5-Step Plan"}
+                      </span>
                     </Button>
 
                     <Button
@@ -328,7 +362,7 @@ export default function LearningGapsPage() {
                       className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15"
                     >
                       <RotateCcw className="w-3.5 h-3.5 mr-1" />
-                      <span>Reassess Delta</span>
+                      <span>{language === "gu" ? "ડેલ્ટા પુનઃમૂલ્યાંકન" : "Reassess Delta"}</span>
                     </Button>
                   </div>
                 </div>
@@ -349,14 +383,18 @@ export default function LearningGapsPage() {
                   <div data-tour="gaps-why-flagged" className="p-3.5 rounded-2xl bg-[#FAF6E9] border border-[#49352F]/10 space-y-1.5 text-[#49352F]">
                     <span className="font-bold uppercase tracking-wider text-[#C54738] text-[10px] flex items-center gap-1.5">
                       <BrainCircuit className="w-3.5 h-3.5" />
-                      <span>Why Flagged (Cognitive Obstacle)</span>
+                      <span>{language === "gu" ? "શા માટે ચિહ્નિત (જ્ઞાનાત્મક અવરોધ)" : "Why Flagged (Cognitive Obstacle)"}</span>
                       <ContextualHelp termKey="gapDetection" />
                     </span>
                     <p className="text-[#49352F] leading-relaxed">
-                      {gap.reason || "Performance dropped below 60% developing benchmark across consecutive classroom observations."}
+                      {gap.reason || (language === "gu"
+                        ? "સતત વર્ગખંડ અવલોકનોમાં પ્રદર્શન ૬૦% પ્રગતિશીલ બેન્ચમાર્કથી નીચે ગયું."
+                        : "Performance dropped below 60% developing benchmark across consecutive classroom observations.")}
                     </p>
                     <div className="text-[11px] text-[#7A6862] pt-1 font-mono">
-                      Metric: {gap.latestPercentage}% score (Target: &ge; {supportThreshold}%)
+                      {language === "gu"
+                        ? `માપદંડ: ${gap.latestPercentage}% સ્કોર (લક્ષ્ય: ≥ ${supportThreshold}%)`
+                        : `Metric: ${gap.latestPercentage}% score (Target: ≥ ${supportThreshold}%)`}
                     </div>
                   </div>
 
@@ -364,14 +402,16 @@ export default function LearningGapsPage() {
                   <div data-tour="gaps-action-plan" className="p-3.5 rounded-2xl bg-[#FAF6E9] border border-[#49352F]/10 space-y-1.5 text-[#49352F]">
                     <span className="font-bold uppercase tracking-wider text-[#B26A1B] text-[10px] flex items-center gap-1.5">
                       <ClipboardList className="w-3.5 h-3.5" />
-                      Pedagogical Prescription
+                      {language === "gu" ? "શિક્ષણશાસ્ત્રીય માર્ગદર્શન" : "Pedagogical Prescription"}
                     </span>
                     <p className="text-[#49352F] leading-relaxed">
-                      {gap.suggestedAction || "Deploy Step 2 concrete manipulatives (counting beads / number lines) followed by paired practice."}
+                      {gap.suggestedAction || (language === "gu"
+                        ? "પગલું ૨ મૂર્ત સાધનો (ગણતરી મણકા / સંખ્યા રેખાઓ) નો ઉપયોગ કરો ત્યારબાદ જોડી મહાવરો કરાવો."
+                        : "Deploy Step 2 concrete manipulatives (counting beads / number lines) followed by paired practice.")}
                     </p>
                     <div className="text-[11px] text-[#2E7D5E] pt-1 font-semibold flex items-center gap-1">
                       <CheckCircle2 className="w-3 h-3" />
-                      <span>Ready for 5-Step Concrete Remedial Plan</span>
+                      <span>{language === "gu" ? "૫-પગલાં પ્રવૃત્તિ આધારિત ઉપચાર માટે તૈયાર" : "Ready for 5-Step Concrete Remedial Plan"}</span>
                     </div>
                   </div>
                 </div>

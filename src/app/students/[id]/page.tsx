@@ -78,7 +78,7 @@ export default function StudentDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const { t, language } = useLanguage();
+  const { t, language, formatSubject, formatPriority, formatStatus } = useLanguage();
 
   const [student, setStudent] = useState<any>(null);
   const [results, setResults] = useState<any[]>([]);
@@ -264,7 +264,7 @@ export default function StudentDetailPage({
             className="inline-flex items-center gap-1.5 text-xs font-bold text-[#7A6862] hover:text-[#49352F]"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to All Students</span>
+            <span>{language === "gu" ? "બધા વિદ્યાર્થીઓ પર પાછા જાઓ" : "Back to All Students"}</span>
           </Link>
           <Button
             variant="outline"
@@ -273,7 +273,7 @@ export default function StudentDetailPage({
             className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15"
           >
             <Edit className="w-3 h-3 mr-1" />
-            <span>Edit Profile</span>
+            <span>{language === "gu" ? "પ્રોફાઇલ સંપાદિત કરો" : "Edit Profile"}</span>
           </Button>
         </div>
 
@@ -289,15 +289,19 @@ export default function StudentDetailPage({
                   {student.displayName}
                 </h1>
                 <Badge variant="outline" size="sm">
-                  Class {student.grade}-{student.section}
+                  {language === "gu" ? `ધોરણ ${student.grade}-${student.section}` : `Class ${student.grade}-${student.section}`}
                 </Badge>
                 {student.id === "std-aarav" && (
                   <Badge variant="saffron" size="sm" pulse>
-                    SFIC Gujarat Key Demo
+                    {language === "gu" ? "SFIC ગુજરાત કી ડેમો" : "SFIC Gujarat Key Demo"}
                   </Badge>
                 )}
               </div>
-              <p className="font-mono text-xs text-[#7A6862]">Roll: {student.studentCode} • Enrolled 2026</p>
+              <p className="font-mono text-xs text-[#7A6862]">
+                {language === "gu"
+                  ? `રોલ નં: ${student.studentCode} • નોંધણી ૨૦૨૬`
+                  : `Roll: ${student.studentCode} • Enrolled 2026`}
+              </p>
               {student.notes && (
                 <p className="text-xs text-[#7A6862] max-w-xl italic mt-1">
                   &quot;{student.notes}&quot;
@@ -315,7 +319,7 @@ export default function StudentDetailPage({
               className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15"
             >
               <Edit className="w-3.5 h-3.5 mr-1" />
-              <span>Edit Profile</span>
+              <span>{language === "gu" ? "પ્રોફાઇલ સંપાદિત કરો" : "Edit Profile"}</span>
             </Button>
 
             {divisionActivity && (
@@ -326,7 +330,7 @@ export default function StudentDetailPage({
                 className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15"
               >
                 <Play className="w-3.5 h-3.5 fill-current mr-1" />
-                <span>Practice Activity</span>
+                <span>{language === "gu" ? "મહાવરા પ્રવૃત્તિ" : "Practice Activity"}</span>
               </Button>
             )}
 
@@ -344,7 +348,7 @@ export default function StudentDetailPage({
                 className="rounded-full text-xs font-black shadow-xs"
               >
                 <RotateCcw className="w-3.5 h-3.5 mr-1" />
-                <span>Record Reassessment</span>
+                <span>{t.actions.reassess || "Record Reassessment"}</span>
               </Button>
             </div>
           </div>
@@ -353,37 +357,49 @@ export default function StudentDetailPage({
         {/* 4 Summary Stat Tiles */}
         <div data-tour="student-scores" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <StatTile
-            label="Average Performance"
+            label={language === "gu" ? "સરેરાશ પરિણામ" : "Average Performance"}
             value={avgScore}
             suffix="%"
             icon={TrendingUp}
             variant="indigo"
-            description={`Across ${results.length} assessments`}
+            description={
+              language === "gu"
+                ? `${results.length} મૂલ્યાંકનોમાં`
+                : `Across ${results.length} assessments`
+            }
             sparklineData={[50, 58, 65, 74, avgScore]}
           />
 
           <StatTile
-            label="Active Learning Gaps"
+            label={language === "gu" ? "સક્રિય શીખવાની ખામીઓ" : "Active Learning Gaps"}
             value={activeGaps.length}
             icon={AlertTriangle}
             variant={activeGaps.length > 0 ? "coral" : "mint"}
-            description={activeGaps.length === 0 ? "All concepts mastered!" : "Requires 5-step intervention"}
+            description={
+              activeGaps.length === 0
+                ? language === "gu"
+                  ? "બધી સંકલ્પનાઓ સિદ્ધ!"
+                  : "All concepts mastered!"
+                : language === "gu"
+                ? "૫-પગલાં હસ્તક્ષેપ જરૂરી"
+                : "Requires 5-step intervention"
+            }
           />
 
           <StatTile
-            label="Active Remedial Plans"
+            label={language === "gu" ? "સક્રિય ઉપચાર યોજનાઓ" : "Active Remedial Plans"}
             value={remedialPlans.length}
             icon={Layers}
             variant="saffron"
-            description="5-step manipulatives"
+            description={language === "gu" ? "૫-પગલાં પ્રવૃત્તિ આધારિત" : "5-step manipulatives"}
           />
 
           <StatTile
-            label="Activities Completed"
+            label={language === "gu" ? "પૂર્ણ થયેલ પ્રવૃત્તિઓ" : "Activities Completed"}
             value={attempts.length}
             icon={Gamepad2}
             variant="mint"
-            description="Interactive practice sessions"
+            description={language === "gu" ? "ઇન્ટરેક્ટિવ મહાવરા સત્રો" : "Interactive practice sessions"}
           />
         </div>
 
@@ -400,7 +416,7 @@ export default function StudentDetailPage({
                 : "text-[#7A6862] hover:text-[#49352F] hover:bg-[#FAF6E9]"
             }`}
           >
-            3D Skill Tree (Interactive)
+            {language === "gu" ? "3D કૌશલ્ય વૃક્ષ (ઇન્ટરેક્ટિવ)" : "3D Skill Tree (Interactive)"}
           </button>
           <button
             type="button"
@@ -413,7 +429,9 @@ export default function StudentDetailPage({
                 : "text-[#7A6862] hover:text-[#49352F] hover:bg-[#FAF6E9]"
             }`}
           >
-            Learning Gaps &amp; The Bridge ({gaps.length})
+            {language === "gu"
+              ? `શીખવાની ખામીઓ અને સેતુ (${gaps.length})`
+              : `Learning Gaps & The Bridge (${gaps.length})`}
           </button>
           <button
             type="button"
@@ -426,7 +444,7 @@ export default function StudentDetailPage({
                 : "text-[#7A6862] hover:text-[#49352F] hover:bg-[#FAF6E9]"
             }`}
           >
-            Mastery Analytics
+            {language === "gu" ? "પ્રભુત્વ વિશ્લેષણ" : "Mastery Analytics"}
           </button>
           <button
             type="button"
@@ -439,7 +457,9 @@ export default function StudentDetailPage({
                 : "text-[#7A6862] hover:text-[#49352F] hover:bg-[#FAF6E9]"
             }`}
           >
-            Assessment History ({results.length})
+            {language === "gu"
+              ? `મૂલ્યાંકન ઇતિહાસ (${results.length})`
+              : `Assessment History (${results.length})`}
           </button>
         </div>
 
@@ -461,7 +481,9 @@ export default function StudentDetailPage({
           <div className="space-y-4">
             {gaps.length === 0 ? (
               <Card variant="glass" className="p-8 text-center text-[#7A6862] bg-white border-[#49352F]/12">
-                No learning gaps recorded for this student.
+                {language === "gu"
+                  ? "આ વિદ્યાર્થી માટે કોઈ શીખવાની ખામી નોંધાયેલ નથી."
+                  : "No learning gaps recorded for this student."}
               </Card>
             ) : (
               gaps.map((gap) => (
@@ -487,17 +509,17 @@ export default function StudentDetailPage({
                           size="sm"
                           dot
                         >
-                          {gap.priority} Priority
+                          {formatPriority(gap.priority)} {language === "gu" ? "અગ્રતા" : "Priority"}
                         </Badge>
                         <Badge
                           variant={gap.status === "Resolved" ? "completed" : "inProgress"}
                           size="sm"
                         >
-                          {gap.status}
+                          {formatStatus(gap.status)}
                         </Badge>
                       </div>
                       <p className="text-xs text-[#B26A1B] font-medium">
-                        Subject: {gap.subjectName || "Mathematics"}
+                        {language === "gu" ? "વિષય:" : "Subject:"} {formatSubject(gap.subjectName || "Mathematics")}
                       </p>
                     </div>
 
@@ -515,7 +537,7 @@ export default function StudentDetailPage({
                         className="rounded-full text-xs font-bold"
                       >
                         <RotateCcw className="w-3.5 h-3.5 mr-1" />
-                        <span>Reassess Delta</span>
+                        <span>{language === "gu" ? "ડેલ્ટા પુનઃમૂલ્યાંકન" : "Reassess Delta"}</span>
                       </Button>
 
                       <Link
@@ -528,7 +550,7 @@ export default function StudentDetailPage({
                         }}
                       >
                         <Button variant="outline" size="sm" className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15">
-                          <span>5-Step Plan &rarr;</span>
+                          <span>{language === "gu" ? "૫-પગલાં યોજના →" : "5-Step Plan →"}</span>
                         </Button>
                       </Link>
                       <ContextualHelp termKey="remedialPlan" />
@@ -549,7 +571,7 @@ export default function StudentDetailPage({
                       <div className="flex items-center gap-1.5">
                         <span className="text-[10px] uppercase font-bold text-[#7A6862] flex items-center gap-1">
                           <BrainCircuit className="w-3.5 h-3.5 text-[#B26A1B]" />
-                          Algorithmic Explanation:
+                          {language === "gu" ? "એલ્ગોરિધમિક સમજૂતી:" : "Algorithmic Explanation:"}
                         </span>
                         <ContextualHelp termKey="gapDetection" />
                       </div>
@@ -567,9 +589,11 @@ export default function StudentDetailPage({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card variant="glass" className="p-5 bg-white border-[#49352F]/12 text-[#49352F] shadow-xs">
               <h3 className="font-heading text-base font-bold text-[#49352F] mb-2">
-                Concept Scores Comparison
+                {language === "gu" ? "સંકલ્પના સ્કોર સરખામણી" : "Concept Scores Comparison"}
               </h3>
-              <p className="text-xs text-[#7A6862] mb-4">Baseline vs Reassessment %</p>
+              <p className="text-xs text-[#7A6862] mb-4">
+                {language === "gu" ? "મૂળ આધાર વિરુદ્ધ પુનઃમૂલ્યાંકન %" : "Baseline vs Reassessment %"}
+              </p>
               <div className="h-[250px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={conceptScoresData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -584,8 +608,18 @@ export default function StudentDetailPage({
                         color: "#49352F",
                       }}
                     />
-                    <Bar dataKey="latest" fill="#2E7D5E" name="Latest Score %" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="previous" fill="#F2CAB3" name="Baseline %" radius={[4, 4, 0, 0]} />
+                    <Bar
+                      dataKey="latest"
+                      fill="#2E7D5E"
+                      name={language === "gu" ? "તાજેતરનો સ્કોર %" : "Latest Score %"}
+                      radius={[4, 4, 0, 0]}
+                    />
+                    <Bar
+                      dataKey="previous"
+                      fill="#F2CAB3"
+                      name={language === "gu" ? "મૂળ આધાર %" : "Baseline %"}
+                      radius={[4, 4, 0, 0]}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -594,22 +628,34 @@ export default function StudentDetailPage({
             <Card variant="glass" className="p-5 flex flex-col justify-between bg-white border-[#49352F]/12 text-[#49352F] shadow-xs">
               <div>
                 <h3 className="font-heading text-base font-bold text-[#49352F] mb-2">
-                  Pedagogical Mastery Verdict
+                  {language === "gu" ? "શિક્ષણશાસ્ત્રીય પ્રભુત્વ નિર્ણય" : "Pedagogical Mastery Verdict"}
                 </h3>
                 <div className="space-y-3 mt-4 text-xs">
                   <div className="p-3 rounded-xl bg-[#FAF6E9] border border-[#49352F]/10">
-                    <span className="text-[#7A6862] block font-semibold">Mastery Benchmark</span>
-                    <span className="text-lg font-black text-[#2E7D5E]">80% Threshold</span>
+                    <span className="text-[#7A6862] block font-semibold">
+                      {language === "gu" ? "પ્રભુત્વ બેન્ચમાર્ક" : "Mastery Benchmark"}
+                    </span>
+                    <span className="text-lg font-black text-[#2E7D5E]">
+                      {language === "gu" ? "૮૦% મર્યાદા" : "80% Threshold"}
+                    </span>
                     <p className="text-[11px] text-[#7A6862] mt-0.5">
-                      Student demonstrates independent problem-solving without prompt assistance.
+                      {language === "gu"
+                        ? "વિદ્યાર્થી મદદ વિના સ્વતંત્ર રીતે સમસ્યા ઉકેલી શકે છે."
+                        : "Student demonstrates independent problem-solving without prompt assistance."}
                     </p>
                   </div>
 
                   <div className="p-3 rounded-xl bg-[#FAF6E9] border border-[#49352F]/10">
-                    <span className="text-[#7A6862] block font-semibold">Developing Benchmark</span>
-                    <span className="text-lg font-black text-[#B26A1B]">60% Threshold</span>
+                    <span className="text-[#7A6862] block font-semibold">
+                      {language === "gu" ? "પ્રગતિશીલ બેન્ચમાર્ક" : "Developing Benchmark"}
+                    </span>
+                    <span className="text-lg font-black text-[#B26A1B]">
+                      {language === "gu" ? "૬૦% મર્યાદા" : "60% Threshold"}
+                    </span>
                     <p className="text-[11px] text-[#7A6862] mt-0.5">
-                      Basic conceptual familiarity; requires occasional manipulative or visual aid.
+                      {language === "gu"
+                        ? "મૂળભૂત સંકલ્પના પરિચય; ક્યારેક પ્રવૃત્તિ સાધનો અથવા દ્રશ્ય સહાયની જરૂર પડે છે."
+                        : "Basic conceptual familiarity; requires occasional manipulative or visual aid."}
                     </p>
                   </div>
                 </div>
@@ -617,7 +663,9 @@ export default function StudentDetailPage({
 
               <Link href="/reports">
                 <Button variant="outline" size="sm" className="w-full rounded-xl text-xs mt-4 bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15">
-                  Generate Printable Report Card &rarr;
+                  {language === "gu"
+                    ? "પ્રિન્ટેબલ રિપોર્ટ કાર્ડ બનાવો →"
+                    : "Generate Printable Report Card →"}
                 </Button>
               </Link>
             </Card>
@@ -630,11 +678,11 @@ export default function StudentDetailPage({
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-[#49352F]/10 text-[#7A6862]">
-                  <th className="p-3 font-semibold">Date</th>
-                  <th className="p-3 font-semibold">Assessment Title</th>
-                  <th className="p-3 font-semibold">Marks</th>
-                  <th className="p-3 font-semibold">Percentage</th>
-                  <th className="p-3 font-semibold">Mastery Status</th>
+                  <th className="p-3 font-semibold">{language === "gu" ? "તારીખ" : "Date"}</th>
+                  <th className="p-3 font-semibold">{language === "gu" ? "મૂલ્યાંકન શીર્ષક" : "Assessment Title"}</th>
+                  <th className="p-3 font-semibold">{language === "gu" ? "ગુણ" : "Marks"}</th>
+                  <th className="p-3 font-semibold">{language === "gu" ? "ટકાવારી" : "Percentage"}</th>
+                  <th className="p-3 font-semibold">{language === "gu" ? "પ્રભુત્વ સ્થિતિ" : "Mastery Status"}</th>
                 </tr>
               </thead>
               <tbody>
@@ -646,7 +694,9 @@ export default function StudentDetailPage({
                       <td className="p-3 text-[#7A6862]">
                         {new Date(res.recordedAt || Date.now()).toLocaleDateString()}
                       </td>
-                      <td className="p-3 font-bold text-[#49352F]">{res.assessmentTitle || "Diagnostic Assessment"}</td>
+                      <td className="p-3 font-bold text-[#49352F]">
+                        {res.assessmentTitle || (language === "gu" ? "નિદાનાત્મક મૂલ્યાંકન" : "Diagnostic Assessment")}
+                      </td>
                       <td className="p-3 text-[#7A6862]">
                         {res.marksObtained} / {res.maximumMarks}
                       </td>
@@ -669,7 +719,17 @@ export default function StudentDetailPage({
                           size="sm"
                           dot
                         >
-                          {isMastered ? "Mastered" : isGap ? "Needs Support" : "Developing"}
+                          {isMastered
+                            ? language === "gu"
+                              ? "સિદ્ધ"
+                              : "Mastered"
+                            : isGap
+                            ? language === "gu"
+                              ? "સહાય જરૂરી"
+                              : "Needs Support"
+                            : language === "gu"
+                            ? "પ્રગતિ હેઠળ"
+                            : "Developing"}
                         </Badge>
                       </td>
                     </tr>

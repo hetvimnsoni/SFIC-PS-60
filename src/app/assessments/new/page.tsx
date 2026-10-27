@@ -20,7 +20,7 @@ import {
 
 export default function NewAssessmentPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, language, formatClass, formatSubject, formatStatus } = useLanguage();
 
   const [title, setTitle] = useState("Class 4: Division & Multiplication Check");
   const [classroomId, setClassroomId] = useState("cls-4a");
@@ -96,11 +96,19 @@ export default function NewAssessmentPage() {
 
   const handleSubmit = async (publish: boolean) => {
     if (!title.trim()) {
-      setError("Please enter an assessment title.");
+      setError(
+        language === "gu"
+          ? "કૃપા કરીને મૂલ્યાંકનનું શીર્ષક દાખલ કરો."
+          : "Please enter an assessment title."
+      );
       return;
     }
     if (selectedConcepts.length === 0) {
-      setError("Please select at least one concept evaluated.");
+      setError(
+        language === "gu"
+          ? "કૃપા કરીને ઓછામાં ઓછી એક મૂલ્યાંકિત સંકલ્પના પસંદ કરો."
+          : "Please select at least one concept evaluated."
+      );
       return;
     }
 
@@ -136,10 +144,10 @@ export default function NewAssessmentPage() {
       if (data.success) {
         router.push("/assessments");
       } else {
-        setError(data.error || "Failed to record assessment");
+        setError(data.error || (language === "gu" ? "મૂલ્યાંકન નોંધવામાં નિષ્ફળતા" : "Failed to record assessment"));
       }
     } catch {
-      setError("Network error submitting assessment");
+      setError(language === "gu" ? "નેટવર્ક ભૂલ: મૂલ્યાંકન સબમિટ થઈ શક્યું નથી" : "Network error submitting assessment");
     } finally {
       setIsSubmitting(false);
     }
@@ -156,15 +164,17 @@ export default function NewAssessmentPage() {
           className="inline-flex items-center gap-1.5 text-xs font-bold text-[#7A6862] hover:text-[#49352F]"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to Assessments</span>
+          <span>{language === "gu" ? "મૂલ્યાંકનો પર પાછા ફરો" : "Back to Assessments"}</span>
         </Link>
 
         <div>
           <h1 className="text-xl sm:text-2xl font-extrabold text-[#49352F] tracking-tight font-heading">
-            Create Concept-Level Assessment
+            {language === "gu" ? "સંકલ્પના-સ્તરનું મૂલ્યાંકન રચો" : "Create Concept-Level Assessment"}
           </h1>
           <p className="text-xs sm:text-sm text-[#7A6862] mt-0.5">
-            Record student scores mapped directly to primary curriculum concepts for automatic gap detection.
+            {language === "gu"
+              ? "શીખવાની ખામીઓ આપમેળે શોધવા માટે પ્રાથમિક અભ્યાસક્રમ સંકલ્પનાઓ સાથે મેપ કરેલ વિદ્યાર્થી ગુણ નોંધો."
+              : "Record student scores mapped directly to primary curriculum concepts for automatic gap detection."}
           </p>
         </div>
 
@@ -173,20 +183,27 @@ export default function NewAssessmentPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-[#49352F] mb-1">
-                Assessment Title <span className="text-rose-500">*</span>
+                {language === "gu" ? "મૂલ્યાંકન શીર્ષક" : "Assessment Title"}{" "}
+                <span className="text-rose-500">*</span>
               </label>
               <input
                 type="text"
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. Unit 3 Division & Multiplication Check"
+                placeholder={
+                  language === "gu"
+                    ? "દા.ત. એકમ ૩ ગુણાકાર અને ભાગાકાર ચકાસણી"
+                    : "e.g. Unit 3 Division & Multiplication Check"
+                }
                 className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-xs font-semibold text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#49352F] mb-1">Date</label>
+              <label className="block text-xs font-semibold text-[#49352F] mb-1">
+                {language === "gu" ? "તારીખ" : "Date"}
+              </label>
               <input
                 type="date"
                 value={assessmentDate}
@@ -198,35 +215,39 @@ export default function NewAssessmentPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#49352F] mb-1">Classroom</label>
+              <label className="block text-xs font-semibold text-[#49352F] mb-1">
+                {language === "gu" ? "વર્ગખંડ" : "Classroom"}
+              </label>
               <select
                 value={classroomId}
                 onChange={(e) => setClassroomId(e.target.value)}
                 className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-xs text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden cursor-pointer"
               >
-                <option value="cls-3a">Class 3 - Section A</option>
-                <option value="cls-4a">Class 4 - Section A</option>
-                <option value="cls-5a">Class 5 - Section A</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-[#49352F] mb-1">Subject</label>
-              <select
-                value={subjectCode}
-                onChange={(e) => setSubjectCode(e.target.value)}
-                className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-xs text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden cursor-pointer"
-              >
-                <option value="MATH">Mathematics</option>
-                <option value="ENG">English</option>
-                <option value="GUJ">Gujarati</option>
-                <option value="EVS">EVS</option>
+                <option value="cls-3a">{formatClass("Class 3 - Section A")}</option>
+                <option value="cls-4a">{formatClass("Class 4 - Section A")}</option>
+                <option value="cls-5a">{formatClass("Class 5 - Section A")}</option>
               </select>
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-[#49352F] mb-1">
-                Maximum Marks
+                {language === "gu" ? "વિષય" : "Subject"}
+              </label>
+              <select
+                value={subjectCode}
+                onChange={(e) => setSubjectCode(e.target.value)}
+                className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-xs text-[#49352F] focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden cursor-pointer"
+              >
+                <option value="MATH">{formatSubject("MATH")}</option>
+                <option value="ENG">{formatSubject("ENG")}</option>
+                <option value="GUJ">{formatSubject("GUJ")}</option>
+                <option value="EVS">{formatSubject("EVS")}</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#49352F] mb-1">
+                {language === "gu" ? "મહત્તમ ગુણ" : "Maximum Marks"}
               </label>
               <input
                 type="number"
@@ -242,7 +263,8 @@ export default function NewAssessmentPage() {
           {/* Concepts Selector */}
           <div className="pt-2">
             <label className="block text-xs font-semibold text-[#49352F] mb-2">
-              Select Concept(s) Evaluated <span className="text-rose-500">*</span>
+              {language === "gu" ? "તપાસાયેલ સંકલ્પના(ઓ) પસંદ કરો" : "Select Concept(s) Evaluated"}{" "}
+              <span className="text-rose-500">*</span>
             </label>
             <div className="flex flex-wrap gap-2">
               {relevantConcepts.map((c) => {
@@ -270,9 +292,11 @@ export default function NewAssessmentPage() {
         <Card className="space-y-4">
           <CardHeader className="mb-0">
             <div>
-              <CardTitle>Record Marks by Student</CardTitle>
+              <CardTitle>{language === "gu" ? "વિદ્યાર્થીવાર ગુણ નોંધણી" : "Record Marks by Student"}</CardTitle>
               <CardDescription>
-                Enter marks obtained out of {maxMarks}. Percentage and learning gap statuses will update automatically.
+                {language === "gu"
+                  ? `${maxMarks} માંથી મેળવેલ ગુણ દાખલ કરો. ટકાવારી અને શીખવાની ખામી સ્થિતિ આપમેળે અપડેટ થશે.`
+                  : `Enter marks obtained out of ${maxMarks}. Percentage and learning gap statuses will update automatically.`}
               </CardDescription>
             </div>
           </CardHeader>
@@ -281,11 +305,13 @@ export default function NewAssessmentPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-[#FAF6E9] border-b border-[#49352F]/10 text-[#7A6862] uppercase tracking-wider text-[10px]">
                 <tr>
-                  <th className="p-3">Student</th>
-                  <th className="p-3">Marks (0 - {maxMarks})</th>
-                  <th className="p-3">Calculated %</th>
-                  <th className="p-3">Mastery Status</th>
-                  <th className="p-3">Teacher Notes</th>
+                  <th className="p-3">{language === "gu" ? "વિદ્યાર્થી" : "Student"}</th>
+                  <th className="p-3">
+                    {language === "gu" ? `ગુણ (૦ - ${maxMarks})` : `Marks (0 - ${maxMarks})`}
+                  </th>
+                  <th className="p-3">{language === "gu" ? "ગણતરી કરેલ %" : "Calculated %"}</th>
+                  <th className="p-3">{language === "gu" ? "નિપુણતા સ્થિતિ" : "Mastery Status"}</th>
+                  <th className="p-3">{language === "gu" ? "શિક્ષકની નોંધ" : "Teacher Notes"}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#49352F]/10">
@@ -294,6 +320,18 @@ export default function NewAssessmentPage() {
                   const pct = calculatePercentage(studentScore, maxMarks);
                   const status =
                     pct >= 80 ? "Mastered" : pct >= 60 ? "Developing" : "Needs Support";
+                  const statusLabel =
+                    status === "Mastered"
+                      ? language === "gu"
+                        ? "પ્રવીણ (Mastered)"
+                        : "Mastered"
+                      : status === "Developing"
+                      ? language === "gu"
+                        ? "વિકાસશીલ (Developing)"
+                        : "Developing"
+                      : language === "gu"
+                      ? "સહાય જરૂરી (Needs Support)"
+                      : "Needs Support";
 
                   return (
                     <tr key={std.id} className="hover:bg-[#FAF6E9]/50">
@@ -324,13 +362,13 @@ export default function NewAssessmentPage() {
                           }
                           size="sm"
                         >
-                          {status}
+                          {statusLabel}
                         </Badge>
                       </td>
                       <td className="p-3">
                         <input
                           type="text"
-                          placeholder="Optional observations..."
+                          placeholder={language === "gu" ? "વૈકલ્પિક અવલોકન..." : "Optional observations..."}
                           value={scores[std.id]?.notes ?? ""}
                           onChange={(e) => handleNotesChange(std.id, e.target.value)}
                           className="w-full rounded-lg border border-[#49352F]/15 bg-white p-1.5 text-xs text-[#49352F] placeholder-[#7A6862]/60 focus:border-[#B26A1B] outline-hidden"
@@ -360,7 +398,7 @@ export default function NewAssessmentPage() {
             className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-[#49352F] bg-white hover:bg-[#FAF6E9] rounded-xl border border-[#49352F]/15 shadow-2xs transition-colors cursor-pointer"
           >
             <Save className="w-3.5 h-3.5" />
-            <span>Save Draft</span>
+            <span>{language === "gu" ? "ડ્રાફ્ટ સાચવો" : "Save Draft"}</span>
           </button>
           <button
             type="button"
@@ -369,7 +407,15 @@ export default function NewAssessmentPage() {
             className="inline-flex items-center gap-2 px-6 py-2.5 text-xs font-bold text-[#49352F] bg-[#F2CAB3] hover:bg-white border border-[#49352F]/16 rounded-xl shadow-md transition-colors cursor-pointer disabled:opacity-50"
           >
             <Send className="w-3.5 h-3.5" />
-            <span>{isSubmitting ? "Publishing & Recalculating..." : "Publish & Recalculate Gaps"}</span>
+            <span>
+              {language === "gu"
+                ? isSubmitting
+                  ? "પ્રકાશિત અને પુનઃ ગણતરી..."
+                  : "પ્રકાશિત કરો અને ખામીઓ પુનઃ ગણો"
+                : isSubmitting
+                ? "Publishing & Recalculating..."
+                : "Publish & Recalculate Gaps"}
+            </span>
           </button>
         </div>
       </div>

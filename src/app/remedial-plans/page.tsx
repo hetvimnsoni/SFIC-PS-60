@@ -96,7 +96,7 @@ function ProgressRing({
 }
 
 export default function RemedialPlansPage() {
-  const { t, language } = useLanguage();
+  const { t, language, formatSubject, formatStatus } = useLanguage();
 
   const [plans, setPlans] = useState<any[]>([]);
   const [activities, setActivities] = useState<any[]>([]);
@@ -208,14 +208,14 @@ export default function RemedialPlansPage() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#49352F] tracking-tight">
-                {language === "gu" ? "૫-પગલાંની ઉપચારાત્મક શિક્ષણ યોજનાઓ" : "5-Step Concrete Remedial Plans"}
+                {t.remedialPlans.title || "5-Step Concrete Remedial Plans"}
               </h1>
               <Badge variant="saffron" size="sm" pulse>
-                Active Curricula
+                {language === "gu" ? "સક્રિય અભ્યાસક્રમ" : "Active Curricula"}
               </Badge>
             </div>
             <p className="text-xs sm:text-sm text-[#7A6862] mt-1">
-              Targeted step-by-step manipulative pathways (counting beads, number lines, flashcards) to close student learning gaps.
+              {t.remedialPlans.subtitle || "Targeted step-by-step manipulative pathways (counting beads, number lines, flashcards) to close student learning gaps."}
             </p>
           </div>
 
@@ -228,14 +228,14 @@ export default function RemedialPlansPage() {
                 className="rounded-full text-xs font-semibold print:hidden bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15"
               >
                 <Printer className="w-3.5 h-3.5 mr-1 text-[#7A6862]" />
-                <span>Print A4 Plans</span>
+                <span>{language === "gu" ? "A4 યોજનાઓ પ્રિન્ટ કરો" : "Print A4 Plans"}</span>
               </Button>
             </div>
 
             <Link href="/ai?tab=remedial" className="print:hidden">
               <Button variant="saffron" size="sm" className="rounded-full text-xs font-bold">
                 <Sparkles className="w-3.5 h-3.5 mr-1" />
-                <span>Generate Plan</span>
+                <span>{language === "gu" ? "યોજના બનાવો" : "Generate Plan"}</span>
               </Button>
             </Link>
           </div>
@@ -244,22 +244,26 @@ export default function RemedialPlansPage() {
         {/* Filter Bar */}
         <Card variant="glass" className="p-3.5 flex items-center justify-between border-[#49352F]/15 bg-white text-[#49352F] print:hidden shadow-xs">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-[#7A6862]">Filter by Status:</span>
+            <span className="text-xs font-semibold text-[#7A6862]">
+              {language === "gu" ? "સ્થિતિ દ્વારા ફિલ્ટર કરો:" : "Filter by Status:"}
+            </span>
             <select
               value={statusFilter}
               aria-label="Filter remedial plans by status"
               onChange={(e) => setStatusFilter(e.target.value)}
               className="rounded-full border border-[#49352F]/15 bg-[#FAF6E9] px-3 py-1.5 text-xs font-semibold text-[#49352F] outline-hidden cursor-pointer"
             >
-              <option value="all">All Statuses</option>
-              <option value="Suggested">Suggested</option>
-              <option value="Approved">Approved</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Completed">Completed</option>
+              <option value="all">{language === "gu" ? "બધી સ્થિતિ" : "All Statuses"}</option>
+              <option value="Suggested">{language === "gu" ? "સૂચિત" : "Suggested"}</option>
+              <option value="Approved">{language === "gu" ? "મંજૂર" : "Approved"}</option>
+              <option value="In Progress">{language === "gu" ? "પ્રગતિ હેઠળ" : "In Progress"}</option>
+              <option value="Completed">{language === "gu" ? "પૂર્ણ થયેલ" : "Completed"}</option>
             </select>
           </div>
           <span className="text-xs text-[#7A6862]">
-            {filteredPlans.length} active remedial plans
+            {language === "gu"
+              ? `${filteredPlans.length} સક્રિય ઉપચાર યોજનાઓ`
+              : `${filteredPlans.length} active remedial plans`}
           </span>
         </Card>
 
@@ -268,11 +272,36 @@ export default function RemedialPlansPage() {
           {filteredPlans.map((plan) => {
             const completedList = completedStepsMap[plan.id] || [1];
             const steps = plan.steps && plan.steps.length > 0 ? plan.steps : [
-              { stepNumber: 1, title: "Diagnostic Assessment", durationMinutes: 10, description: "Record baseline error patterns and identify specific confusion with remainders." },
-              { stepNumber: 2, title: "Concrete Manipulatives (Beads & Counters)", durationMinutes: 20, description: "Physical equal-sharing practice with 12 and 15 beads grouped into bowls." },
-              { stepNumber: 3, title: "Visual Number Lines", durationMinutes: 15, description: "Transition from physical beads to jumping backward on drawn number lines." },
-              { stepNumber: 4, title: "Interactive Practice & Quizzes", durationMinutes: 15, description: "Digital tablet questions with immediate feedback and self-correction prompts." },
-              { stepNumber: 5, title: "Formative Reassessment", durationMinutes: 10, description: "Final assessment to verify student crosses the 80% mastery threshold." },
+              {
+                stepNumber: 1,
+                title: language === "gu" ? "નિદાનાત્મક મૂલ્યાંકન" : "Diagnostic Assessment",
+                durationMinutes: 10,
+                description: language === "gu" ? "મૂળભૂત ભૂલ પેટર્ન નોંધો અને શેષ સાથેની ચોક્કસ મૂંઝવણ ઓળખો." : "Record baseline error patterns and identify specific confusion with remainders.",
+              },
+              {
+                stepNumber: 2,
+                title: language === "gu" ? "મૂર્ત સાધનો (મણકા અને કાઉન્ટર્સ)" : "Concrete Manipulatives (Beads & Counters)",
+                durationMinutes: 20,
+                description: language === "gu" ? "વાટકીઓમાં જૂથબદ્ધ ૧૨ અને ૧૫ મણકા સાથે સમાન વહેંચણીનો વાસ્તવિક મહાવરો." : "Physical equal-sharing practice with 12 and 15 beads grouped into bowls.",
+              },
+              {
+                stepNumber: 3,
+                title: language === "gu" ? "દ્રશ્ય સંખ્યા રેખાઓ" : "Visual Number Lines",
+                durationMinutes: 15,
+                description: language === "gu" ? "ભૌતિક મણકાથી દોરેલી સંખ્યા રેખાઓ પર પાછળ કૂદવાની પ્રક્રિયા." : "Transition from physical beads to jumping backward on drawn number lines.",
+              },
+              {
+                stepNumber: 4,
+                title: language === "gu" ? "ઇન્ટરેક્ટિવ મહાવરો અને ક્વિઝ" : "Interactive Practice & Quizzes",
+                durationMinutes: 15,
+                description: language === "gu" ? "ત્વરિત પ્રતિસાદ અને સ્વ-સુધારણા સંકેતો સાથે ડિજિટલ પ્રશ્નો." : "Digital tablet questions with immediate feedback and self-correction prompts.",
+              },
+              {
+                stepNumber: 5,
+                title: language === "gu" ? "રચનાત્મક પુનઃમૂલ્યાંકન" : "Formative Reassessment",
+                durationMinutes: 10,
+                description: language === "gu" ? "વિદ્યાર્થી ૮૦% પ્રભુત્વ મર્યાદા પાર કરે છે તે ચકાસવા માટે અંતિમ મૂલ્યાંકન." : "Final assessment to verify student crosses the 80% mastery threshold.",
+              },
             ];
 
             const isFullyCompleted = completedList.length >= steps.length;
@@ -296,7 +325,7 @@ export default function RemedialPlansPage() {
                         {plan.studentName}
                       </Link>
                       <Badge variant="outline" size="sm">
-                        {plan.subjectCode || "MATH"}
+                        {formatSubject(plan.subjectCode || "MATH")}
                       </Badge>
                       <Badge
                         variant={
@@ -309,21 +338,26 @@ export default function RemedialPlansPage() {
                         size="sm"
                         dot
                       >
-                        {plan.status}
+                        {formatStatus(plan.status)}
                       </Badge>
                       <span className="text-xs text-[#7A6862] font-mono flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5 text-[#7A6862]" aria-hidden="true" />
-                        <span>{plan.estimatedMinutes || 60} mins sequence</span>
+                        <span>
+                          {plan.estimatedMinutes || 60}{" "}
+                          {language === "gu" ? "મિનિટ અનુક્રમ" : "mins sequence"}
+                        </span>
                       </span>
                     </div>
 
                     <h3 className="font-heading text-base font-bold text-[#B26A1B] mt-1 print:text-black">
-                      Target Competency: {plan.conceptName}
+                      {language === "gu" ? "લક્ષિત સંકલ્પના:" : "Target Competency:"} {plan.conceptName}
                     </h3>
 
                     {plan.learningObjective && (
                       <p className="text-xs text-[#7A6862] max-w-2xl leading-relaxed print:text-slate-700">
-                        <strong className="text-[#49352F] print:text-black">Pedagogical Objective:</strong>{" "}
+                        <strong className="text-[#49352F] print:text-black">
+                          {language === "gu" ? "શિક્ષણશાસ્ત્રીય ઉદ્દેશ્ય:" : "Pedagogical Objective:"}
+                        </strong>{" "}
                         {plan.learningObjective}
                       </p>
                     )}
@@ -334,10 +368,10 @@ export default function RemedialPlansPage() {
                     <div className="flex items-center gap-2 text-right">
                       <div className="hidden sm:block">
                         <span className="text-[10px] uppercase font-bold text-[#7A6862] block">
-                          Progress
+                          {language === "gu" ? "પ્રગતિ" : "Progress"}
                         </span>
                         <span className="text-xs font-extrabold text-[#49352F] print:text-black">
-                          {completedList.length}/{steps.length} Steps
+                          {completedList.length}/{steps.length} {language === "gu" ? "પગલાં" : "Steps"}
                         </span>
                       </div>
                       <ProgressRing
@@ -355,7 +389,7 @@ export default function RemedialPlansPage() {
                           onClick={() => handleUpdateStatus(plan.id, "Approved")}
                           className="rounded-full text-xs h-7"
                         >
-                          Approve Plan
+                          {language === "gu" ? "યોજના મંજૂર કરો" : "Approve Plan"}
                         </Button>
                       )}
                       {plan.status === "Approved" && (
@@ -366,7 +400,7 @@ export default function RemedialPlansPage() {
                           className="rounded-full text-xs h-7 font-bold"
                         >
                           <Play className="w-3 h-3 fill-current mr-1" />
-                          <span>Start Activity</span>
+                          <span>{language === "gu" ? "પ્રવૃત્તિ શરૂ કરો" : "Start Activity"}</span>
                         </Button>
                       )}
                       {plan.status === "In Progress" && (
@@ -376,7 +410,7 @@ export default function RemedialPlansPage() {
                           onClick={() => handleUpdateStatus(plan.id, "Completed")}
                           className="rounded-full text-xs h-7"
                         >
-                          Mark Completed
+                          {language === "gu" ? "પૂર્ણ તરીકે ચિહ્નિત કરો" : "Mark Completed"}
                         </Button>
                       )}
                     </div>
@@ -387,7 +421,7 @@ export default function RemedialPlansPage() {
                 <div className="flex flex-wrap items-center gap-2 p-3 rounded-2xl bg-[#FAF6E9] border border-[#49352F]/10 text-xs print:bg-slate-100 print:text-black">
                   <span className="font-bold text-[#49352F] flex items-center gap-1.5 print:text-black">
                     <Boxes className="w-3.5 h-3.5 text-[#B26A1B]" />
-                    Manipulatives Needed:
+                    {language === "gu" ? "જરૂરી સાધનો:" : "Manipulatives Needed:"}
                   </span>
                   {(plan.requiredMaterials && plan.requiredMaterials.length > 0
                     ? plan.requiredMaterials
@@ -406,10 +440,14 @@ export default function RemedialPlansPage() {
                 <div data-tour="plan-5steps" className="space-y-3 pt-1">
                   <div className="flex items-center justify-between text-xs font-bold text-[#7A6862] uppercase tracking-wider">
                     <span className="flex items-center gap-1">
-                      <span>5-Step Remedial Sequence</span>
+                      <span>{language === "gu" ? "૫-પગલાં ઉપચાર ક્રમ" : "5-Step Remedial Sequence"}</span>
                       <ContextualHelp termKey="remedialPlan" />
                     </span>
-                    <span className="text-[11px] font-normal lowercase">Click checkbox to mark step done</span>
+                    <span className="text-[11px] font-normal lowercase">
+                      {language === "gu"
+                        ? "પગલું પૂર્ણ કરવા ચેકબોક્સ પર ક્લિક કરો"
+                        : "Click checkbox to mark step done"}
+                    </span>
                   </div>
 
                   <div className="relative pl-6 space-y-3 border-l-2 border-[#49352F]/15 ml-3 print:border-slate-300">
@@ -480,19 +518,23 @@ export default function RemedialPlansPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 text-xs">
                   <div className="p-3.5 rounded-2xl bg-[#FAF6E9] border border-[#49352F]/12 space-y-1">
                     <span className="font-bold text-[#B26A1B] block text-[10px] uppercase">
-                      Teacher Concrete Instructions:
+                      {language === "gu" ? "શિક્ષક માટે મૂર્ત સૂચનાઓ:" : "Teacher Concrete Instructions:"}
                     </span>
                     <p className="text-[#7A6862] leading-relaxed text-[11px]">
-                      {plan.teacherInstructions || "Ensure student verbally explains remainder groups before transitioning from tactile beads to worksheet numbers."}
+                      {plan.teacherInstructions || (language === "gu"
+                        ? "મણકાથી કાર્યપત્રિકા નંબરો તરફ જતાં પહેલાં વિદ્યાર્થી શેષ જૂથો મૌખિક રીતે સમજાવે તેની ખાતરી કરો."
+                        : "Ensure student verbally explains remainder groups before transitioning from tactile beads to worksheet numbers.")}
                     </p>
                   </div>
 
                   <div className="p-3.5 rounded-2xl bg-[#FAF6E9] border border-[#49352F]/12 space-y-1">
                     <span className="font-bold text-[#2E7D5E] block text-[10px] uppercase">
-                      Reassessment Target Benchmark:
+                      {language === "gu" ? "પુનઃમૂલ્યાંકન લક્ષ્ય બેન્ચમાર્ક:" : "Reassessment Target Benchmark:"}
                     </span>
                     <p className="text-[#7A6862] leading-relaxed text-[11px]">
-                      {plan.reassessmentCriteria || "Student achieves &ge; 80% independently on a 5-question formative check without counting manipulatives."}
+                      {plan.reassessmentCriteria || (language === "gu"
+                        ? "વિદ્યાર્થી પ્રવૃત્તિ સાધનો વગર ૫-પ્રશ્નોની ચકાસણીમાં સ્વતંત્ર રીતે ≥ ૮૦% મેળવે છે."
+                        : "Student achieves ≥ 80% independently on a 5-question formative check without counting manipulatives.")}
                     </p>
                   </div>
                 </div>

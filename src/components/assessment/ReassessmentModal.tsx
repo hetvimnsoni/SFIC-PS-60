@@ -1,11 +1,10 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import { Modal } from "../ui/Modal";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { BridgeProgress } from "../ui/BridgeProgress";
 import { calculatePercentage, calculatePercentagePointDelta } from "@/lib/engine/calculations";
+import { useLanguage } from "@/context/LanguageContext";
 import { TrendingUp, CheckCircle, AlertCircle, Sparkles } from "lucide-react";
 
 interface ReassessmentModalProps {
@@ -29,6 +28,7 @@ export function ReassessmentModal({
   previousPercentage = 35,
   onSuccess,
 }: ReassessmentModalProps) {
+  const { language } = useLanguage();
   const [marksObtained, setMarksObtained] = useState<string>("17");
   const [maximumMarks, setMaximumMarks] = useState<string>("20");
   const [notes, setNotes] = useState<string>("Post-remedial intervention reassessment.");
@@ -39,10 +39,14 @@ export function ReassessmentModal({
     if (isOpen) {
       setMarksObtained("17");
       setMaximumMarks("20");
-      setNotes(`Post-remedial intervention reassessment for ${conceptName}.`);
+      setNotes(
+        language === "gu"
+          ? `${conceptName} માટે ઉપચારાત્મક હસ્તક્ષેપ પછીનું પુનઃમૂલ્યાંકન.`
+          : `Post-remedial intervention reassessment for ${conceptName}.`
+      );
       setError(null);
     }
-  }, [isOpen, conceptName]);
+  }, [isOpen, conceptName, language]);
 
   const obtainedNum = parseFloat(marksObtained) || 0;
   const maxNum = parseFloat(maximumMarks) || 20;
@@ -51,11 +55,27 @@ export function ReassessmentModal({
 
   const newStatus =
     currentPct >= 80 ? "Mastered" : currentPct >= 60 ? "Developing" : "Needs Support";
+  const newStatusLabel =
+    newStatus === "Mastered"
+      ? language === "gu"
+        ? "પ્રવીણ (Mastered)"
+        : "Mastered"
+      : newStatus === "Developing"
+      ? language === "gu"
+        ? "વિકાસશીલ (Developing)"
+        : "Developing"
+      : language === "gu"
+      ? "સહાય જરૂરી (Needs Support)"
+      : "Needs Support";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (obtainedNum < 0 || obtainedNum > maxNum) {
-      setError(`Marks obtained must be between 0 and ${maxNum}`);
+      setError(
+        language === "gu"
+          ? `મેળવેલ ગુણ ૦ અને ${maxNum} વચ્ચે હોવા આવશ્યક છે`
+          : `Marks obtained must be between 0 and ${maxNum}`
+      );
       return;
     }
 
@@ -86,10 +106,10 @@ export function ReassessmentModal({
         if (onSuccess) onSuccess();
         onClose();
       } else {
-        setError(data.error || "Failed to record reassessment");
+        setError(data.error || (language === "gu" ? "પુનઃમૂલ્યાંકન નોંધવામાં નિષ્ફળતા" : "Failed to record reassessment"));
       }
     } catch {
-      setError("Network error recording reassessment");
+      setError(language === "gu" ? "નેટવર્ક ભૂલ: પુનઃમૂલ્યાંકન નોંધાઈ શક્યું નથી" : "Network error recording reassessment");
     } finally {
       setIsSubmitting(false);
     }
@@ -99,8 +119,12 @@ export function ReassessmentModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Record Concept Reassessment"
-      description={`Measure remedial intervention outcomes for ${studentName} on ${conceptName}`}
+      title={language === "gu" ? "સંકલ્પના પુનઃમૂલ્યાંકન નોંધો" : "Record Concept Reassessment"}
+      description={
+        language === "gu"
+          ? `${studentName} માટે ${conceptName} પર ઉપચારાત્મક પરિણામો માપો`
+          : `Measure remedial intervention outcomes for ${studentName} on ${conceptName}`
+      }
       maxWidth="lg"
     >
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -109,7 +133,7 @@ export function ReassessmentModal({
           <div className="flex items-center justify-between text-xs">
             <span className="font-bold text-[#49352F] flex items-center gap-1.5 font-heading">
               <Sparkles className="w-3.5 h-3.5 text-[#B26A1B]" />
-              The Bridge Delta
+              {language === "gu" ? "સેતુ વૃદ્ધિ તફાવત" : "The Bridge Delta"}
             </span>
             <Badge
               variant={
@@ -122,7 +146,7 @@ export function ReassessmentModal({
               size="sm"
               dot
             >
-              {newStatus}
+              {newStatusLabel}
             </Badge>
           </div>
 
@@ -136,19 +160,19 @@ export function ReassessmentModal({
           <div className="grid grid-cols-3 gap-2 pt-2 text-center text-xs">
             <div className="p-2.5 rounded-xl bg-white border border-[#49352F]/10 shadow-2xs">
               <span className="text-[10px] text-[#7A6862] uppercase font-semibold block">
-                Baseline
+                {language === "gu" ? "આધારરેખા (Baseline)" : "Baseline"}
               </span>
               <span className="text-base font-bold text-[#7A6862]">{previousPercentage}%</span>
             </div>
             <div className="p-2.5 rounded-xl bg-white border border-[#49352F]/10 shadow-2xs">
               <span className="text-[10px] text-[#B26A1B] uppercase font-semibold block">
-                New Score
+                {language === "gu" ? "નવો સ્કોર" : "New Score"}
               </span>
               <span className="text-base font-black text-[#B26A1B]">{currentPct}%</span>
             </div>
             <div className="p-2.5 rounded-xl bg-white border border-[#49352F]/10 shadow-2xs">
               <span className="text-[10px] text-[#2E7D5E] uppercase font-semibold block">
-                Delta Gain
+                {language === "gu" ? "વૃદ્ધિ તફાવત" : "Delta Gain"}
               </span>
               <span className="text-base font-black text-[#2E7D5E]">
                 {deltaPp >= 0 ? `+${deltaPp}` : deltaPp} pp
@@ -161,7 +185,7 @@ export function ReassessmentModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-xs font-semibold text-[#49352F] mb-1">
-              Marks Obtained
+              {language === "gu" ? "મેળવેલ ગુણ" : "Marks Obtained"}
             </label>
             <input
               type="number"
@@ -176,7 +200,7 @@ export function ReassessmentModal({
           </div>
           <div>
             <label className="block text-xs font-semibold text-[#49352F] mb-1">
-              Maximum Marks
+              {language === "gu" ? "મહત્તમ ગુણ" : "Maximum Marks"}
             </label>
             <input
               type="number"
@@ -191,14 +215,18 @@ export function ReassessmentModal({
 
         <div>
           <label className="block text-xs font-semibold text-[#49352F] mb-1">
-            Teacher Observation & Remedial Notes
+            {language === "gu" ? "શિક્ષક અવલોકન અને ઉપચાર નોંધ" : "Teacher Observation & Remedial Notes"}
           </label>
           <textarea
             rows={2}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             className="w-full rounded-xl border border-[#49352F]/15 bg-white p-2.5 text-xs text-[#49352F] placeholder-[#7A6862]/60 focus:border-[#B26A1B] focus:ring-1 focus:ring-[#B26A1B] outline-hidden"
-            placeholder="e.g. Student successfully used visual grouping cards without prompts."
+            placeholder={
+              language === "gu"
+                ? "દા.ત. વિદ્યાર્થીએ સંકેત વિના વિઝ્યુઅલ કાર્ડ્સનો સફળતાપૂર્વક ઉપયોગ કર્યો."
+                : "e.g. Student successfully used visual grouping cards without prompts."
+            }
           />
         </div>
 
@@ -217,7 +245,7 @@ export function ReassessmentModal({
             onClick={onClose}
             className="text-xs"
           >
-            Cancel
+            {language === "gu" ? "રદ કરો" : "Cancel"}
           </Button>
           <Button
             type="submit"
@@ -226,7 +254,13 @@ export function ReassessmentModal({
             disabled={isSubmitting}
             className="rounded-full text-xs font-bold"
           >
-            {isSubmitting ? "Recording..." : "Save & Recalculate The Bridge"}
+            {isSubmitting
+              ? language === "gu"
+                ? "નોંધાઈ રહ્યું છે..."
+                : "Recording..."
+              : language === "gu"
+              ? "સાચવો અને સેતુ પુનઃ ગણો"
+              : "Save & Recalculate The Bridge"}
           </Button>
         </div>
       </form>

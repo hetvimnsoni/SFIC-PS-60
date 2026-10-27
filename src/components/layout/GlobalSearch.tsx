@@ -215,10 +215,26 @@ export function GlobalSearch({ onSearchChange, className = "" }: GlobalSearchPro
 
   // Quick suggestions for empty state
   const quickSuggestions = [
-    { label: "Class 4 - Section A", category: "classes", href: "/students?class=cls-4a" },
-    { label: "Aarav Patel (Class 4)", category: "students", href: "/students/std-aarav" },
-    { label: "Division Basics Remedial", category: "remedial", href: "/remedial-plans" },
-    { label: "Pooja Sharma (Class Teacher)", category: "teachers", href: "/students?class=cls-4a" },
+    {
+      label: language === "gu" ? "ધોરણ ૪ - વર્ગ અ" : "Class 4 - Section A",
+      category: language === "gu" ? "વર્ગ" : "classes",
+      href: "/students?class=cls-4a",
+    },
+    {
+      label: language === "gu" ? "આરવ પટેલ (ધોરણ ૪)" : "Aarav Patel (Class 4)",
+      category: language === "gu" ? "વિદ્યાર્થી" : "students",
+      href: "/students/std-aarav",
+    },
+    {
+      label: language === "gu" ? "ભાગાકાર પાયાની ઉપચાર યોજના" : "Division Basics Remedial",
+      category: language === "gu" ? "ઉપચાર યોજના" : "remedial",
+      href: "/remedial-plans",
+    },
+    {
+      label: language === "gu" ? "પૂજા શર્મા (વર્ગ શિક્ષક)" : "Pooja Sharma (Class Teacher)",
+      category: language === "gu" ? "શિક્ષક" : "teachers",
+      href: "/students?class=cls-4a",
+    },
   ];
 
   const getCategoryIcon = (category: SearchResultItem["category"]) => {
@@ -399,23 +415,23 @@ export function GlobalSearch({ onSearchChange, className = "" }: GlobalSearchPro
                 <kbd className="px-1 py-0.5 rounded bg-white border border-[#49352F]/15 text-[9px] font-mono font-bold">
                   ↑↓
                 </kbd>
-                <span>Navigate</span>
+                <span>{language === "gu" ? "આગળ-પાછળ" : "Navigate"}</span>
               </span>
               <span className="flex items-center gap-1">
                 <kbd className="px-1 py-0.5 rounded bg-white border border-[#49352F]/15 text-[9px] font-mono font-bold">
                   ↵
                 </kbd>
-                <span>Open</span>
+                <span>{language === "gu" ? "ખોલો" : "Open"}</span>
               </span>
               <span className="flex items-center gap-1">
                 <kbd className="px-1 py-0.5 rounded bg-white border border-[#49352F]/15 text-[9px] font-mono font-bold">
                   Esc
                 </kbd>
-                <span>Dismiss</span>
+                <span>{language === "gu" ? "બંધ કરો" : "Dismiss"}</span>
               </span>
             </div>
             <span className="text-[10px] font-medium text-[#B26A1B]">
-              ShikshaSetu Global Search
+              {language === "gu" ? "શિક્ષાસેતુ ગ્લોબલ સર્ચ" : "ShikshaSetu Global Search"}
             </span>
           </div>
         </div>

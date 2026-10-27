@@ -8,6 +8,7 @@ import { NoticeDeliveryTracker } from "@/components/notices/NoticeDeliveryTracke
 import { NoticeAssistantChat } from "@/components/notices/NoticeAssistantChat";
 import { AudioPlayer } from "@/components/audio/AudioPlayer";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   MessageSquare,
   Sparkles,
@@ -35,6 +36,7 @@ import type { SchoolNotice, NoticeTranslation, NoticeDelivery, SupportedLanguage
 
 export default function NoticesPage() {
   const { user, role, switchRole } = useAuth();
+  const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState<"feed" | "compose" | "assistant" | "parent_view">("feed");
   const [notices, setNotices] = useState<SchoolNotice[]>([]);
   const [selectedNotice, setSelectedNotice] = useState<SchoolNotice | null>(null);
@@ -114,13 +116,17 @@ export default function NoticesPage() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F2CAB3]/60 border border-[#49352F]/15 text-xs font-bold text-[#49352F] mb-2">
                 <Sparkles className="w-3.5 h-3.5 text-[#2E7D5E]" />
-                AI Parent-School Language Bridge
+                {language === "gu" ? "AI વાલી-શાળા ભાષા સેતુ" : "AI Parent-School Language Bridge"}
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-[#49352F] tracking-tight font-heading">
-                Simplified, Multilingual &amp; Voice-Enabled School Communication
+                {language === "gu"
+                  ? "સરળ, બહુભાષી અને અવાજ-સક્ષમ શાળા સંચાર"
+                  : "Simplified, Multilingual & Voice-Enabled School Communication"}
               </h1>
               <p className="text-xs sm:text-sm text-[#49352F]/70 mt-1 max-w-2xl leading-relaxed">
-                Empowering teachers to simplify complex school policies into crystal-clear parent notices, instantly translate into Gujarati &amp; Hindi with native speech, and track parent delivery and acknowledgments.
+                {language === "gu"
+                  ? "શિક્ષકોને જટિલ શાળા નીતિઓને સ્પષ્ટ વાલી પરિપત્રોમાં સરળ બનાવવા, મૂળ વાણી સાથે ગુજરાતી અને હિન્દીમાં તાત્કાલિક અનુવાદ કરવા અને વાલી પહોંચનું ટ્રેકિંગ કરવા સક્ષમ બનાવે છે."
+                  : "Empowering teachers to simplify complex school policies into crystal-clear parent notices, instantly translate into Gujarati & Hindi with native speech, and track parent delivery and acknowledgments."}
               </p>
             </div>
 
@@ -131,7 +137,7 @@ export default function NoticesPage() {
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#49352F] hover:bg-[#49352F]/90 text-white text-xs font-bold shadow-md active:scale-95 transition-all cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
-                <span>Compose New Notice</span>
+                <span>{language === "gu" ? "નવી સૂચના બનાવો" : "Compose New Notice"}</span>
               </button>
 
               <button
@@ -140,7 +146,7 @@ export default function NoticesPage() {
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white hover:bg-[#FAF6E9] text-[#49352F] border border-[#49352F]/20 text-xs font-bold shadow-sm transition-all cursor-pointer"
               >
                 <Sparkles className="w-4 h-4 text-[#2E7D5E]" />
-                <span>Notice Assistant</span>
+                <span>{language === "gu" ? "સૂચના સહાયક" : "Notice Assistant"}</span>
               </button>
             </div>
           </div>
@@ -148,27 +154,43 @@ export default function NoticesPage() {
           {/* Quick Metrics Bar */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
             <div className="p-3.5 bg-white rounded-2xl border border-[#49352F]/10">
-              <div className="text-xs font-semibold text-[#49352F]/70">Published Notices</div>
+              <div className="text-xs font-semibold text-[#49352F]/70">
+                {language === "gu" ? "પ્રકાશિત સૂચનાઓ" : "Published Notices"}
+              </div>
               <div className="mt-1 text-2xl font-black text-[#49352F]">{totalNotices}</div>
-              <div className="text-[11px] text-[#2E7D5E] font-medium mt-0.5">All school circulars</div>
+              <div className="text-[11px] text-[#2E7D5E] font-medium mt-0.5">
+                {language === "gu" ? "બધા શાળા પરિપત્રો" : "All school circulars"}
+              </div>
             </div>
 
             <div className="p-3.5 bg-white rounded-2xl border border-[#49352F]/10">
-              <div className="text-xs font-semibold text-[#49352F]/70">Indian Languages</div>
-              <div className="mt-1 text-2xl font-black text-[#49352F]">3 Active</div>
+              <div className="text-xs font-semibold text-[#49352F]/70">
+                {language === "gu" ? "ભારતીય ભાષાઓ" : "Indian Languages"}
+              </div>
+              <div className="mt-1 text-2xl font-black text-[#49352F]">
+                {language === "gu" ? "૩ સક્રિય" : "3 Active"}
+              </div>
               <div className="text-[11px] text-[#49352F]/60 mt-0.5">English, ગુજરાતી, हिंदी</div>
             </div>
 
             <div className="p-3.5 bg-white rounded-2xl border border-[#49352F]/10">
-              <div className="text-xs font-semibold text-[#49352F]/70">Messages Dispatched</div>
+              <div className="text-xs font-semibold text-[#49352F]/70">
+                {language === "gu" ? "મોકલેલા સંદેશાઓ" : "Messages Dispatched"}
+              </div>
               <div className="mt-1 text-2xl font-black text-blue-900">{totalSentDeliveries}</div>
-              <div className="text-[11px] text-blue-700 font-medium mt-0.5">WhatsApp &amp; SMS delivery</div>
+              <div className="text-[11px] text-blue-700 font-medium mt-0.5">
+                {language === "gu" ? "WhatsApp અને SMS પહોંચ" : "WhatsApp & SMS delivery"}
+              </div>
             </div>
 
             <div className="p-3.5 bg-white rounded-2xl border border-[#49352F]/10">
-              <div className="text-xs font-semibold text-[#49352F]/70">Parent Acknowledgments</div>
+              <div className="text-xs font-semibold text-[#49352F]/70">
+                {language === "gu" ? "વાલી સ્વીકૃતિઓ" : "Parent Acknowledgments"}
+              </div>
               <div className="mt-1 text-2xl font-black text-emerald-900">{totalAcknowledged}</div>
-              <div className="text-[11px] text-emerald-700 font-medium mt-0.5">Verified parent sign-offs</div>
+              <div className="text-[11px] text-emerald-700 font-medium mt-0.5">
+                {language === "gu" ? "પ્રમાણિત વાલી સહીઓ" : "Verified parent sign-offs"}
+              </div>
             </div>
           </div>
         </div>
@@ -186,7 +208,7 @@ export default function NoticesPage() {
               }`}
             >
               <FileText className="w-3.5 h-3.5" />
-              <span>Notice Hub &amp; Translation Hub</span>
+              <span>{language === "gu" ? "સૂચના કેન્દ્ર અને અનુવાદ" : "Notice Hub & Translation Hub"}</span>
             </button>
 
             <button
@@ -199,7 +221,7 @@ export default function NoticesPage() {
               }`}
             >
               <Sparkles className="w-3.5 h-3.5 text-[#2E7D5E]" />
-              <span>Compose &amp; AI Simplify</span>
+              <span>{language === "gu" ? "સૂચના રચના અને AI સરળીકરણ" : "Compose & AI Simplify"}</span>
             </button>
 
             <button
@@ -212,7 +234,7 @@ export default function NoticesPage() {
               }`}
             >
               <MessageSquare className="w-3.5 h-3.5 text-[#B26A1B]" />
-              <span>AI Notice Assistant (Q&amp;A)</span>
+              <span>{language === "gu" ? "AI સૂચના સહાયક (પ્રશ્નોત્તરી)" : "AI Notice Assistant (Q&A)"}</span>
             </button>
 
             <button
@@ -225,12 +247,14 @@ export default function NoticesPage() {
               }`}
             >
               <Eye className="w-3.5 h-3.5" />
-              <span>Parent Experience Preview</span>
+              <span>{language === "gu" ? "વાલી અનુભવ પૂર્વાવલોકન" : "Parent Experience Preview"}</span>
             </button>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs text-[#49352F]/70 font-semibold">Current Role:</span>
+            <span className="text-xs text-[#49352F]/70 font-semibold">
+              {language === "gu" ? "વર્તમાન ભૂમિકા:" : "Current Role:"}
+            </span>
             <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-[#F2CAB3]/40 text-[#49352F] border border-[#49352F]/15 uppercase">
               {role}
             </span>
@@ -249,7 +273,11 @@ export default function NoticesPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && fetchNotices()}
-                  placeholder="Search notices by keyword, date, or topic..."
+                  placeholder={
+                    language === "gu"
+                      ? "કીવર્ડ, તારીખ અથવા વિષય દ્વારા સૂચનાઓ શોધો..."
+                      : "Search notices by keyword, date, or topic..."
+                  }
                   className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm rounded-xl bg-[#FAF6E9]/50 border border-[#49352F]/15 text-[#49352F] focus:outline-none focus:ring-2 focus:ring-[#F2CAB3]"
                 />
               </div>
@@ -260,13 +288,13 @@ export default function NoticesPage() {
                   onChange={(e) => setSelectedCategory(e.target.value)}
                   className="px-3 py-2 text-xs rounded-xl bg-[#FAF6E9] border border-[#49352F]/15 text-[#49352F] font-semibold"
                 >
-                  <option value="all">All Categories</option>
-                  <option value="announcement">Announcements</option>
-                  <option value="event">School Events</option>
-                  <option value="homework">Homework / Project</option>
-                  <option value="exam">Examinations</option>
-                  <option value="fee">Fees / Admin</option>
-                  <option value="urgent_alert">Urgent Alerts</option>
+                  <option value="all">{language === "gu" ? "બધી શ્રેણીઓ" : "All Categories"}</option>
+                  <option value="announcement">{language === "gu" ? "સામાન્ય જાહેરાતો" : "Announcements"}</option>
+                  <option value="event">{language === "gu" ? "શાળા ઉત્સવો / કાર્યક્રમો" : "School Events"}</option>
+                  <option value="homework">{language === "gu" ? "ગૃહકાર્ય / પ્રોજેક્ટ" : "Homework / Project"}</option>
+                  <option value="exam">{language === "gu" ? "પરીક્ષાઓ" : "Examinations"}</option>
+                  <option value="fee">{language === "gu" ? "ફી / વહીવટી" : "Fees / Admin"}</option>
+                  <option value="urgent_alert">{language === "gu" ? "તાકીદની સૂચનાઓ" : "Urgent Alerts"}</option>
                 </select>
 
                 <select
@@ -274,12 +302,12 @@ export default function NoticesPage() {
                   onChange={(e) => setSelectedGrade(e.target.value)}
                   className="px-3 py-2 text-xs rounded-xl bg-[#FAF6E9] border border-[#49352F]/15 text-[#49352F] font-semibold"
                 >
-                  <option value="all">All Grades</option>
-                  <option value="3">Grade 3</option>
-                  <option value="4">Grade 4</option>
-                  <option value="5">Grade 5</option>
-                  <option value="6">Grade 6</option>
-                  <option value="7">Grade 7</option>
+                  <option value="all">{language === "gu" ? "બધા ધોરણ" : "All Grades"}</option>
+                  <option value="3">{language === "gu" ? "ધોરણ ૩" : "Grade 3"}</option>
+                  <option value="4">{language === "gu" ? "ધોરણ ૪" : "Grade 4"}</option>
+                  <option value="5">{language === "gu" ? "ધોરણ ૫" : "Grade 5"}</option>
+                  <option value="6">{language === "gu" ? "ધોરણ ૬" : "Grade 6"}</option>
+                  <option value="7">{language === "gu" ? "ધોરણ ૭" : "Grade 7"}</option>
                 </select>
               </div>
             </div>
@@ -289,22 +317,45 @@ export default function NoticesPage() {
               {/* Left Column: Notice Feed Cards (5 cols) */}
               <div className="lg:col-span-5 space-y-4">
                 <div className="flex items-center justify-between text-xs font-bold text-[#49352F] uppercase tracking-wider px-1">
-                  <span>School Circulars ({notices.length})</span>
-                  <span>Select to Inspect</span>
+                  <span>
+                    {language === "gu"
+                      ? `શાળા પરિપત્રો (${notices.length})`
+                      : `School Circulars (${notices.length})`}
+                  </span>
+                  <span>{language === "gu" ? "તપાસવા માટે પસંદ કરો" : "Select to Inspect"}</span>
                 </div>
 
                 {isLoading ? (
                   <div className="p-8 text-center bg-white rounded-2xl border border-[#49352F]/15">
-                    <p className="text-xs text-[#49352F]/60">Loading school notices...</p>
+                    <p className="text-xs text-[#49352F]/60">
+                      {language === "gu" ? "શાળા સૂચનાઓ લોડ થઈ રહી છે..." : "Loading school notices..."}
+                    </p>
                   </div>
                 ) : notices.length === 0 ? (
                   <div className="p-8 text-center bg-white rounded-2xl border border-dashed border-[#49352F]/20">
                     <FileText className="w-8 h-8 text-[#49352F]/30 mx-auto mb-2" />
-                    <p className="text-xs font-semibold text-[#49352F]">No school notices match your filter.</p>
+                    <p className="text-xs font-semibold text-[#49352F]">
+                      {language === "gu"
+                        ? "કોઈ શાળા સૂચના તમારા ફિલ્ટર સાથે મેળ ખાતી નથી."
+                        : "No school notices match your filter."}
+                    </p>
                   </div>
                 ) : (
                   notices.map((notice) => {
                     const isSelected = selectedNotice?.id === notice.id;
+                    const urgencyText =
+                      notice.urgency === "urgent"
+                        ? language === "gu"
+                          ? "તાકીદનું"
+                          : "urgent"
+                        : notice.urgency === "important"
+                        ? language === "gu"
+                          ? "મહત્વપૂર્ણ"
+                          : "important"
+                        : language === "gu"
+                        ? "સામાન્ય"
+                        : notice.urgency;
+
                     return (
                       <div
                         key={notice.id}
@@ -320,14 +371,16 @@ export default function NoticesPage() {
                             {notice.category}
                           </span>
 
-                          <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-md border ${
-                            notice.urgency === "urgent"
-                              ? "bg-red-50 text-red-700 border-red-200"
-                              : notice.urgency === "important"
-                              ? "bg-amber-50 text-amber-700 border-amber-200"
-                              : "bg-gray-50 text-gray-700 border-gray-200"
-                          }`}>
-                            {notice.urgency}
+                          <span
+                            className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-md border ${
+                              notice.urgency === "urgent"
+                                ? "bg-red-50 text-red-700 border-red-200"
+                                : notice.urgency === "important"
+                                ? "bg-amber-50 text-amber-700 border-amber-200"
+                                : "bg-gray-50 text-gray-700 border-gray-200"
+                            }`}
+                          >
+                            {urgencyText}
                           </span>
                         </div>
 
@@ -340,10 +393,18 @@ export default function NoticesPage() {
                         </p>
 
                         <div className="flex items-center justify-between text-[11px] pt-2 border-t border-[#49352F]/10 text-[#49352F]/60">
-                          <span>Target: {notice.targetClassGrade ? `Grade ${notice.targetClassGrade}` : "All School"}</span>
+                          <span>
+                            {language === "gu"
+                              ? `લક્ષ્ય: ${notice.targetClassGrade ? `ધોરણ ${notice.targetClassGrade}` : "સમગ્ર શાળા"}`
+                              : `Target: ${notice.targetClassGrade ? `Grade ${notice.targetClassGrade}` : "All School"}`}
+                          </span>
                           <span className="flex items-center gap-1 font-semibold text-[#2E7D5E]">
                             <Languages className="w-3 h-3" />
-                            <span>{(notice as any).translationsCount || 2} Languages</span>
+                            <span>
+                              {language === "gu"
+                                ? `${(notice as any).translationsCount || 2} ભાષાઓ`
+                                : `${(notice as any).translationsCount || 2} Languages`}
+                            </span>
                           </span>
                         </div>
                       </div>
@@ -365,7 +426,9 @@ export default function NoticesPage() {
                               {selectedNotice.status}
                             </span>
                             <span className="text-xs text-[#49352F]/60">
-                              Issued by {selectedNotice.senderTeacherName}
+                              {language === "gu"
+                                ? `શિક્ષક: ${selectedNotice.senderTeacherName}`
+                                : `Issued by ${selectedNotice.senderTeacherName}`}
                             </span>
                           </div>
                           <h2 className="text-lg font-bold text-[#49352F]">
@@ -376,22 +439,46 @@ export default function NoticesPage() {
                         <AudioPlayer
                           text={selectedNotice.simplifiedContent || selectedNotice.originalContent}
                           language={selectedNotice.originalLanguage}
-                          buttonLabel="Listen Notice"
+                          buttonLabel={language === "gu" ? "સૂચના સાંભળો" : "Listen Notice"}
                         />
                       </div>
 
                       <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs text-[#49352F]">
                         <div className="p-2.5 bg-[#FAF6E9] rounded-xl border border-[#49352F]/10">
-                          <span className="text-[10px] text-[#49352F]/60 font-semibold block uppercase">Target Class</span>
-                          <span className="font-bold">{selectedNotice.targetClassGrade ? `Grade ${selectedNotice.targetClassGrade}` : "All Classes"}</span>
+                          <span className="text-[10px] text-[#49352F]/60 font-semibold block uppercase">
+                            {language === "gu" ? "લક્ષિત વર્ગ" : "Target Class"}
+                          </span>
+                          <span className="font-bold">
+                            {selectedNotice.targetClassGrade
+                              ? language === "gu"
+                                ? `ધોરણ ${selectedNotice.targetClassGrade}`
+                                : `Grade ${selectedNotice.targetClassGrade}`
+                              : language === "gu"
+                              ? "બધા વર્ગ"
+                              : "All Classes"}
+                          </span>
                         </div>
                         <div className="p-2.5 bg-[#FAF6E9] rounded-xl border border-[#49352F]/10">
-                          <span className="text-[10px] text-[#49352F]/60 font-semibold block uppercase">Reading Level</span>
-                          <span className="font-bold capitalize">{(selectedNotice.readingLevel || "simple").replace("_", " ")}</span>
+                          <span className="text-[10px] text-[#49352F]/60 font-semibold block uppercase">
+                            {language === "gu" ? "વાંચન સ્તર" : "Reading Level"}
+                          </span>
+                          <span className="font-bold capitalize">
+                            {(selectedNotice.readingLevel || "simple").replace("_", " ")}
+                          </span>
                         </div>
                         <div className="p-2.5 bg-[#FAF6E9] rounded-xl border border-[#49352F]/10">
-                          <span className="text-[10px] text-[#49352F]/60 font-semibold block uppercase">Sign-Off Required</span>
-                          <span className="font-bold">{selectedNotice.requiresAcknowledgment ? "Yes (Mandatory)" : "Optional"}</span>
+                          <span className="text-[10px] text-[#49352F]/60 font-semibold block uppercase">
+                            {language === "gu" ? "સહી જરૂરી" : "Sign-Off Required"}
+                          </span>
+                          <span className="font-bold">
+                            {selectedNotice.requiresAcknowledgment
+                              ? language === "gu"
+                                ? "હા (ફરજિયાત)"
+                                : "Yes (Mandatory)"
+                              : language === "gu"
+                              ? "વૈકલ્પિક"
+                              : "Optional"}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -422,7 +509,11 @@ export default function NoticesPage() {
                   </>
                 ) : (
                   <div className="p-12 text-center bg-white rounded-2xl border border-[#49352F]/15">
-                    <p className="text-sm font-semibold text-[#49352F]">Select a notice on the left to inspect its translations and distribution.</p>
+                    <p className="text-sm font-semibold text-[#49352F]">
+                      {language === "gu"
+                        ? "અનુવાદ અને વિતરણ તપાસવા માટે ડાબી બાજુથી સૂચના પસંદ કરો."
+                        : "Select a notice on the left to inspect its translations and distribution."}
+                    </p>
                   </div>
                 )}
               </div>
@@ -447,9 +538,13 @@ export default function NoticesPage() {
           <div className="max-w-3xl mx-auto space-y-6">
             <div className="bg-[#FAF6E9] border border-[#49352F]/15 rounded-2xl p-5 flex items-center justify-between">
               <div>
-                <span className="text-xs font-bold text-[#49352F] block">Parent View Simulator</span>
+                <span className="text-xs font-bold text-[#49352F] block">
+                  {language === "gu" ? "વાલી પૂર્વાવલોકન સિમ્યુલેટર" : "Parent View Simulator"}
+                </span>
                 <span className="text-xs text-[#49352F]/70">
-                  Simulating view for Dineshbhai Patel (Parent of Aarav Patel, Grade 5-A). Preferred Language: Gujarati (ગુજરાતી).
+                  {language === "gu"
+                    ? "દિનેશભાઈ પટેલ (આરવ પટેલના વાલી, ધોરણ ૫-અ) માટે સિમ્યુલેશન. પસંદ કરેલ ભાષા: ગુજરાતી."
+                    : "Simulating view for Dineshbhai Patel (Parent of Aarav Patel, Grade 5-A). Preferred Language: Gujarati (ગુજરાતી)."}
                 </span>
               </div>
 
@@ -458,7 +553,7 @@ export default function NoticesPage() {
                 onClick={() => switchRole("parent")}
                 className="px-3 py-1.5 rounded-xl text-xs font-bold bg-[#49352F] text-white hover:bg-[#49352F]/90 cursor-pointer"
               >
-                Switch to Parent Role
+                {language === "gu" ? "વાલી ભૂમિકામાં બદલો" : "Switch to Parent Role"}
               </button>
             </div>
 
@@ -467,13 +562,17 @@ export default function NoticesPage() {
                 <div className="flex items-start justify-between gap-4 pb-4 border-b border-[#49352F]/10">
                   <div>
                     <span className="text-xs font-bold text-[#2E7D5E] bg-[#2E7D5E]/10 px-2 py-0.5 rounded">
-                      Official Notice &bull; {selectedNotice.category.toUpperCase()}
+                      {language === "gu"
+                        ? `સત્તાવાર સૂચના • ${selectedNotice.category.toUpperCase()}`
+                        : `Official Notice • ${selectedNotice.category.toUpperCase()}`}
                     </span>
                     <h2 className="text-xl font-bold text-[#49352F] mt-1">
                       {selectedNotice.title}
                     </h2>
                     <span className="text-xs text-[#49352F]/60">
-                      Published for Grade {selectedNotice.targetClassGrade || "All"} &bull; Gujarat Adarsh Vidyalaya
+                      {language === "gu"
+                        ? `પ્રકાશિત: ધોરણ ${selectedNotice.targetClassGrade || "બધા"} • ગુજરાત આદર્શ વિદ્યાલય`
+                        : `Published for Grade ${selectedNotice.targetClassGrade || "All"} • Gujarat Adarsh Vidyalaya`}
                     </span>
                   </div>
 
@@ -484,13 +583,15 @@ export default function NoticesPage() {
                       selectedNotice.originalContent
                     }
                     language="gu"
-                    buttonLabel="Listen (ગુજરાતી)"
+                    buttonLabel={language === "gu" ? "સાંભળો (ગુજરાતી)" : "Listen (ગુજરાતી)"}
                   />
                 </div>
 
                 <div className="mt-6 p-4 bg-[#FAF6E9] rounded-2xl border border-[#49352F]/10">
                   <span className="text-[11px] font-bold text-[#49352F]/60 uppercase tracking-wider block mb-1">
-                    ગુજરાતી ભાષામાં સૂચના (Simplified Gujarati Notice):
+                    {language === "gu"
+                      ? "ગુજરાતી ભાષામાં સરળ સૂચના:"
+                      : "ગુજરાતી ભાષામાં સૂચના (Simplified Gujarati Notice):"}
                   </span>
                   <p className="text-sm font-sans text-[#49352F] leading-relaxed whitespace-pre-wrap">
                     {noticeTranslations.find((t) => t.language === "gu")?.translatedContent ||
@@ -500,7 +601,7 @@ export default function NoticesPage() {
 
                 <div className="mt-4 p-4 bg-white rounded-2xl border border-[#49352F]/10">
                   <span className="text-[11px] font-bold text-[#49352F]/60 uppercase tracking-wider block mb-1">
-                    English Simplified Notice:
+                    {language === "gu" ? "અંગ્રેજી સરળ સૂચના:" : "English Simplified Notice:"}
                   </span>
                   <p className="text-xs font-sans text-[#49352F]/80 leading-relaxed whitespace-pre-wrap">
                     {selectedNotice.simplifiedContent || selectedNotice.originalContent}
@@ -510,7 +611,11 @@ export default function NoticesPage() {
                 <div className="mt-6 pt-5 border-t border-[#49352F]/10 flex flex-col sm:flex-row items-center justify-between gap-4">
                   <span className="text-xs text-[#49352F]/70 flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                    <span>Digital parent sign-off confirms receipt with the school administration.</span>
+                    <span>
+                      {language === "gu"
+                        ? "ડિજિટલ વાલી સ્વીકૃતિ શાળા વહીવટીતંત્ર સાથે પહોંચની પુષ્ટિ કરે છે."
+                        : "Digital parent sign-off confirms receipt with the school administration."}
+                    </span>
                   </span>
 
                   <button
@@ -526,14 +631,18 @@ export default function NoticesPage() {
                             feedback: "Acknowledged by Dineshbhai Patel.",
                           }),
                         });
-                        alert("Thank you! Notice acknowledged successfully.");
+                        alert(
+                          language === "gu"
+                            ? "ધન્યવાદ! સૂચના સફળતાપૂર્વક સ્વીકારાઈ."
+                            : "Thank you! Notice acknowledged successfully."
+                        );
                         loadNoticeDetails(selectedNotice.id);
                       }
                     }}
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
                   >
                     <UserCheck className="w-4 h-4" />
-                    <span>Acknowledge &amp; Confirm Notice</span>
+                    <span>{language === "gu" ? "સ્વીકારો અને પુષ્ટિ કરો" : "Acknowledge & Confirm Notice"}</span>
                   </button>
                 </div>
               </div>

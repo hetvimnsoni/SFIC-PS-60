@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 export default function ActivitiesPage() {
-  const { t } = useLanguage();
+  const { t, language, formatSubject } = useLanguage();
 
   const [activities, setActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -69,10 +69,10 @@ export default function ActivitiesPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-xl sm:text-2xl font-extrabold text-[#49352F] tracking-tight font-heading">
-              Curated Remedial Practice Activities & Worksheets
+              {t.activities.title || "Curated Remedial Practice Activities & Worksheets"}
             </h1>
             <p className="text-xs sm:text-sm text-[#7A6862] mt-0.5">
-              Interactive digital questions for classroom devices and printable offline worksheets for primary students.
+              {t.activities.subtitle || "Interactive digital questions for classroom devices and printable offline worksheets for primary students."}
             </p>
           </div>
         </div>
@@ -81,39 +81,43 @@ export default function ActivitiesPage() {
         <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl bg-white/95 border border-[#49352F]/12 shadow-[0_4px_16px_rgba(73,53,47,0.04)]">
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-semibold text-[#7A6862]">Subject:</span>
+              <span className="text-xs font-semibold text-[#7A6862]">
+                {language === "gu" ? "વિષય:" : "Subject:"}
+              </span>
               <select
                 value={subjectFilter}
                 aria-label="Filter activities by subject"
                 onChange={(e) => setSubjectFilter(e.target.value)}
                 className="rounded-xl border border-[#49352F]/15 bg-[#FAF6E9] px-3 py-1.5 text-xs font-semibold text-[#49352F] outline-hidden cursor-pointer"
               >
-                <option value="all">All Subjects</option>
-                <option value="MATH">Mathematics</option>
-                <option value="ENG">English</option>
-                <option value="GUJ">Gujarati</option>
-                <option value="EVS">EVS</option>
+                <option value="all">{language === "gu" ? "બધા વિષયો" : "All Subjects"}</option>
+                <option value="MATH">{formatSubject("MATH")}</option>
+                <option value="ENG">{formatSubject("ENG")}</option>
+                <option value="GUJ">{formatSubject("GUJ")}</option>
+                <option value="EVS">{formatSubject("EVS")}</option>
               </select>
             </div>
 
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-semibold text-[#7A6862]">Difficulty:</span>
+              <span className="text-xs font-semibold text-[#7A6862]">
+                {language === "gu" ? "મુશ્કેલી સ્તર:" : "Difficulty:"}
+              </span>
               <select
                 value={difficultyFilter}
                 aria-label="Filter activities by difficulty"
                 onChange={(e) => setDifficultyFilter(e.target.value)}
                 className="rounded-xl border border-[#49352F]/15 bg-[#FAF6E9] px-3 py-1.5 text-xs font-semibold text-[#49352F] outline-hidden cursor-pointer"
               >
-                <option value="all">All Levels</option>
-                <option value="Easy">Beginner / Easy</option>
-                <option value="Medium">Intermediate</option>
-                <option value="Hard">Advanced</option>
+                <option value="all">{language === "gu" ? "બધા સ્તરો" : "All Levels"}</option>
+                <option value="Easy">{language === "gu" ? "સરળ / પ્રારંભિક" : "Beginner / Easy"}</option>
+                <option value="Medium">{language === "gu" ? "મધ્યમ" : "Intermediate"}</option>
+                <option value="Hard">{language === "gu" ? "કઠિન" : "Advanced"}</option>
               </select>
             </div>
           </div>
 
           <span className="text-xs text-[#7A6862]">
-            {filteredActivities.length} available practice banks
+            {filteredActivities.length} {language === "gu" ? "ઉપલબ્ધ મહાવરા બેંકો" : "available practice banks"}
           </span>
         </div>
 
@@ -124,7 +128,7 @@ export default function ActivitiesPage() {
               <div>
                 <div className="flex items-start justify-between gap-2">
                   <Badge variant="outline" size="sm">
-                    {act.subjectCode} • Grade {act.grade}
+                    {formatSubject(act.subjectCode)} • {language === "gu" ? `ધોરણ ${act.grade}` : `Grade ${act.grade}`}
                   </Badge>
                   <Badge
                     variant={
@@ -136,7 +140,11 @@ export default function ActivitiesPage() {
                     }
                     size="sm"
                   >
-                    {act.difficulty}
+                    {act.difficulty === "Easy"
+                      ? language === "gu" ? "સરળ" : "Easy"
+                      : act.difficulty === "Medium"
+                      ? language === "gu" ? "મધ્યમ" : "Medium"
+                      : language === "gu" ? "કઠિન" : "Hard"}
                   </Badge>
                 </div>
 
@@ -148,17 +156,20 @@ export default function ActivitiesPage() {
                 )}
 
                 <p className="text-xs text-[#7A6862] mt-1">
-                  Concept: <strong className="text-[#49352F]">{act.conceptName}</strong>
+                  {language === "gu" ? "સંકલ્પના:" : "Concept:"}{" "}
+                  <strong className="text-[#49352F]">{act.conceptName}</strong>
                 </p>
 
                 {/* Questions Preview */}
                 <div className="mt-3 p-3 rounded-xl bg-[#FAF6E9] border border-[#49352F]/10 text-xs space-y-1.5">
                   <span className="font-semibold text-[#49352F] block">
-                    Sample Questions ({act.questions?.length} items):
+                    {language === "gu"
+                      ? `નમૂના પ્રશ્નો (${act.questions?.length} પ્રશ્નો):`
+                      : `Sample Questions (${act.questions?.length} items):`}
                   </span>
                   {act.questions?.slice(0, 2).map((q: any, i: number) => (
                     <p key={i} className="text-[#7A6862] text-[11px] line-clamp-1">
-                      • {q.questionText}
+                      • {language === "gu" && q.questionTextGujarati ? q.questionTextGujarati : q.questionText}
                     </p>
                   ))}
                 </div>
@@ -172,7 +183,7 @@ export default function ActivitiesPage() {
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#49352F]/15 bg-white hover:bg-[#FAF6E9] text-[#49352F] text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
                 >
                   <Printer className="w-3.5 h-3.5 text-[#B26A1B]" />
-                  <span>Print Worksheet</span>
+                  <span>{language === "gu" ? "કાર્યપત્રિકા પ્રિન્ટ કરો" : "Print Worksheet"}</span>
                 </button>
 
                 <button
@@ -181,7 +192,7 @@ export default function ActivitiesPage() {
                   className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#F2CAB3] hover:bg-white text-[#49352F] border border-[#49352F]/16 text-xs font-bold shadow-xs transition-colors cursor-pointer"
                 >
                   <Play className="w-3.5 h-3.5 fill-current" />
-                  <span>Launch Practice</span>
+                  <span>{language === "gu" ? "મહાવરો શરૂ કરો" : "Launch Practice"}</span>
                 </button>
               </div>
             </Card>
@@ -194,7 +205,7 @@ export default function ActivitiesPage() {
         <ActivityPlayerModal
           activity={activeActivity}
           studentId="std-aarav"
-          studentName="Aarav Patel (Class 4-A)"
+          studentName={language === "gu" ? "આરવ પટેલ (ધોરણ ૪-અ)" : "Aarav Patel (Class 4-A)"}
           isOpen={Boolean(activeActivity)}
           onClose={() => setActiveActivity(null)}
         />

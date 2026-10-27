@@ -194,14 +194,14 @@ export function AppHeader({
           <GraduationCap className="h-3.5 w-3.5 text-[#7A6862] dark:text-[#FAF6E9]/70 shrink-0" />
           <select
             value={currentClass}
-            aria-label="Filter by class"
+            aria-label={t.header?.searchAriaLabel || "Filter by class"}
             onChange={(e) => handleClassChange(e.target.value)}
             className="bg-transparent text-xs font-semibold text-[#49352F] dark:text-[#F4F1E1] outline-hidden cursor-pointer max-w-[75px] sm:max-w-[105px] xl:max-w-none truncate"
           >
-            <option value="all">{t.dashboard.allClasses}</option>
-            <option value="cls-3a">Class 3 - Section A</option>
-            <option value="cls-4a">Class 4 - Section A</option>
-            <option value="cls-5a">Class 5 - Section A</option>
+            <option value="all">{t.header?.allClasses || t.dashboard.allClasses}</option>
+            <option value="cls-3a">{t.header?.class3A || "Class 3 - Section A"}</option>
+            <option value="cls-4a">{t.header?.class4A || "Class 4 - Section A"}</option>
+            <option value="cls-5a">{t.header?.class5A || "Class 5 - Section A"}</option>
           </select>
         </div>
       </div>
@@ -213,11 +213,7 @@ export function AppHeader({
           <input
             ref={searchInputRef}
             type="text"
-            placeholder={
-              language === "gu"
-                ? "વિદ્યાર્થીઓ, લર્નિંગ ગેપ્સ અથવા વિષય શોધો..."
-                : "Search students, learning gaps, concepts..."
-            }
+            placeholder={t.header?.searchPlaceholder || "Search students, learning gaps, concepts..."}
             value={ctxSearch}
             onChange={(e) => handleSearchChange(e.target.value)}
             onKeyDown={handleSearchKeyDown}
@@ -234,7 +230,7 @@ export function AppHeader({
             </button>
           ) : (
             <span className="hidden md:inline-flex items-center gap-0.5 absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded-md bg-[#FAF6E9] dark:bg-[#1B1614] border border-[#49352F]/15 dark:border-[#F2CAB3]/20 text-[10px] font-mono font-semibold text-[#7A6862] dark:text-[#FAF6E9]/70 pointer-events-none">
-              Ctrl K
+              {t.header?.ctrlK || "Ctrl K"}
             </span>
           )}
         </div>
@@ -256,17 +252,17 @@ export function AppHeader({
         {/* AI Workspace Quick Launch */}
         <Link
           href="/ai"
-          aria-label="AI Hub Workspace"
+          aria-label={t.header?.aiHub || "AI Hub Workspace"}
           className="inline-flex h-9 items-center gap-1.5 bg-[#F2CAB3] dark:bg-[#F2CAB3]/25 hover:bg-white dark:hover:bg-[#26201C] text-[#49352F] dark:text-[#F4F1E1] border border-[#49352F]/15 dark:border-[#F2CAB3]/30 px-2.5 rounded-xl text-xs font-bold shadow-xs transition-all whitespace-nowrap shrink-0"
         >
           <Sparkles className="w-3.5 h-3.5 text-[#B26A1B] dark:text-[#F2CAB3] shrink-0" aria-hidden="true" />
-          <span className="hidden sm:inline">AI Hub</span>
+          <span className="hidden sm:inline">{t.header?.aiHub || "AI Hub"}</span>
         </Link>
 
         {/* Hackathon Demo Tag */}
         <div className="hidden 2xl:inline-flex h-9 items-center gap-1 bg-[#F2DCB5]/60 dark:bg-[#26201C] border border-[#49352F]/15 dark:border-[#F2CAB3]/20 text-[#49352F] dark:text-[#F4F1E1] px-2.5 rounded-xl text-[11px] font-semibold whitespace-nowrap shrink-0">
           <Sparkles className="w-3 h-3 text-[#B26A1B] dark:text-[#F2CAB3] shrink-0" aria-hidden="true" />
-          <span>SFIC Demo</span>
+          <span>{t.header?.sficDemo || "SFIC Demo"}</span>
         </div>
 
         {/* Replay Tour Button */}
@@ -326,15 +322,17 @@ export function AppHeader({
           {notificationsOpen && (
             <div className="absolute right-0 mt-2 w-80 max-w-[calc(100vw-1.5rem)] rounded-2xl bg-white dark:bg-[#26201C] p-3 shadow-xl border border-[#49352F]/15 dark:border-[#F2CAB3]/20 z-50">
               <div className="flex items-center justify-between pb-2 border-b border-[#49352F]/10 dark:border-[#F2CAB3]/15">
-                <span className="font-semibold text-xs text-[#49352F] dark:text-[#F4F1E1]">Learning Gap Alerts</span>
+                <span className="font-semibold text-xs text-[#49352F] dark:text-[#F4F1E1]">
+                  {t.header?.gapAlerts || "Learning Gap Alerts"}
+                </span>
                 <span className="text-[10px] bg-[#C54738]/15 text-[#C54738] border border-[#C54738]/20 px-1.5 py-0.5 rounded-full font-bold">
-                  {urgentGaps.length} Urgent
+                  {urgentGaps.length} {t.header?.urgentGaps || "Urgent"}
                 </span>
               </div>
               <div className="mt-2 space-y-2 text-xs">
                 {urgentGaps.length === 0 ? (
                   <p className="text-[#7A6862] dark:text-[#FAF6E9]/70 text-center py-2 text-xs">
-                    No active high priority gaps detected!
+                    {t.header?.noUrgentGaps || "No active high priority gaps detected!"}
                   </p>
                 ) : (
                   urgentGaps.slice(0, 3).map((gap) => (
@@ -345,10 +343,12 @@ export function AppHeader({
                       className="block p-2 rounded-xl bg-[#FAF6E9] dark:bg-[#1E1916] hover:bg-[#F2DCB5]/40 dark:hover:bg-[#2E2520] border border-[#49352F]/10 dark:border-[#F2CAB3]/15 transition-colors"
                     >
                       <p className="font-semibold text-[#49352F] dark:text-[#F4F1E1]">
-                        {gap.studentName} (Class {gap.grade}-A)
+                        {gap.studentName} ({language === "gu" ? `ધોરણ ${gap.grade}-અ` : `Class ${gap.grade}-A`})
                       </p>
                       <p className="text-[#7A6862] dark:text-[#FAF6E9]/70 text-[11px] mt-0.5">
-                        Needs Support in {gap.conceptName} ({gap.latestPercentage}%).
+                        {language === "gu"
+                          ? `${gap.conceptName} માં સહાયની જરૂર (${gap.latestPercentage}%).`
+                          : `Needs Support in ${gap.conceptName} (${gap.latestPercentage}%).`}
                       </p>
                     </Link>
                   ))
@@ -368,7 +368,7 @@ export function AppHeader({
             onClick={() => setShowRoleMenu(!showRoleMenu)}
             aria-expanded={showRoleMenu}
             aria-haspopup="true"
-            aria-label="Account Center and Role Switcher"
+            aria-label={t.header?.switchRole || "Account Center and Role Switcher"}
             className="flex h-9 items-center gap-1.5 sm:gap-2 px-2 sm:px-2.5 rounded-xl border border-[#49352F]/15 dark:border-[#F2CAB3]/20 bg-white dark:bg-[#26201C] hover:bg-[#FAF6E9] dark:hover:bg-[#1E1916] transition-colors cursor-pointer shadow-xs whitespace-nowrap shrink-0"
           >
             <div className="w-6 h-6 rounded-full bg-[#F2CAB3] dark:bg-[#F2CAB3]/30 border border-[#49352F]/15 dark:border-[#F2CAB3]/30 text-[#49352F] dark:text-[#F4F1E1] flex items-center justify-center text-xs font-bold shrink-0">
@@ -376,10 +376,14 @@ export function AppHeader({
             </div>
             <div className="text-left hidden sm:block shrink-0">
               <div className="text-xs font-semibold text-[#49352F] dark:text-[#F4F1E1] leading-tight truncate max-w-[85px] md:max-w-[120px] 2xl:max-w-none">
-                {user?.name || "Teacher"}
+                {role === "admin"
+                  ? (t.header?.principalName || "Principal R.K. Trivedi")
+                  : role === "parent"
+                  ? (t.header?.parentName || "Dineshbhai Patel")
+                  : (t.header?.teacherName || user?.name || "Pooja Sharma")}
               </div>
               <div className="text-[10px] text-[#B26A1B] dark:text-[#F2CAB3] font-medium capitalize truncate max-w-[85px] md:max-w-[120px] 2xl:max-w-none">
-                {role === "admin" ? t.app.adminRole : role === "parent" ? "Guardian/Parent" : t.app.teacherRole}
+                {role === "admin" ? t.app.adminRole : role === "parent" ? (t.app?.parentRole || "Guardian / Parent") : t.app.teacherRole}
               </div>
             </div>
             <ChevronDown className="w-3.5 h-3.5 text-[#7A6862] dark:text-[#FAF6E9]/70 shrink-0" />
@@ -389,9 +393,11 @@ export function AppHeader({
             <div className="absolute right-0 mt-2 w-60 max-w-[calc(100vw-1.5rem)] rounded-2xl bg-white dark:bg-[#26201C] p-2 shadow-xl border border-[#49352F]/15 dark:border-[#F2CAB3]/20 z-50">
               <div className="px-3 py-2 border-b border-[#49352F]/10 dark:border-[#F2CAB3]/15 mb-1">
                 <p className="text-[11px] font-semibold text-[#7A6862] dark:text-[#FAF6E9]/60 uppercase tracking-wider">
-                  Switch Active Role
+                  {t.header?.switchRole || "Switch Active Role"}
                 </p>
-                <p className="text-xs text-[#7A6862] dark:text-[#FAF6E9]/70 mt-0.5">Explore with different permissions</p>
+                <p className="text-xs text-[#7A6862] dark:text-[#FAF6E9]/70 mt-0.5">
+                  {t.header?.explorePermissions || "Explore with different permissions"}
+                </p>
               </div>
               <button
                 type="button"
@@ -407,8 +413,8 @@ export function AppHeader({
               >
                 <UserCheck className="w-4 h-4 text-[#2E7D5E]" />
                 <div>
-                  <div className="font-semibold text-[#49352F] dark:text-[#F4F1E1]">Pooja Sharma</div>
-                  <div className="text-[10px] text-[#7A6862] dark:text-[#FAF6E9]/70">Class Teacher (Class 4-A)</div>
+                  <div className="font-semibold text-[#49352F] dark:text-[#F4F1E1]">{t.header?.teacherName || "Pooja Sharma"}</div>
+                  <div className="text-[10px] text-[#7A6862] dark:text-[#FAF6E9]/70">{t.header?.teacherTitle || "Class Teacher (Class 4-A)"}</div>
                 </div>
               </button>
               <button
@@ -425,8 +431,8 @@ export function AppHeader({
               >
                 <ShieldAlert className="w-4 h-4 text-[#B26A1B] dark:text-[#F2CAB3]" />
                 <div>
-                  <div className="font-semibold text-[#49352F] dark:text-[#F4F1E1]">Principal R.K. Trivedi</div>
-                  <div className="text-[10px] text-[#7A6862] dark:text-[#FAF6E9]/70">School Administrator</div>
+                  <div className="font-semibold text-[#49352F] dark:text-[#F4F1E1]">{t.header?.principalName || "Principal R.K. Trivedi"}</div>
+                  <div className="text-[10px] text-[#7A6862] dark:text-[#FAF6E9]/70">{t.header?.principalTitle || "School Administrator"}</div>
                 </div>
               </button>
               <button
@@ -443,8 +449,8 @@ export function AppHeader({
               >
                 <Users className="w-4 h-4 text-[#49352F] dark:text-[#F4F1E1]" />
                 <div>
-                  <div className="font-semibold text-[#49352F] dark:text-[#F4F1E1]">Dineshbhai Patel</div>
-                  <div className="text-[10px] text-[#7A6862] dark:text-[#FAF6E9]/70">Parent (Aarav Patel, Class 5-A)</div>
+                  <div className="font-semibold text-[#49352F] dark:text-[#F4F1E1]">{t.header?.parentName || "Dineshbhai Patel"}</div>
+                  <div className="text-[10px] text-[#7A6862] dark:text-[#FAF6E9]/70">{t.header?.parentTitle || "Parent (Aarav Patel, Class 4-A)"}</div>
                 </div>
               </button>
 
@@ -459,7 +465,7 @@ export function AppHeader({
                   className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-[#C54738] hover:bg-[#C54738]/10 rounded-xl text-left transition-colors cursor-pointer"
                 >
                   <LogOut className="w-4 h-4 text-[#C54738]" />
-                  <span>{t.nav?.logout || "Sign Out"}</span>
+                  <span>{t.header?.signOut || t.nav?.logout || "Sign Out"}</span>
                 </button>
               </div>
             </div>
