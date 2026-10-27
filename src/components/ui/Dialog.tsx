@@ -49,7 +49,7 @@ export function Dialog({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#49352F]/40 backdrop-blur-sm animate-in fade-in duration-150">
       <div
         className={cn(
-          "w-full rounded-3xl bg-white shadow-[0_20px_60px_rgba(73,53,47,0.18)] border border-[#49352F]/12 overflow-hidden max-h-[90vh] flex flex-col text-[#49352F] relative",
+          "w-full rounded-3xl bg-white dark:bg-[#26201C] shadow-[0_20px_60px_rgba(73,53,47,0.18)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)] border border-[#49352F]/12 dark:border-[#F2CAB3]/20 overflow-hidden max-h-[90vh] flex flex-col text-[#49352F] dark:text-[#F4F1E1] relative",
           maxWidthClasses[maxWidth]
         )}
       >
@@ -57,23 +57,23 @@ export function Dialog({
         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#F2CAB3] via-[#F2DCB5] to-[#2E7D5E]" />
 
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#49352F]/10 px-6 py-4 bg-[#FAF6E9]">
+        <div className="flex items-center justify-between border-b border-[#49352F]/10 dark:border-[#F2CAB3]/15 px-6 py-4 bg-[#FAF6E9] dark:bg-[#1E1916]">
           <div>
-            <h3 className="text-base font-bold text-[#49352F] font-heading">{title}</h3>
-            {description && <p className="text-xs text-[#7A6862] mt-0.5">{description}</p>}
+            <h3 className="text-base font-bold text-[#49352F] dark:text-[#F4F1E1] font-heading">{title}</h3>
+            {description && <p className="text-xs text-[#7A6862] dark:text-[#FAF6E9]/70 mt-0.5">{description}</p>}
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="p-1.5 rounded-xl text-[#7A6862] hover:text-[#49352F] hover:bg-[#F2CAB3]/30 transition-colors cursor-pointer"
+            className="p-1.5 rounded-xl text-[#7A6862] dark:text-[#FAF6E9]/70 hover:text-[#49352F] dark:hover:text-[#F4F1E1] hover:bg-[#F2CAB3]/30 dark:hover:bg-[#F2CAB3]/20 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content body */}
-        <div className="p-6 overflow-y-auto flex-1 bg-white text-[#49352F]">{children}</div>
+        <div className="p-6 overflow-y-auto flex-1 bg-white dark:bg-[#26201C] text-[#49352F] dark:text-[#F4F1E1]">{children}</div>
       </div>
     </div>
   );

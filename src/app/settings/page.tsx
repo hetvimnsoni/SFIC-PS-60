@@ -20,15 +20,12 @@ import {
   Monitor,
   Palette,
   Info,
-  Server,
 } from "lucide-react";
-import { AdminAiProviderSettings } from "@/components/settings/AdminAiProviderSettings";
 
 export default function SettingsPage() {
   const { t, language, setLanguage } = useLanguage();
   const { theme, resolvedTheme, setTheme } = useTheme();
 
-  const [activeTab, setActiveTab] = useState<"general" | "ai_providers">("general");
   const [masteryThreshold, setMasteryThreshold] = useState<number>(80);
   const [developingThreshold, setDevelopingThreshold] = useState<number>(60);
   const [preferredLang, setPreferredLang] = useState<"en" | "gu">("en");
@@ -145,40 +142,8 @@ export default function SettingsPage() {
           </p>
         </div>
 
-        {/* Settings Tab Selector */}
-        <div className="flex items-center gap-2 p-1 rounded-2xl bg-[#FAF6E9] border border-[#49352F]/15 w-fit">
-          <button
-            type="button"
-            onClick={() => setActiveTab("general")}
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === "general"
-                ? "bg-[#49352F] text-white shadow-xs"
-                : "text-[#49352F]/70 hover:text-[#49352F]"
-            }`}
-          >
-            <Sliders className="w-3.5 h-3.5" />
-            <span>Institutional &amp; Appearance</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("ai_providers")}
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === "ai_providers"
-                ? "bg-[#49352F] text-white shadow-xs"
-                : "text-[#49352F]/70 hover:text-[#49352F]"
-            }`}
-          >
-            <Server className="w-3.5 h-3.5 text-[#2E7D5E]" />
-            <span>AI Provider Orchestration &amp; Telemetry</span>
-          </button>
-        </div>
-
-        {activeTab === "ai_providers" ? (
-          <AdminAiProviderSettings />
-        ) : (
-          /* Form */
-          <form onSubmit={handleSaveSettings} className="space-y-6">
+        {/* Form */}
+        <form onSubmit={handleSaveSettings} className="space-y-6">
           {/* Card 1: Theme & Interface Appearance */}
           <Card>
             <CardHeader>
@@ -505,7 +470,6 @@ export default function SettingsPage() {
             </button>
           </div>
         </form>
-        )}
       </div>
 
       {/* Reset Confirmation Modal */}

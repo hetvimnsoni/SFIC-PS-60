@@ -15,17 +15,17 @@ export function Card({
 }: CardProps) {
   const variantStyles = {
     glass:
-      "bg-white/95 backdrop-blur-md border border-[#49352F]/10 text-[#49352F] shadow-[0_8px_24px_rgba(73,53,47,0.06)] rounded-[24px]",
+      "bg-white/95 dark:bg-[#26201C]/95 backdrop-blur-md border border-[#49352F]/10 dark:border-[#F2CAB3]/15 text-[#49352F] dark:text-[#F4F1E1] shadow-[0_8px_24px_rgba(73,53,47,0.06)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.35)] rounded-[24px]",
     solid:
-      "bg-white border border-[#49352F]/10 text-[#49352F] shadow-xs rounded-[24px]",
+      "bg-white dark:bg-[#26201C] border border-[#49352F]/10 dark:border-[#F2CAB3]/15 text-[#49352F] dark:text-[#F4F1E1] shadow-xs rounded-[24px]",
     interactive:
-      "bg-white/95 border border-[#49352F]/10 text-[#49352F] shadow-xs hover:shadow-md hover:-translate-y-1 hover:border-[#F2CAB3] transition-all duration-200 cursor-pointer rounded-[24px]",
+      "bg-white/95 dark:bg-[#26201C]/95 border border-[#49352F]/10 dark:border-[#F2CAB3]/15 text-[#49352F] dark:text-[#F4F1E1] shadow-xs hover:shadow-md hover:-translate-y-1 hover:border-[#F2CAB3] dark:hover:border-[#F2CAB3] transition-all duration-200 cursor-pointer rounded-[24px]",
   };
 
   return (
     <div
       className={cn(
-        "p-5 text-[#49352F]",
+        "p-5 text-[#49352F] dark:text-[#F4F1E1]",
         variantStyles[variant],
         glow && "ring-1 ring-[#F2CAB3] shadow-md shadow-[#F2CAB3]/25",
         className
@@ -45,7 +45,7 @@ export function CardHeader({
   return (
     <div
       className={cn(
-        "flex items-center justify-between border-b border-[#49352F]/10 pb-4 mb-4",
+        "flex items-center justify-between border-b border-[#49352F]/10 dark:border-[#F2CAB3]/15 pb-4 mb-4",
         className
       )}
       {...props}
@@ -63,7 +63,7 @@ export function CardTitle({
   return (
     <h3
       className={cn(
-        "text-base sm:text-lg font-bold text-[#49352F] tracking-tight font-heading",
+        "text-base sm:text-lg font-bold text-[#49352F] dark:text-[#F4F1E1] tracking-tight font-heading",
         className
       )}
       {...props}
@@ -80,7 +80,7 @@ export function CardDescription({
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
     <p
-      className={cn("text-xs text-[#7A6862] mt-0.5", className)}
+      className={cn("text-xs text-[#7A6862] dark:text-[#FAF6E9]/70 mt-0.5", className)}
       {...props}
     >
       {children}

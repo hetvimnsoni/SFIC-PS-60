@@ -31,15 +31,17 @@ export default function RootLayout({
               (function() {
                 try {
                   var stored = localStorage.getItem('shikshasetu_theme');
-                  var isDark = stored === 'dark';
+                  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  var isDark = stored === 'dark' || ((!stored || stored === 'system') && prefersDark);
+                  var root = document.documentElement;
                   if (isDark) {
-                    document.documentElement.classList.add('dark');
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    document.documentElement.style.colorScheme = 'dark';
+                    root.classList.add('dark');
+                    root.setAttribute('data-theme', 'dark');
+                    root.style.colorScheme = 'dark';
                   } else {
-                    document.documentElement.classList.remove('dark');
-                    document.documentElement.setAttribute('data-theme', 'light');
-                    document.documentElement.style.colorScheme = 'light';
+                    root.classList.remove('dark');
+                    root.setAttribute('data-theme', 'light');
+                    root.style.colorScheme = 'light';
                   }
                 } catch (e) {}
               })();
@@ -47,7 +49,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-[#F4F1E1] text-[#49352F] antialiased font-sans transition-colors duration-200">
+      <body className="min-h-screen bg-[#F4F1E1] text-[#49352F] dark:bg-[#1B1614] dark:text-[#F4F1E1] antialiased font-sans transition-colors duration-200">
         <ThemeProvider>
           <LanguageProvider>
             <AuthProvider>

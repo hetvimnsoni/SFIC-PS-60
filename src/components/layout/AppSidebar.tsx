@@ -21,7 +21,6 @@ import {
   Sparkles,
   BookOpen,
   Languages,
-  Cpu,
 } from "lucide-react";
 import { triggerPageTour } from "@/components/tutorial/SpotlightTour";
 
@@ -69,13 +68,6 @@ export function AppSidebar() {
       badge: "5 Min",
       badgeColor: "bg-[#2E7D5E]/15 text-[#2E7D5E] border border-[#2E7D5E]/20 font-semibold",
     },
-    {
-      href: "/admin/ai-providers",
-      label: "AI Providers",
-      icon: Cpu,
-      badge: "Admin",
-      badgeColor: "bg-[#2E7D5E]/15 text-[#2E7D5E] border border-[#2E7D5E]/20 font-bold",
-    },
     { href: "/settings", label: t.nav.settings, icon: Settings },
   ];
 
@@ -106,7 +98,7 @@ export function AppSidebar() {
       <button
         type="button"
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="fixed top-3 left-3 z-50 p-2 rounded-xl bg-[#FAF6E9] border border-[#49352F]/15 text-[#49352F] shadow-sm lg:hidden cursor-pointer print:hidden"
+        className="fixed top-3 left-3 z-50 p-2 rounded-xl bg-[#FAF6E9] dark:bg-[#26201C] border border-[#49352F]/15 dark:border-[#F2CAB3]/20 text-[#49352F] dark:text-[#F4F1E1] shadow-sm lg:hidden cursor-pointer print:hidden"
         aria-label="Toggle Navigation"
       >
         {isMobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -122,29 +114,29 @@ export function AppSidebar() {
 
       {/* Sidebar container */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-[#49352F]/10 bg-[#FAF6E9] text-[#49352F] shadow-[2px_0_14px_rgba(73,53,47,0.04)] transition-transform duration-200 ease-in-out lg:translate-x-0 print:hidden ${
+        className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-[#49352F]/10 dark:border-[#F2CAB3]/15 bg-[#FAF6E9] dark:bg-[#1E1916] text-[#49352F] dark:text-[#F4F1E1] shadow-[2px_0_14px_rgba(73,53,47,0.04)] dark:shadow-[2px_0_14px_rgba(0,0,0,0.3)] transition-transform duration-200 ease-in-out lg:translate-x-0 print:hidden ${
           isMobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Brand Header */}
-        <div className="flex h-16 items-center px-5 border-b border-[#49352F]/10">
+        <div className="flex h-16 items-center px-5 border-b border-[#49352F]/10 dark:border-[#F2CAB3]/15">
           <Link href="/dashboard" onClick={() => setIsMobileOpen(false)}>
             <BrandLogo />
           </Link>
         </div>
 
         {/* Teacher Tutorial & How-To Card */}
-        <div className="mx-3 mt-3 p-3 rounded-2xl bg-gradient-to-br from-[#F2DCB5]/80 via-[#FAF6E9] to-[#F2CAB3]/80 border border-[#49352F]/15 shadow-xs">
-          <div className="flex items-center justify-between text-[#49352F] font-bold text-xs">
+        <div className="mx-3 mt-3 p-3 rounded-2xl bg-gradient-to-br from-[#F2DCB5]/80 via-[#FAF6E9] to-[#F2CAB3]/80 dark:from-[#26201C] dark:via-[#1E1916] dark:to-[#26201C] border border-[#49352F]/15 dark:border-[#F2CAB3]/20 shadow-xs">
+          <div className="flex items-center justify-between text-[#49352F] dark:text-[#F4F1E1] font-bold text-xs">
             <span className="flex items-center gap-1.5">
-              <BookOpen className="w-3.5 h-3.5 text-[#B26A1B]" />
+              <BookOpen className="w-3.5 h-3.5 text-[#B26A1B] dark:text-[#F2CAB3]" />
               <span>{language === "gu" ? "શિક્ષક ટ્યુટોરિયલ" : "Teacher Tutorial"}</span>
             </span>
             <span className="px-1.5 py-0.2 rounded-full bg-[#2E7D5E]/15 text-[#2E7D5E] border border-[#2E7D5E]/20 text-[10px] font-mono font-bold">
               Guide
             </span>
           </div>
-          <p className="text-[11px] text-[#7A6862] mt-1 leading-snug">
+          <p className="text-[11px] text-[#7A6862] dark:text-[#FAF6E9]/70 mt-1 leading-snug">
             {language === "gu"
               ? "વેબસાઇટ વાપરવા માટે ૪ પગલાંનું સરળ માર્ગદર્શન."
               : "Learn how to spot gaps, create 5-step plans & reassess."}
@@ -153,7 +145,7 @@ export function AppSidebar() {
             <Link
               href="/tutorial"
               onClick={() => setIsMobileOpen(false)}
-              className="flex-1 py-1.5 text-center bg-[#F2CAB3] hover:bg-white text-[#49352F] border border-[#49352F]/15 rounded-xl text-[11px] font-bold transition-all shadow-xs"
+              className="flex-1 py-1.5 text-center bg-[#F2CAB3] dark:bg-[#F2CAB3]/20 hover:bg-white dark:hover:bg-[#26201C] text-[#49352F] dark:text-[#F4F1E1] border border-[#49352F]/15 dark:border-[#F2CAB3]/20 rounded-xl text-[11px] font-bold transition-all shadow-xs"
             >
               {language === "gu" ? "ટ્યુટોરિયલ જુઓ →" : "Open Tutorial →"}
             </Link>
@@ -166,7 +158,7 @@ export function AppSidebar() {
                 }
                 triggerPageTour("dashboard");
               }}
-              className="px-2 py-1.5 rounded-xl border border-[#49352F]/20 hover:bg-white text-[#49352F] text-[11px] font-semibold cursor-pointer transition-colors"
+              className="px-2 py-1.5 rounded-xl border border-[#49352F]/20 dark:border-[#F2CAB3]/20 hover:bg-white dark:hover:bg-[#26201C] text-[#49352F] dark:text-[#F4F1E1] text-[11px] font-semibold cursor-pointer transition-colors"
               title="Start Guided Tour"
             >
               <RotateCcw className="w-3.5 h-3.5" />
@@ -175,18 +167,18 @@ export function AppSidebar() {
         </div>
 
         {/* Guided Demo Shortcut Card */}
-        <div className="mx-3 mt-2.5 p-3 rounded-2xl bg-gradient-to-br from-white to-[#FAF6E9] border border-[#49352F]/12 shadow-xs">
-          <div className="flex items-center gap-1.5 text-[#49352F] font-semibold text-xs">
-            <Sparkles className="w-3.5 h-3.5 text-[#B26A1B]" />
+        <div className="mx-3 mt-2.5 p-3 rounded-2xl bg-gradient-to-br from-white to-[#FAF6E9] dark:from-[#26201C] dark:to-[#1E1916] border border-[#49352F]/12 dark:border-[#F2CAB3]/20 shadow-xs">
+          <div className="flex items-center gap-1.5 text-[#49352F] dark:text-[#F4F1E1] font-semibold text-xs">
+            <Sparkles className="w-3.5 h-3.5 text-[#B26A1B] dark:text-[#F2CAB3]" />
             <span>Hackathon Guided Demo</span>
           </div>
-          <p className="text-[11px] text-[#7A6862] mt-1 leading-snug">
+          <p className="text-[11px] text-[#7A6862] dark:text-[#FAF6E9]/70 mt-1 leading-snug">
             Evaluate Aarav&apos;s division gap remediation in 2 minutes.
           </p>
           <Link
             href="/students/std-aarav"
             onClick={() => setIsMobileOpen(false)}
-            className="mt-2 block w-full py-1 text-center bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15 rounded-lg text-[11px] font-semibold transition-all shadow-xs"
+            className="mt-2 block w-full py-1 text-center bg-white dark:bg-[#26201C] hover:bg-[#F2CAB3] dark:hover:bg-[#F2CAB3]/20 text-[#49352F] dark:text-[#F4F1E1] border border-[#49352F]/15 dark:border-[#F2CAB3]/20 rounded-lg text-[11px] font-semibold transition-all shadow-xs"
           >
             Launch Demo Case →
           </Link>
@@ -204,16 +196,16 @@ export function AppSidebar() {
                 onClick={() => setIsMobileOpen(false)}
                 className={`flex items-center justify-between px-3 py-2 text-xs font-semibold rounded-xl transition-all group cursor-pointer ${
                   active
-                    ? "bg-[#F2CAB3] text-[#49352F] font-bold shadow-[0_2px_8px_rgba(73,53,47,0.08)] border border-[#49352F]/15"
-                    : "text-[#7A6862] hover:text-[#49352F] hover:bg-[#F2DCB5]/40"
+                    ? "bg-[#F2CAB3] dark:bg-[#F2CAB3]/25 text-[#49352F] dark:text-[#F4F1E1] font-bold shadow-[0_2px_8px_rgba(73,53,47,0.08)] border border-[#49352F]/15 dark:border-[#F2CAB3]/30"
+                    : "text-[#7A6862] dark:text-[#FAF6E9]/70 hover:text-[#49352F] dark:hover:text-[#F4F1E1] hover:bg-[#F2DCB5]/40 dark:hover:bg-[#26201C]"
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <Icon
                     className={`w-4 h-4 transition-colors ${
                       active
-                        ? "text-[#49352F]"
-                        : "text-[#7A6862] group-hover:text-[#49352F]"
+                        ? "text-[#49352F] dark:text-[#F4F1E1]"
+                        : "text-[#7A6862] dark:text-[#FAF6E9]/70 group-hover:text-[#49352F] dark:group-hover:text-[#F4F1E1]"
                     }`}
                   />
                   <span>{item.label}</span>
@@ -222,8 +214,8 @@ export function AppSidebar() {
                   <span
                     className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
                       active
-                        ? "bg-white/80 text-[#49352F] border border-[#49352F]/15"
-                        : item.badgeColor || "bg-white text-[#49352F] border border-[#49352F]/12"
+                        ? "bg-white/80 dark:bg-[#26201C] text-[#49352F] dark:text-[#F4F1E1] border border-[#49352F]/15 dark:border-[#F2CAB3]/20"
+                        : item.badgeColor || "bg-white dark:bg-[#26201C] text-[#49352F] dark:text-[#F4F1E1] border border-[#49352F]/12 dark:border-[#F2CAB3]/20"
                     }`}
                   >
                     {item.badge}
@@ -235,11 +227,11 @@ export function AppSidebar() {
         </nav>
 
         {/* Bottom Utility: Demo Data Reset */}
-        <div className="p-3 border-t border-[#49352F]/10 bg-[#FAF6E9]/80">
+        <div className="p-3 border-t border-[#49352F]/10 dark:border-[#F2CAB3]/15 bg-[#FAF6E9]/80 dark:bg-[#1E1916]/80">
           <button
             type="button"
             onClick={() => setShowResetConfirm(true)}
-            className="w-full flex items-center justify-center gap-2 py-2 px-3 text-xs font-medium text-[#7A6862] hover:text-[#C54738] hover:bg-[#C54738]/10 rounded-xl border border-[#49352F]/10 transition-colors cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 py-2 px-3 text-xs font-medium text-[#7A6862] dark:text-[#FAF6E9]/70 hover:text-[#C54738] hover:bg-[#C54738]/10 rounded-xl border border-[#49352F]/10 dark:border-[#F2CAB3]/15 transition-colors cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>{t.actions.resetDemo}</span>
@@ -250,16 +242,16 @@ export function AppSidebar() {
       {/* Reset Confirmation Modal */}
       {showResetConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#49352F]/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-2xl border border-[#49352F]/15 text-[#49352F]">
-            <h3 className="text-base font-bold text-[#49352F]">Reset Demo Data?</h3>
-            <p className="text-xs text-[#7A6862] mt-2">
+          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#26201C] p-5 shadow-2xl border border-[#49352F]/15 dark:border-[#F2CAB3]/20 text-[#49352F] dark:text-[#F4F1E1]">
+            <h3 className="text-base font-bold text-[#49352F] dark:text-[#F4F1E1]">Reset Demo Data?</h3>
+            <p className="text-xs text-[#7A6862] dark:text-[#FAF6E9]/70 mt-2">
               This will restore the 15 demonstration students, initial assessment scores, learning gaps, and remedial plans to their original state.
             </p>
             <div className="mt-5 flex items-center justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setShowResetConfirm(false)}
-                className="px-3 py-1.5 text-xs font-semibold text-[#7A6862] hover:bg-[#FAF6E9] rounded-xl transition-colors cursor-pointer"
+                className="px-3 py-1.5 text-xs font-semibold text-[#7A6862] dark:text-[#FAF6E9]/70 hover:bg-[#FAF6E9] dark:hover:bg-[#1E1916] rounded-xl transition-colors cursor-pointer"
               >
                 {t.actions.cancel}
               </button>

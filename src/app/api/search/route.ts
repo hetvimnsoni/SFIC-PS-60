@@ -26,7 +26,7 @@ const VERIFIED_STAFF = [
     role: "School Administrator / Principal",
     email: "principal@shikshasetu.edu.in",
     school: "Model Primary School, Gandhinagar",
-    href: "/admin/ai-providers",
+    href: "/settings",
   },
   {
     id: "staff-dinesh",

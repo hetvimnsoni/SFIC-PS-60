@@ -139,12 +139,12 @@ export function AppHeader({
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[#49352F]/10 bg-[#F4F1E1]/90 px-2 sm:px-4 lg:px-6 backdrop-blur-md print:hidden transition-colors relative text-[#49352F]">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[#49352F]/10 dark:border-[#F2CAB3]/15 bg-[#F4F1E1]/90 dark:bg-[#1B1614]/90 px-2 sm:px-4 lg:px-6 backdrop-blur-md print:hidden transition-colors relative text-[#49352F] dark:text-[#F4F1E1]">
       {/* Mobile Full-Width Search Overlay */}
       {isMobileSearchOpen && (
-        <div className="sm:hidden absolute inset-0 z-50 bg-[#FAF6E9] px-3 flex items-center gap-2 border-b border-[#49352F]/15 shadow-md">
+        <div className="sm:hidden absolute inset-0 z-50 bg-[#FAF6E9] dark:bg-[#1B1614] px-3 flex items-center gap-2 border-b border-[#49352F]/15 dark:border-[#F2CAB3]/20 shadow-md">
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#7A6862]" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#7A6862] dark:text-[#FAF6E9]/60" />
             <input
               autoFocus
               type="text"
@@ -152,13 +152,13 @@ export function AppHeader({
               value={ctxSearch}
               onChange={(e) => handleSearchChange(e.target.value)}
               onKeyDown={handleSearchKeyDown}
-              className="w-full h-10 rounded-xl border border-[#49352F]/20 bg-white py-2 pl-10 pr-8 text-xs text-[#49352F] placeholder-[#7A6862] outline-hidden focus:border-[#F2CAB3]"
+              className="w-full h-10 rounded-xl border border-[#49352F]/20 dark:border-[#F2CAB3]/20 bg-white dark:bg-[#26201C] py-2 pl-10 pr-8 text-xs text-[#49352F] dark:text-[#F4F1E1] placeholder-[#7A6862] dark:placeholder-[#FAF6E9]/50 outline-hidden focus:border-[#F2CAB3]"
             />
             {ctxSearch && (
               <button
                 type="button"
                 onClick={handleClearSearch}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-[#7A6862] cursor-pointer"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-[#7A6862] dark:text-[#FAF6E9]/70 cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -167,7 +167,7 @@ export function AppHeader({
           <button
             type="button"
             onClick={() => setIsMobileSearchOpen(false)}
-            className="px-3 py-1.5 rounded-xl text-xs font-bold text-[#49352F] hover:bg-[#F2DCB5]/40 cursor-pointer"
+            className="px-3 py-1.5 rounded-xl text-xs font-bold text-[#49352F] dark:text-[#F4F1E1] hover:bg-[#F2DCB5]/40 dark:hover:bg-[#26201C] cursor-pointer"
           >
             Close
           </button>
@@ -175,28 +175,28 @@ export function AppHeader({
       )}
 
       {/* 1. Left section: School info & Class selector */}
-      <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 min-w-0">
-        <div className="hidden md:flex items-center gap-1.5 text-[#49352F] shrink-0">
-          <Building className="h-4 w-4 text-[#B26A1B] shrink-0" />
+      <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 min-w-0 pl-11 lg:pl-0">
+        <div className="hidden md:flex items-center gap-1.5 text-[#49352F] dark:text-[#F4F1E1] shrink-0">
+          <Building className="h-4 w-4 text-[#B26A1B] dark:text-[#F2CAB3] shrink-0" />
           <span
-            className="font-semibold text-xs lg:text-sm tracking-tight text-[#49352F] truncate max-w-[120px] lg:max-w-[150px] 2xl:max-w-none"
+            className="font-semibold text-xs lg:text-sm tracking-tight text-[#49352F] dark:text-[#F4F1E1] truncate max-w-[110px] lg:max-w-[140px] 2xl:max-w-none"
             title={`${t.app.demoSchoolName} (GUJ-GNR-042)`}
           >
             {t.app.demoSchoolName}
           </span>
-          <span className="hidden 2xl:inline-block text-[11px] text-[#7A6862] font-normal shrink-0">
+          <span className="hidden 2xl:inline-block text-[11px] text-[#7A6862] dark:text-[#FAF6E9]/60 font-normal shrink-0">
             (GUJ-GNR-042)
           </span>
         </div>
 
         {/* Current Class Selector */}
-        <div className="flex items-center gap-1 bg-white border border-[#49352F]/15 rounded-xl px-1.5 sm:px-2 py-1 shadow-xs shrink-0 max-w-[90px] sm:max-w-[140px] xl:max-w-none">
-          <GraduationCap className="h-3.5 w-3.5 text-[#7A6862] shrink-0" />
+        <div className="flex h-9 items-center gap-1 bg-white dark:bg-[#26201C] border border-[#49352F]/15 dark:border-[#F2CAB3]/20 rounded-xl px-2 shadow-xs shrink-0 max-w-[105px] sm:max-w-[140px] xl:max-w-none">
+          <GraduationCap className="h-3.5 w-3.5 text-[#7A6862] dark:text-[#FAF6E9]/70 shrink-0" />
           <select
             value={currentClass}
             aria-label="Filter by class"
             onChange={(e) => handleClassChange(e.target.value)}
-            className="bg-transparent text-xs font-semibold text-[#49352F] outline-hidden cursor-pointer max-w-[65px] sm:max-w-[110px] xl:max-w-none truncate"
+            className="bg-transparent text-xs font-semibold text-[#49352F] dark:text-[#F4F1E1] outline-hidden cursor-pointer max-w-[75px] sm:max-w-[105px] xl:max-w-none truncate"
           >
             <option value="all">{t.dashboard.allClasses}</option>
             <option value="cls-3a">Class 3 - Section A</option>
@@ -207,9 +207,9 @@ export function AppHeader({
       </div>
 
       {/* 2. Center Search - Prominent, Large, and Accessible */}
-      <div className="hidden xl:flex items-center flex-1 min-w-0 max-w-xs md:max-w-sm lg:max-w-md mx-2">
+      <div className="hidden xl:flex items-center flex-1 min-w-0 max-w-xs 2xl:max-w-md mx-2">
         <div className="relative w-full min-w-0">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#7A6862] pointer-events-none" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#7A6862] dark:text-[#FAF6E9]/60 pointer-events-none" />
           <input
             ref={searchInputRef}
             type="text"
@@ -221,19 +221,19 @@ export function AppHeader({
             value={ctxSearch}
             onChange={(e) => handleSearchChange(e.target.value)}
             onKeyDown={handleSearchKeyDown}
-            className="w-full h-9 rounded-2xl border-2 border-[#49352F]/15 bg-white py-1.5 pl-9 pr-14 text-xs sm:text-sm text-[#49352F] placeholder-[#7A6862] focus:bg-white focus:border-[#F2CAB3] focus:ring-3 focus:ring-[#F2CAB3]/30 outline-hidden transition-all shadow-xs"
+            className="w-full h-9 rounded-xl border border-[#49352F]/15 dark:border-[#F2CAB3]/20 bg-white dark:bg-[#26201C] py-1.5 pl-9 pr-14 text-xs sm:text-sm text-[#49352F] dark:text-[#F4F1E1] placeholder-[#7A6862] dark:placeholder-[#FAF6E9]/50 focus:bg-white dark:focus:bg-[#26201C] focus:border-[#F2CAB3] focus:ring-2 focus:ring-[#F2CAB3]/30 outline-hidden transition-all shadow-xs"
           />
           {ctxSearch ? (
             <button
               type="button"
               onClick={handleClearSearch}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-full text-[#7A6862] hover:text-[#49352F] hover:bg-[#FAF6E9] transition-colors cursor-pointer"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-full text-[#7A6862] dark:text-[#FAF6E9]/70 hover:text-[#49352F] dark:hover:text-[#F4F1E1] hover:bg-[#FAF6E9] dark:hover:bg-[#1E1916] transition-colors cursor-pointer"
               title="Clear search"
             >
               <X className="w-3.5 h-3.5" />
             </button>
           ) : (
-            <span className="hidden md:inline-flex items-center gap-0.5 absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded-md bg-[#FAF6E9] border border-[#49352F]/15 text-[10px] font-mono font-semibold text-[#7A6862] pointer-events-none">
+            <span className="hidden md:inline-flex items-center gap-0.5 absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded-md bg-[#FAF6E9] dark:bg-[#1B1614] border border-[#49352F]/15 dark:border-[#F2CAB3]/20 text-[10px] font-mono font-semibold text-[#7A6862] dark:text-[#FAF6E9]/70 pointer-events-none">
               Ctrl K
             </span>
           )}
@@ -246,7 +246,7 @@ export function AppHeader({
         <button
           type="button"
           onClick={() => setIsMobileSearchOpen(true)}
-          className="xl:hidden p-2 rounded-xl border border-[#49352F]/15 bg-white text-[#49352F] hover:bg-[#FAF6E9] cursor-pointer shrink-0"
+          className="xl:hidden h-9 w-9 p-0 flex items-center justify-center rounded-xl border border-[#49352F]/15 dark:border-[#F2CAB3]/20 bg-white dark:bg-[#26201C] text-[#49352F] dark:text-[#F4F1E1] hover:bg-[#FAF6E9] dark:hover:bg-[#1E1916] cursor-pointer shrink-0 shadow-xs"
           aria-label="Open Search"
           title="Search"
         >
@@ -257,17 +257,16 @@ export function AppHeader({
         <Link
           href="/ai"
           aria-label="AI Hub Workspace"
-          className="inline-flex items-center gap-1.5 bg-[#F2CAB3] hover:bg-white text-[#49352F] border border-[#49352F]/15 px-2.5 py-1.5 rounded-xl text-xs font-bold shadow-xs transition-all whitespace-nowrap shrink-0"
+          className="inline-flex h-9 items-center gap-1.5 bg-[#F2CAB3] dark:bg-[#F2CAB3]/25 hover:bg-white dark:hover:bg-[#26201C] text-[#49352F] dark:text-[#F4F1E1] border border-[#49352F]/15 dark:border-[#F2CAB3]/30 px-2.5 rounded-xl text-xs font-bold shadow-xs transition-all whitespace-nowrap shrink-0"
         >
-          <Sparkles className="w-3.5 h-3.5 text-[#B26A1B] shrink-0" aria-hidden="true" />
-          <span className="hidden xl:inline">AI Hub</span>
+          <Sparkles className="w-3.5 h-3.5 text-[#B26A1B] dark:text-[#F2CAB3] shrink-0" aria-hidden="true" />
+          <span className="hidden sm:inline">AI Hub</span>
         </Link>
 
         {/* Hackathon Demo Tag */}
-        <div className="hidden xl:inline-flex items-center gap-1 bg-[#F2DCB5]/60 border border-[#49352F]/15 text-[#49352F] px-2.5 py-1 rounded-full text-[11px] font-semibold whitespace-nowrap shrink-0">
-          <Sparkles className="w-3 h-3 text-[#B26A1B] shrink-0" aria-hidden="true" />
-          <span className="hidden 2xl:inline">SFIC Gujarat Hackathon Demo</span>
-          <span className="hidden xl:inline 2xl:hidden">SFIC Demo</span>
+        <div className="hidden 2xl:inline-flex h-9 items-center gap-1 bg-[#F2DCB5]/60 dark:bg-[#26201C] border border-[#49352F]/15 dark:border-[#F2CAB3]/20 text-[#49352F] dark:text-[#F4F1E1] px-2.5 rounded-xl text-[11px] font-semibold whitespace-nowrap shrink-0">
+          <Sparkles className="w-3 h-3 text-[#B26A1B] dark:text-[#F2CAB3] shrink-0" aria-hidden="true" />
+          <span>SFIC Demo</span>
         </div>
 
         {/* Replay Tour Button */}
@@ -280,11 +279,11 @@ export function AppHeader({
             }
             triggerPageTour(pageKey);
           }}
-          className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-[#49352F]/15 bg-white hover:bg-[#F2CAB3] text-[#49352F] text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 whitespace-nowrap shrink-0"
+          className="hidden xl:inline-flex h-9 items-center gap-1.5 px-2.5 rounded-xl border border-[#49352F]/15 dark:border-[#F2CAB3]/20 bg-white dark:bg-[#26201C] hover:bg-[#F2CAB3] dark:hover:bg-[#F2CAB3]/20 text-[#49352F] dark:text-[#F4F1E1] text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 whitespace-nowrap shrink-0"
           aria-label={t.tutorial?.replayTour || "Start Page Guided Tour"}
           title={t.tutorial?.replayTour || "Start Page Guided Tour"}
         >
-          <RotateCcw className="w-3.5 h-3.5 text-[#B26A1B] shrink-0" aria-hidden="true" />
+          <RotateCcw className="w-3.5 h-3.5 text-[#B26A1B] dark:text-[#F2CAB3] shrink-0" aria-hidden="true" />
           <span className="hidden 2xl:inline whitespace-nowrap">{t.tutorial?.replayTour || "Replay Tour"}</span>
         </button>
 
@@ -292,10 +291,10 @@ export function AppHeader({
         <Link
           href="/tutorial"
           aria-label={t.tutorial?.pageTitle || "Help & Tutorial Center"}
-          className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-[#49352F]/15 bg-white hover:bg-[#F2CAB3] text-[#49352F] text-xs font-bold transition-all shadow-xs whitespace-nowrap shrink-0"
+          className="hidden xl:inline-flex h-9 items-center gap-1.5 px-2.5 rounded-xl border border-[#49352F]/15 dark:border-[#F2CAB3]/20 bg-white dark:bg-[#26201C] hover:bg-[#F2CAB3] dark:hover:bg-[#F2CAB3]/20 text-[#49352F] dark:text-[#F4F1E1] text-xs font-bold transition-all shadow-xs whitespace-nowrap shrink-0"
           title={t.tutorial?.pageTitle || "Help & Tutorial Center"}
         >
-          <HelpCircle className="w-3.5 h-3.5 text-[#B26A1B] shrink-0" aria-hidden="true" />
+          <HelpCircle className="w-3.5 h-3.5 text-[#B26A1B] dark:text-[#F2CAB3] shrink-0" aria-hidden="true" />
           <span className="hidden 2xl:inline whitespace-nowrap">{t.nav?.tutorial || "Tutorial & Help"}</span>
         </Link>
 
@@ -314,26 +313,27 @@ export function AppHeader({
           <button
             type="button"
             onClick={() => setNotificationsOpen(!notificationsOpen)}
-            className="relative p-2 rounded-xl text-[#49352F] hover:bg-[#FAF6E9] border border-[#49352F]/15 bg-white transition-colors cursor-pointer shadow-xs shrink-0"
+            className="relative h-9 w-9 p-0 flex items-center justify-center rounded-xl text-[#49352F] dark:text-[#F4F1E1] hover:bg-[#FAF6E9] dark:hover:bg-[#1E1916] border border-[#49352F]/15 dark:border-[#F2CAB3]/20 bg-white dark:bg-[#26201C] transition-colors cursor-pointer shadow-xs shrink-0"
             title="Learning Gap Notifications"
+            aria-label="Learning Gap Notifications"
           >
             <Bell className="w-4 h-4" />
             {urgentGaps.length > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#C54738] ring-2 ring-white animate-pulse" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#C54738] ring-2 ring-white dark:ring-[#26201C] animate-pulse" />
             )}
           </button>
 
           {notificationsOpen && (
-            <div className="absolute right-0 mt-2 w-80 rounded-2xl bg-white p-3 shadow-xl border border-[#49352F]/15 z-50">
-              <div className="flex items-center justify-between pb-2 border-b border-[#49352F]/10">
-                <span className="font-semibold text-xs text-[#49352F]">Learning Gap Alerts</span>
+            <div className="absolute right-0 mt-2 w-80 max-w-[calc(100vw-1.5rem)] rounded-2xl bg-white dark:bg-[#26201C] p-3 shadow-xl border border-[#49352F]/15 dark:border-[#F2CAB3]/20 z-50">
+              <div className="flex items-center justify-between pb-2 border-b border-[#49352F]/10 dark:border-[#F2CAB3]/15">
+                <span className="font-semibold text-xs text-[#49352F] dark:text-[#F4F1E1]">Learning Gap Alerts</span>
                 <span className="text-[10px] bg-[#C54738]/15 text-[#C54738] border border-[#C54738]/20 px-1.5 py-0.5 rounded-full font-bold">
                   {urgentGaps.length} Urgent
                 </span>
               </div>
               <div className="mt-2 space-y-2 text-xs">
                 {urgentGaps.length === 0 ? (
-                  <p className="text-[#7A6862] text-center py-2 text-xs">
+                  <p className="text-[#7A6862] dark:text-[#FAF6E9]/70 text-center py-2 text-xs">
                     No active high priority gaps detected!
                   </p>
                 ) : (
@@ -342,12 +342,12 @@ export function AppHeader({
                       key={gap.id}
                       href={`/students/${gap.studentId}`}
                       onClick={() => setNotificationsOpen(false)}
-                      className="block p-2 rounded-xl bg-[#FAF6E9] hover:bg-[#F2DCB5]/40 border border-[#49352F]/10 transition-colors"
+                      className="block p-2 rounded-xl bg-[#FAF6E9] dark:bg-[#1E1916] hover:bg-[#F2DCB5]/40 dark:hover:bg-[#2E2520] border border-[#49352F]/10 dark:border-[#F2CAB3]/15 transition-colors"
                     >
-                      <p className="font-semibold text-[#49352F]">
+                      <p className="font-semibold text-[#49352F] dark:text-[#F4F1E1]">
                         {gap.studentName} (Class {gap.grade}-A)
                       </p>
-                      <p className="text-[#7A6862] text-[11px] mt-0.5">
+                      <p className="text-[#7A6862] dark:text-[#FAF6E9]/70 text-[11px] mt-0.5">
                         Needs Support in {gap.conceptName} ({gap.latestPercentage}%).
                       </p>
                     </Link>
@@ -358,6 +358,9 @@ export function AppHeader({
           )}
         </div>
 
+        {/* Visual Divider Separating Controls from Account Center */}
+        <div className="h-6 w-px bg-[#49352F]/15 dark:bg-[#F2CAB3]/20 mx-1 sm:mx-1.5 shrink-0" aria-hidden="true" />
+
         {/* User Profile & Role Switcher (Account Center) */}
         <div ref={roleMenuRef} className="relative shrink-0">
           <button
@@ -366,29 +369,29 @@ export function AppHeader({
             aria-expanded={showRoleMenu}
             aria-haspopup="true"
             aria-label="Account Center and Role Switcher"
-            className="flex items-center gap-1 sm:gap-2 p-1.5 sm:pl-2 sm:pr-2.5 rounded-xl border border-[#49352F]/15 bg-white hover:bg-[#FAF6E9] transition-colors cursor-pointer shadow-xs whitespace-nowrap shrink-0"
+            className="flex h-9 items-center gap-1.5 sm:gap-2 px-2 sm:px-2.5 rounded-xl border border-[#49352F]/15 dark:border-[#F2CAB3]/20 bg-white dark:bg-[#26201C] hover:bg-[#FAF6E9] dark:hover:bg-[#1E1916] transition-colors cursor-pointer shadow-xs whitespace-nowrap shrink-0"
           >
-            <div className="w-6 h-6 rounded-full bg-[#F2CAB3] border border-[#49352F]/15 text-[#49352F] flex items-center justify-center text-xs font-bold shrink-0">
+            <div className="w-6 h-6 rounded-full bg-[#F2CAB3] dark:bg-[#F2CAB3]/30 border border-[#49352F]/15 dark:border-[#F2CAB3]/30 text-[#49352F] dark:text-[#F4F1E1] flex items-center justify-center text-xs font-bold shrink-0">
               {role === "admin" ? "A" : role === "parent" ? "P" : "T"}
             </div>
-            <div className="text-left hidden xl:block shrink-0">
-              <div className="text-xs font-semibold text-[#49352F] leading-tight truncate max-w-[80px] 2xl:max-w-none">
+            <div className="text-left hidden sm:block shrink-0">
+              <div className="text-xs font-semibold text-[#49352F] dark:text-[#F4F1E1] leading-tight truncate max-w-[85px] md:max-w-[120px] 2xl:max-w-none">
                 {user?.name || "Teacher"}
               </div>
-              <div className="text-[10px] text-[#B26A1B] font-medium capitalize truncate max-w-[80px] 2xl:max-w-none">
+              <div className="text-[10px] text-[#B26A1B] dark:text-[#F2CAB3] font-medium capitalize truncate max-w-[85px] md:max-w-[120px] 2xl:max-w-none">
                 {role === "admin" ? t.app.adminRole : role === "parent" ? "Guardian/Parent" : t.app.teacherRole}
               </div>
             </div>
-            <ChevronDown className="hidden sm:block w-3.5 h-3.5 text-[#7A6862] shrink-0" />
+            <ChevronDown className="w-3.5 h-3.5 text-[#7A6862] dark:text-[#FAF6E9]/70 shrink-0" />
           </button>
 
           {showRoleMenu && (
-            <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white p-2 shadow-xl border border-[#49352F]/15 z-50">
-              <div className="px-3 py-2 border-b border-[#49352F]/10 mb-1">
-                <p className="text-[11px] font-semibold text-[#7A6862] uppercase tracking-wider">
+            <div className="absolute right-0 mt-2 w-60 max-w-[calc(100vw-1.5rem)] rounded-2xl bg-white dark:bg-[#26201C] p-2 shadow-xl border border-[#49352F]/15 dark:border-[#F2CAB3]/20 z-50">
+              <div className="px-3 py-2 border-b border-[#49352F]/10 dark:border-[#F2CAB3]/15 mb-1">
+                <p className="text-[11px] font-semibold text-[#7A6862] dark:text-[#FAF6E9]/60 uppercase tracking-wider">
                   Switch Active Role
                 </p>
-                <p className="text-xs text-[#7A6862] mt-0.5">Explore with different permissions</p>
+                <p className="text-xs text-[#7A6862] dark:text-[#FAF6E9]/70 mt-0.5">Explore with different permissions</p>
               </div>
               <button
                 type="button"
@@ -398,14 +401,14 @@ export function AppHeader({
                 }}
                 className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-xl text-left transition-colors cursor-pointer ${
                   role === "teacher"
-                    ? "bg-[#F2CAB3]/40 text-[#49352F] font-semibold"
-                    : "text-[#49352F] hover:bg-[#FAF6E9]"
+                    ? "bg-[#F2CAB3]/40 dark:bg-[#F2CAB3]/25 text-[#49352F] dark:text-[#F4F1E1] font-semibold"
+                    : "text-[#49352F] dark:text-[#F4F1E1] hover:bg-[#FAF6E9] dark:hover:bg-[#1E1916]"
                 }`}
               >
                 <UserCheck className="w-4 h-4 text-[#2E7D5E]" />
                 <div>
-                  <div className="font-semibold text-[#49352F]">Pooja Sharma</div>
-                  <div className="text-[10px] text-[#7A6862]">Class Teacher (Class 4-A)</div>
+                  <div className="font-semibold text-[#49352F] dark:text-[#F4F1E1]">Pooja Sharma</div>
+                  <div className="text-[10px] text-[#7A6862] dark:text-[#FAF6E9]/70">Class Teacher (Class 4-A)</div>
                 </div>
               </button>
               <button
@@ -416,14 +419,14 @@ export function AppHeader({
                 }}
                 className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-xl text-left transition-colors mt-1 cursor-pointer ${
                   role === "admin"
-                    ? "bg-[#F2CAB3]/40 text-[#49352F] font-semibold"
-                    : "text-[#49352F] hover:bg-[#FAF6E9]"
+                    ? "bg-[#F2CAB3]/40 dark:bg-[#F2CAB3]/25 text-[#49352F] dark:text-[#F4F1E1] font-semibold"
+                    : "text-[#49352F] dark:text-[#F4F1E1] hover:bg-[#FAF6E9] dark:hover:bg-[#1E1916]"
                 }`}
               >
-                <ShieldAlert className="w-4 h-4 text-[#B26A1B]" />
+                <ShieldAlert className="w-4 h-4 text-[#B26A1B] dark:text-[#F2CAB3]" />
                 <div>
-                  <div className="font-semibold text-[#49352F]">Principal R.K. Trivedi</div>
-                  <div className="text-[10px] text-[#7A6862]">School Administrator</div>
+                  <div className="font-semibold text-[#49352F] dark:text-[#F4F1E1]">Principal R.K. Trivedi</div>
+                  <div className="text-[10px] text-[#7A6862] dark:text-[#FAF6E9]/70">School Administrator</div>
                 </div>
               </button>
               <button
@@ -434,18 +437,18 @@ export function AppHeader({
                 }}
                 className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-xl text-left transition-colors mt-1 cursor-pointer ${
                   role === "parent"
-                    ? "bg-[#F2CAB3]/40 text-[#49352F] font-semibold"
-                    : "text-[#49352F] hover:bg-[#FAF6E9]"
+                    ? "bg-[#F2CAB3]/40 dark:bg-[#F2CAB3]/25 text-[#49352F] dark:text-[#F4F1E1] font-semibold"
+                    : "text-[#49352F] dark:text-[#F4F1E1] hover:bg-[#FAF6E9] dark:hover:bg-[#1E1916]"
                 }`}
               >
-                <Users className="w-4 h-4 text-[#49352F]" />
+                <Users className="w-4 h-4 text-[#49352F] dark:text-[#F4F1E1]" />
                 <div>
-                  <div className="font-semibold text-[#49352F]">Dineshbhai Patel</div>
-                  <div className="text-[10px] text-[#7A6862]">Parent (Aarav Patel, Class 5-A)</div>
+                  <div className="font-semibold text-[#49352F] dark:text-[#F4F1E1]">Dineshbhai Patel</div>
+                  <div className="text-[10px] text-[#7A6862] dark:text-[#FAF6E9]/70">Parent (Aarav Patel, Class 5-A)</div>
                 </div>
               </button>
 
-              <div className="border-t border-[#49352F]/10 my-1 pt-1">
+              <div className="border-t border-[#49352F]/10 dark:border-[#F2CAB3]/15 my-1 pt-1">
                 <button
                   type="button"
                   onClick={() => {

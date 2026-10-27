@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 
 @font-face {
   font-family: 'Lexend';
@@ -51,10 +51,21 @@
   color-scheme: light;
 }
 
-.dark {
+.dark,
+[data-theme="dark"] {
   /* Warm Roasted Walnut & Peach (harmonious with warm identity instead of cold blue) */
   --background: #1B1614;
   --foreground: #F4F1E1;
+  --color-cream: #1B1614;
+  --color-ivory: #221C18;
+  --color-beige: #2E2520;
+  --color-surface-white: #26201C;
+  --color-text-brown: #F4F1E1;
+  --color-text-muted: #C2B3AC;
+  --color-text-faint: #9E8E87;
+  --color-rule: rgba(242, 202, 179, 0.15);
+  --color-rule-subtle: rgba(242, 202, 179, 0.08);
+
   --primary: #F2CAB3;
   --primary-hover: #EFBDA4;
   --primary-light: rgba(242, 202, 179, 0.15);
@@ -69,6 +80,132 @@
   --glass-bg: rgba(38, 32, 28, 0.88);
   --glass-border: rgba(242, 202, 179, 0.2);
   color-scheme: dark;
+}
+
+/* Global automatic theme adaptations for dark mode */
+.dark body,
+[data-theme="dark"] body {
+  background-color: #1B1614 !important;
+  color: #F4F1E1 !important;
+}
+
+.dark .bg-\[\#F4F1E1\],
+[data-theme="dark"] .bg-\[\#F4F1E1\] {
+  background-color: #1B1614 !important;
+}
+
+.dark .bg-\[\#F4F1E1\]\/90,
+[data-theme="dark"] .bg-\[\#F4F1E1\]\/90 {
+  background-color: rgba(27, 22, 20, 0.92) !important;
+}
+
+.dark .bg-\[\#FAF6E9\],
+[data-theme="dark"] .bg-\[\#FAF6E9\] {
+  background-color: #221C18 !important;
+}
+
+.dark .bg-\[\#FAF6E9\]\/95,
+[data-theme="dark"] .bg-\[\#FAF6E9\]\/95 {
+  background-color: rgba(34, 28, 24, 0.95) !important;
+}
+
+.dark .bg-\[\#FAF6E9\]\/90,
+[data-theme="dark"] .bg-\[\#FAF6E9\]\/90 {
+  background-color: rgba(34, 28, 24, 0.9) !important;
+}
+
+.dark .bg-\[\#FAF6E9\]\/80,
+[data-theme="dark"] .bg-\[\#FAF6E9\]\/80 {
+  background-color: rgba(34, 28, 24, 0.8) !important;
+}
+
+.dark .bg-\[\#F2DCB5\],
+[data-theme="dark"] .bg-\[\#F2DCB5\] {
+  background-color: #2E2520 !important;
+}
+
+.dark .bg-\[\#F2DCB5\]\/80,
+[data-theme="dark"] .bg-\[\#F2DCB5\]\/80 {
+  background-color: rgba(46, 37, 32, 0.8) !important;
+}
+
+.dark .bg-\[\#F2DCB5\]\/60,
+[data-theme="dark"] .bg-\[\#F2DCB5\]\/60 {
+  background-color: rgba(46, 37, 32, 0.6) !important;
+}
+
+.dark .bg-\[\#F2DCB5\]\/40,
+[data-theme="dark"] .bg-\[\#F2DCB5\]\/40 {
+  background-color: rgba(46, 37, 32, 0.4) !important;
+}
+
+.dark .text-\[\#49352F\],
+[data-theme="dark"] .text-\[\#49352F\] {
+  color: #F4F1E1 !important;
+}
+
+.dark .text-\[\#7A6862\],
+[data-theme="dark"] .text-\[\#7A6862\] {
+  color: #C2B3AC !important;
+}
+
+.dark .text-\[\#5C4B45\],
+[data-theme="dark"] .text-\[\#5C4B45\] {
+  color: #D1C4BD !important;
+}
+
+.dark .border-\[\#49352F\]\/10,
+.dark .border-\[\#49352F\]\/12,
+.dark .border-\[\#49352F\]\/14,
+.dark .border-\[\#49352F\]\/15,
+.dark .border-\[\#49352F\]\/16,
+.dark .border-\[\#49352F\]\/18,
+.dark .border-\[\#49352F\]\/20,
+[data-theme="dark"] .border-\[\#49352F\]\/10,
+[data-theme="dark"] .border-\[\#49352F\]\/12,
+[data-theme="dark"] .border-\[\#49352F\]\/14,
+[data-theme="dark"] .border-\[\#49352F\]\/15,
+[data-theme="dark"] .border-\[\#49352F\]\/16,
+[data-theme="dark"] .border-\[\#49352F\]\/18,
+[data-theme="dark"] .border-\[\#49352F\]\/20 {
+  border-color: rgba(242, 202, 179, 0.18) !important;
+}
+
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+.dark select,
+.dark textarea,
+[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background-color: #26201C;
+  color: #F4F1E1;
+  border-color: rgba(242, 202, 179, 0.2);
+}
+
+.dark select option,
+[data-theme="dark"] select option {
+  background-color: #26201C;
+  color: #F4F1E1;
+}
+
+.dark .bg-white:not([data-preserve-white]),
+[data-theme="dark"] .bg-white:not([data-preserve-white]) {
+  background-color: #26201C !important;
+}
+
+.dark .hover\:bg-white:hover,
+[data-theme="dark"] .hover\:bg-white:hover {
+  background-color: #362E28 !important;
+}
+
+.dark .hover\:bg-\[\#FAF6E9\]:hover,
+[data-theme="dark"] .hover\:bg-\[\#FAF6E9\]:hover {
+  background-color: #2D241F !important;
+}
+
+.dark .hover\:bg-\[\#F2DCB5\]\/40:hover,
+[data-theme="dark"] .hover\:bg-\[\#F2DCB5\]\/40:hover {
+  background-color: rgba(46, 37, 32, 0.5) !important;
 }
 
 body {
