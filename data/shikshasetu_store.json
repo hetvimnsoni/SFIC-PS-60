@@ -978,7 +978,24 @@
       "createdAt": "2026-09-01T10:00:00Z"
     }
   ],
-  "attempts": [],
+  "attempts": [
+    {
+      "studentId": "std-kabir",
+      "activityId": "act-div-01",
+      "score": 4,
+      "maximumScore": 4,
+      "percentage": 100,
+      "answers": {
+        "q-div-1": "4 laddus",
+        "q-div-2": "5 × 4 = 20",
+        "q-div-3": "True",
+        "q-div-4": "3 boxes"
+      },
+      "incorrectQuestions": [],
+      "id": "att-1793308862466",
+      "completedAt": "2026-10-29T21:21:02.467Z"
+    }
+  ],
   "parents": [
     {
       "id": "par-aarav",
