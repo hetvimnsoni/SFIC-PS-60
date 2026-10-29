@@ -204,6 +204,7 @@ export default function ActivitiesPage() {
       {activeActivity && (
         <ActivityPlayerModal
           activity={activeActivity}
+          availableActivities={activities}
           studentId="std-aarav"
           studentName={language === "gu" ? "આરવ પટેલ (ધોરણ ૪-અ)" : "Aarav Patel (Class 4-A)"}
           isOpen={Boolean(activeActivity)}

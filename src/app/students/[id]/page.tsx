@@ -131,6 +131,21 @@ export default function StudentDetailPage({
     }
   }, [id]);
 
+  // Synchronize guided tour step changes: auto-open Learning Gaps tab when highlighting gap features
+  useEffect(() => {
+    const handleTourStep = (e: Event) => {
+      const detail = (e as CustomEvent)?.detail;
+      if (detail && detail.page === "studentDetail") {
+        const stepId = detail.step?.id;
+        if (stepId === "student-gap-reason" || stepId === "student-remedial-btn") {
+          setActiveTab("gaps");
+        }
+      }
+    };
+    window.addEventListener("shikshasetu_tour_step_change", handleTourStep);
+    return () => window.removeEventListener("shikshasetu_tour_step_change", handleTourStep);
+  }, []);
+
   if (loading && !student) {
     return (
       <AppLayout>
@@ -334,7 +349,11 @@ export default function StudentDetailPage({
               </Button>
             )}
 
-            <div data-tour="student-reassess-form">
+            <div
+              data-tour="student-reassess-form"
+              id="student-reassess-form"
+              className="inline-block"
+            >
               <Button
                 variant="saffron"
                 size="sm"
@@ -355,7 +374,11 @@ export default function StudentDetailPage({
         </Card>
 
         {/* 4 Summary Stat Tiles */}
-        <div data-tour="student-scores" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div
+          data-tour="student-scores"
+          id="student-scores"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
+        >
           <StatTile
             label={language === "gu" ? "સરેરાશ પરિણામ" : "Average Performance"}
             value={avgScore}
@@ -480,13 +503,43 @@ export default function StudentDetailPage({
         {activeTab === "gaps" && (
           <div className="space-y-4">
             {gaps.length === 0 ? (
-              <Card variant="glass" className="p-8 text-center text-[#7A6862] bg-white border-[#49352F]/12">
-                {language === "gu"
-                  ? "આ વિદ્યાર્થી માટે કોઈ શીખવાની ખામી નોંધાયેલ નથી."
-                  : "No learning gaps recorded for this student."}
+              <Card variant="glass" className="p-6 border-[#49352F]/12 bg-white text-[#49352F] space-y-4 shadow-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h3 className="font-heading text-lg font-bold text-[#49352F]">
+                      {language === "gu" ? "પ્રારંભિક નિદાન અને સક્ષમતા" : "Foundational Assessment & Competency"}
+                    </h3>
+                    <p className="text-xs text-[#7A6862]">
+                      {language === "gu"
+                        ? "બધી લક્ષિત સંકલ્પનાઓ સંતોષકારક સ્થિતિમાં છે."
+                        : "All tracked competencies are currently on track."}
+                    </p>
+                  </div>
+                  <div data-tour="student-remedial-btn" id="student-remedial-btn" className="inline-block">
+                    <Link href="/remedial-plans">
+                      <Button variant="outline" size="sm" className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15">
+                        <span>{language === "gu" ? "૫-પગલાં યોજના →" : "5-Step Plan →"}</span>
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+                <div data-tour="student-gap-reason" id="student-gap-reason" className="p-3.5 rounded-xl bg-[#FAF6E9] border border-[#49352F]/12 text-xs space-y-1.5 text-[#49352F] shadow-xs">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] uppercase font-bold text-[#7A6862] flex items-center gap-1">
+                      <BrainCircuit className="w-3.5 h-3.5 text-[#B26A1B]" />
+                      {language === "gu" ? "એલ્ગોરિધમિક સમજૂતી:" : "Algorithmic Explanation:"}
+                    </span>
+                    <ContextualHelp termKey="gapDetection" />
+                  </div>
+                  <p className="text-[#49352F] leading-relaxed">
+                    {language === "gu"
+                      ? "નિદાન એલ્ગોરિધમ સક્રિય છે. જો કોઈપણ સંકલ્પનામાં સ્કોર ૬૦% થી નીચે જશે, તો તે અહીં ૫-પગલાં ઉપચાર યોજના સાથે આપમેળે ફ્લેગ થશે."
+                      : "Diagnostic engine active: Competency score is monitored against the 60% mastery threshold. Any drop triggers automatic 5-step remedial planning."}
+                  </p>
+                </div>
               </Card>
             ) : (
-              gaps.map((gap) => (
+              gaps.map((gap, index) => (
                 <Card
                   key={gap.id}
                   variant="glass"
@@ -540,19 +593,24 @@ export default function StudentDetailPage({
                         <span>{language === "gu" ? "ડેલ્ટા પુનઃમૂલ્યાંકન" : "Reassess Delta"}</span>
                       </Button>
 
-                      <Link
-                        href="/remedial-plans"
-                        data-tour="student-remedial-btn"
-                        onClick={() => {
-                          if (typeof window !== "undefined") {
-                            window.dispatchEvent(new CustomEvent("shikshasetu_step_plan_generated"));
-                          }
-                        }}
+                      <div
+                        data-tour={index === 0 ? "student-remedial-btn" : undefined}
+                        id={index === 0 ? "student-remedial-btn" : undefined}
+                        className="inline-block"
                       >
-                        <Button variant="outline" size="sm" className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15">
-                          <span>{language === "gu" ? "૫-પગલાં યોજના →" : "5-Step Plan →"}</span>
-                        </Button>
-                      </Link>
+                        <Link
+                          href="/remedial-plans"
+                          onClick={() => {
+                            if (typeof window !== "undefined") {
+                              window.dispatchEvent(new CustomEvent("shikshasetu_step_plan_generated"));
+                            }
+                          }}
+                        >
+                          <Button variant="outline" size="sm" className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15 font-bold shadow-xs">
+                            <span>{language === "gu" ? "૫-પગલાં યોજના →" : "5-Step Plan →"}</span>
+                          </Button>
+                        </Link>
+                      </div>
                       <ContextualHelp termKey="remedialPlan" />
                     </div>
                   </div>
@@ -566,18 +624,25 @@ export default function StudentDetailPage({
                   />
 
                   {/* Explainable AI Diagnosis */}
-                  {gap.reason && (
-                    <div data-tour="student-gap-reason" className="p-3 rounded-xl bg-[#FAF6E9] border border-[#49352F]/10 text-xs space-y-1 text-[#49352F]">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] uppercase font-bold text-[#7A6862] flex items-center gap-1">
-                          <BrainCircuit className="w-3.5 h-3.5 text-[#B26A1B]" />
-                          {language === "gu" ? "એલ્ગોરિધમિક સમજૂતી:" : "Algorithmic Explanation:"}
-                        </span>
-                        <ContextualHelp termKey="gapDetection" />
-                      </div>
-                      <p className="text-[#49352F] leading-relaxed">{gap.reason}</p>
+                  <div
+                    data-tour={index === 0 ? "student-gap-reason" : undefined}
+                    id={index === 0 ? "student-gap-reason" : undefined}
+                    className="p-3.5 rounded-xl bg-[#FAF6E9] border border-[#49352F]/12 text-xs space-y-1.5 text-[#49352F] shadow-xs"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[10px] uppercase font-bold text-[#7A6862] flex items-center gap-1">
+                        <BrainCircuit className="w-3.5 h-3.5 text-[#B26A1B]" />
+                        {language === "gu" ? "એલ્ગોરિધમિક સમજૂતી:" : "Algorithmic Explanation:"}
+                      </span>
+                      <ContextualHelp termKey="gapDetection" />
                     </div>
-                  )}
+                    <p className="text-[#49352F] leading-relaxed">
+                      {gap.reason ||
+                        (language === "gu"
+                          ? "વિદ્યાર્થીનો તાજેતરનો મૂલ્યાંકન સ્કોર ૬૦% બેન્ચમાર્ક થ્રેશોલ્ડ કરતાં ઓછો છે, જેના માટે ૫-પગલાં હસ્તક્ષેપ જરૂરી છે."
+                          : "Student assessment score is below the 60% mastery threshold, indicating need for targeted 5E pedagogical intervention.")}
+                    </p>
+                  </div>
                 </Card>
               ))
             )}
@@ -765,6 +830,7 @@ export default function StudentDetailPage({
           isOpen={showActivityModal}
           onClose={() => setShowActivityModal(false)}
           activity={divisionActivity}
+          availableActivities={activities}
           studentId={student.id}
           studentName={student.displayName}
           onCompleted={() => fetchStudentData()}
@@ -780,8 +846,15 @@ export default function StudentDetailPage({
         />
       )}
 
-      {/* Guided Tour */}
-      <SpotlightTour page="studentDetail" />
+      {/* Guided Tour with Active Tab Coordination */}
+      <SpotlightTour
+        page="studentDetail"
+        onStepChange={(step) => {
+          if (step.id === "student-gap-reason" || step.id === "student-remedial-btn") {
+            setActiveTab("gaps");
+          }
+        }}
+      />
     </AppLayout>
   );
 }

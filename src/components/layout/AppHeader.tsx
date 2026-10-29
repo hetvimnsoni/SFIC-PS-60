@@ -16,6 +16,7 @@ import {
   Building,
   GraduationCap,
   Sparkles,
+  Rocket,
   ChevronDown,
   ShieldAlert,
   LogOut,
@@ -199,6 +200,8 @@ export function AppHeader({
             className="bg-transparent text-xs font-semibold text-[#49352F] dark:text-[#F4F1E1] outline-hidden cursor-pointer max-w-[75px] sm:max-w-[105px] xl:max-w-none truncate"
           >
             <option value="all">{t.header?.allClasses || t.dashboard.allClasses}</option>
+            <option value="cls-1a">{language === "gu" ? "ધોરણ ૧ - વર્ગ અ" : "Class 1 - Section A"}</option>
+            <option value="cls-2a">{language === "gu" ? "ધોરણ ૨ - વર્ગ અ" : "Class 2 - Section A"}</option>
             <option value="cls-3a">{t.header?.class3A || "Class 3 - Section A"}</option>
             <option value="cls-4a">{t.header?.class4A || "Class 4 - Section A"}</option>
             <option value="cls-5a">{t.header?.class5A || "Class 5 - Section A"}</option>
@@ -259,11 +262,25 @@ export function AppHeader({
           <span className="hidden sm:inline">{t.header?.aiHub || "AI Hub"}</span>
         </Link>
 
-        {/* Hackathon Demo Tag */}
-        <div className="hidden 2xl:inline-flex h-9 items-center gap-1 bg-[#F2DCB5]/60 dark:bg-[#26201C] border border-[#49352F]/15 dark:border-[#F2CAB3]/20 text-[#49352F] dark:text-[#F4F1E1] px-2.5 rounded-xl text-[11px] font-semibold whitespace-nowrap shrink-0">
-          <Sparkles className="w-3 h-3 text-[#B26A1B] dark:text-[#F2CAB3] shrink-0" aria-hidden="true" />
-          <span>{t.header?.sficDemo || "SFIC Demo"}</span>
-        </div>
+        {/* Launch Demo Case / Quick Launch Button */}
+        <button
+          type="button"
+          onClick={() => {
+            try {
+              router.push("/students/std-aarav");
+            } catch (err) {
+              console.error("Navigation error launching demo:", err);
+            }
+          }}
+          className="inline-flex h-9 items-center gap-1.5 bg-gradient-to-r from-[#F2DCB5] to-[#F2CAB3] dark:from-[#3D2C24] dark:to-[#4A3228] hover:brightness-105 active:scale-95 border border-[#49352F]/15 dark:border-[#F2CAB3]/30 text-[#49352F] dark:text-[#F4F1E1] px-2.5 sm:px-3 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer whitespace-nowrap shrink-0"
+          aria-label="Launch Aarav Demo Case"
+          title={language === "gu" ? "આરવ ડેમો કેસ શરૂ કરો" : "Launch Aarav Demo Case"}
+        >
+          <Rocket className="w-3.5 h-3.5 text-[#B26A1B] dark:text-[#F2CAB3] shrink-0" aria-hidden="true" />
+          <span className="inline font-bold">
+            {language === "gu" ? "ડેમો લોંચ" : "Launch"}
+          </span>
+        </button>
 
         {/* Replay Tour Button */}
         <button
@@ -275,7 +292,7 @@ export function AppHeader({
             }
             triggerPageTour(pageKey);
           }}
-          className="hidden xl:inline-flex h-9 items-center gap-1.5 px-2.5 rounded-xl border border-[#49352F]/15 dark:border-[#F2CAB3]/20 bg-white dark:bg-[#26201C] hover:bg-[#F2CAB3] dark:hover:bg-[#F2CAB3]/20 text-[#49352F] dark:text-[#F4F1E1] text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 whitespace-nowrap shrink-0"
+          className="inline-flex h-9 items-center gap-1.5 px-2 sm:px-2.5 rounded-xl border border-[#49352F]/15 dark:border-[#F2CAB3]/20 bg-white dark:bg-[#26201C] hover:bg-[#F2CAB3] dark:hover:bg-[#F2CAB3]/20 text-[#49352F] dark:text-[#F4F1E1] text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 whitespace-nowrap shrink-0"
           aria-label={t.tutorial?.replayTour || "Start Page Guided Tour"}
           title={t.tutorial?.replayTour || "Start Page Guided Tour"}
         >

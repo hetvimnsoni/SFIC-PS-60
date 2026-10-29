@@ -347,3 +347,10 @@ h1, h2, h3, .font-heading {
     page-break-inside: avoid;
   }
 }
+
+
+/* Guided Walkthrough Spotlight Active Highlight Target */
+.tour-target-active {
+  position: relative !important;
+  z-index: 54 !important;
+}

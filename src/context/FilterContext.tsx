@@ -22,8 +22,20 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
   const [selectedClass, setSelectedClass] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const gradeNumber =
-    selectedClass === "cls-3a" ? 3 : selectedClass === "cls-4a" ? 4 : selectedClass === "cls-5a" ? 5 : null;
+  const gradeMatch = selectedClass.match(/^cls-(\d+)/);
+  const gradeNumber = gradeMatch
+    ? parseInt(gradeMatch[1], 10)
+    : selectedClass === "cls-1a"
+    ? 1
+    : selectedClass === "cls-2a"
+    ? 2
+    : selectedClass === "cls-3a"
+    ? 3
+    : selectedClass === "cls-4a"
+    ? 4
+    : selectedClass === "cls-5a"
+    ? 5
+    : null;
 
   return (
     <FilterContext.Provider

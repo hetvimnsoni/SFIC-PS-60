@@ -27,6 +27,11 @@ import {
   Trash2,
   Edit,
   AlertCircle,
+  ArrowUpDown,
+  Clock,
+  SortAsc,
+  Check,
+  ChevronDown,
 } from "lucide-react";
 
 export default function StudentsPage() {
@@ -47,6 +52,41 @@ export default function StudentsPage() {
   const [showCsvModal, setShowCsvModal] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Class-wise sorting: "rollNumber" (ascending) | "newestFirst" (chronological)
+  type SortOption = "rollNumber" | "newestFirst";
+  const [classSorts, setClassSorts] = useState<Record<number, SortOption>>({});
+  const [openSortDropdown, setOpenSortDropdown] = useState<number | null>(null);
+
+  const getSortForClass = (grade: number): SortOption => classSorts[grade] || "rollNumber";
+  const setSortForClass = (grade: number, sort: SortOption) => {
+    setClassSorts((prev) => ({ ...prev, [grade]: sort }));
+    setOpenSortDropdown(null);
+  };
+
+  const extractRollNumber = (code: string): number => {
+    const match = (code || "").match(/(\d+)$/);
+    if (match) return parseInt(match[1], 10);
+    const allNums = (code || "").match(/\d+/g);
+    if (allNums && allNums.length > 0) return parseInt(allNums[allNums.length - 1], 10);
+    return 999999;
+  };
+
+  const sortStudentsInClass = (list: any[], sort: SortOption) => {
+    return [...list].sort((a, b) => {
+      if (sort === "rollNumber") {
+        const rollA = extractRollNumber(a.studentCode || "");
+        const rollB = extractRollNumber(b.studentCode || "");
+        if (rollA !== rollB) return rollA - rollB;
+        return (a.studentCode || "").localeCompare(b.studentCode || "", undefined, { numeric: true });
+      } else {
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (timeB !== timeA) return timeB - timeA;
+        return (b.id || "").localeCompare(a.id || "");
+      }
+    });
+  };
 
   const showToast = (message: string, type: "success" | "error" = "success") => {
     setNotification({ message, type });
@@ -301,6 +341,8 @@ export default function StudentsPage() {
               <option value="all">
                 {language === "gu" ? "બધા વર્ગો (૧-૫)" : "All Classes (1-5)"}
               </option>
+              <option value="1">{language === "gu" ? "ધોરણ ૧" : "Class 1"}</option>
+              <option value="2">{language === "gu" ? "ધોરણ ૨" : "Class 2"}</option>
               <option value="3">{language === "gu" ? "ધોરણ ૩" : "Class 3"}</option>
               <option value="4">{language === "gu" ? "ધોરણ ૪" : "Class 4"}</option>
               <option value="5">{language === "gu" ? "ધોરણ ૫" : "Class 5"}</option>
@@ -379,16 +421,115 @@ export default function StudentsPage() {
           </Card>
         )}
 
-        {/* Student Cards Grid */}
-        <div
-          data-tour="students-table"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-        >
-          {filteredStudents.map((std) => {
-            const gapCount = getStudentGapCount(std.id);
-            const isDemoCase = std.id === "std-aarav";
+        {/* Class-Wise Student Lists & Compact Sort Mechanism */}
+        <div data-tour="students-table" id="students-table" className="space-y-8">
+          {(() => {
+            const availableGrades = activeGrade !== "all"
+              ? [Number(activeGrade)]
+              : Array.from(new Set(filteredStudents.map((s) => Number(s.grade)))).sort((a, b) => a - b);
+            
+            const displayGrades = availableGrades.length > 0
+              ? availableGrades
+              : (activeGrade !== "all" ? [Number(activeGrade)] : [1, 2, 3, 4, 5]);
 
-            return (
+            return displayGrades.map((grade) => {
+              const classStudents = filteredStudents.filter((s) => Number(s.grade) === grade);
+              const sortChoice = getSortForClass(grade);
+              const sortedClassStudents = sortStudentsInClass(classStudents, sortChoice);
+
+              return (
+                <div key={grade} className="space-y-3.5">
+                  {/* Class Header with Count Badge & Compact Sort Button */}
+                  <div className="flex items-center justify-between pb-2.5 border-b-2 border-[#49352F]/15 bg-white/70 px-4 py-3 rounded-2xl shadow-xs">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-[#F2CAB3] text-[#49352F] flex items-center justify-center font-bold text-sm">
+                        {grade}
+                      </div>
+                      <div>
+                        <h2 className="font-heading text-base sm:text-lg font-bold text-[#49352F]">
+                          {language === "gu" ? `ધોરણ ${grade}` : `Class ${grade}`}
+                        </h2>
+                        <span className="text-[11px] font-semibold text-[#7A6862]">
+                          {classStudents.length} {language === "gu" ? "વિદ્યાર્થીઓ નોંધાયેલ" : "Students enrolled"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Compact Sort Icon/Button adjacent to header */}
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setOpenSortDropdown(openSortDropdown === grade ? null : grade)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#49352F]/15 bg-white hover:bg-[#FAF6E9] text-[#49352F] text-xs font-bold transition-all shadow-2xs cursor-pointer"
+                        aria-label={`Sort Class ${grade} students`}
+                        title={`Sort: ${sortChoice === "rollNumber" ? "Roll Number (Ascending)" : "Recently Added / Newest First"}`}
+                      >
+                        <ArrowUpDown className="w-3.5 h-3.5 text-[#B26A1B]" />
+                        <span>
+                          {sortChoice === "rollNumber"
+                            ? language === "gu" ? "રોલ નંબર (ચડતો)" : "Roll Number"
+                            : language === "gu" ? "તાજેતરમાં ઉમેરેલ" : "Newest First"}
+                        </span>
+                        <ChevronDown className="w-3 h-3 text-[#7A6862]" />
+                      </button>
+
+                      {openSortDropdown === grade && (
+                        <div className="absolute right-0 mt-1.5 w-56 rounded-2xl bg-white border border-[#49352F]/15 shadow-xl p-1.5 z-30 space-y-1">
+                          <button
+                            type="button"
+                            onClick={() => setSortForClass(grade, "rollNumber")}
+                            className={`w-full flex items-center justify-between px-3 py-2 text-xs font-semibold rounded-xl text-left transition-colors cursor-pointer ${
+                              sortChoice === "rollNumber"
+                                ? "bg-[#F2CAB3] text-[#49352F] font-bold"
+                                : "text-[#49352F] hover:bg-[#FAF6E9]"
+                            }`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <SortAsc className="w-3.5 h-3.5 text-[#B26A1B]" />
+                              <div>
+                                <div className="font-bold">{language === "gu" ? "રોલ નંબર" : "Roll Number"}</div>
+                                <div className="text-[10px] text-[#7A6862]">{language === "gu" ? "ચડતો ક્રમ (૧, ૨, ૩...)" : "Numerical ascending"}</div>
+                              </div>
+                            </div>
+                            {sortChoice === "rollNumber" && <Check className="w-4 h-4 text-[#49352F]" />}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => setSortForClass(grade, "newestFirst")}
+                            className={`w-full flex items-center justify-between px-3 py-2 text-xs font-semibold rounded-xl text-left transition-colors cursor-pointer ${
+                              sortChoice === "newestFirst"
+                                ? "bg-[#F2CAB3] text-[#49352F] font-bold"
+                                : "text-[#49352F] hover:bg-[#FAF6E9]"
+                            }`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <Clock className="w-3.5 h-3.5 text-[#B26A1B]" />
+                              <div>
+                                <div className="font-bold">{language === "gu" ? "તાજેતરમાં ઉમેરેલ" : "Recently Added"}</div>
+                                <div className="text-[10px] text-[#7A6862]">{language === "gu" ? "નવીનતમ પ્રવેશ પ્રથમ" : "Newest first"}</div>
+                              </div>
+                            </div>
+                            {sortChoice === "newestFirst" && <Check className="w-4 h-4 text-[#49352F]" />}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Class student cards grid */}
+                  {sortedClassStudents.length === 0 ? (
+                    <div className="p-6 text-center rounded-2xl bg-white/50 border border-dashed border-[#49352F]/15 text-xs text-[#7A6862]">
+                      {language === "gu"
+                        ? `ધોરણ ${grade} માં કોઈ વિદ્યાર્થી નોંધાયા નથી.`
+                        : `No students enrolled in Class ${grade}.`}
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {sortedClassStudents.map((std) => {
+                        const gapCount = getStudentGapCount(std.id);
+                        const isDemoCase = std.id === "std-aarav";
+              return (
               <Card
                 key={std.id}
                 variant="glass"
@@ -498,7 +639,13 @@ export default function StudentsPage() {
                 </div>
               </Card>
             );
-          })}
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            });
+          })()}
         </div>
       </div>
 

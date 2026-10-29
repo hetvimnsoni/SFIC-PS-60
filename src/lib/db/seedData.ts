@@ -925,6 +925,52 @@ export const SEED_ACTIVITIES: LearningActivity[] = [
     ],
     createdAt: "2026-09-01T10:00:00Z",
   },
+  // Activity 5: English Subject-Verb Agreement & Vocabulary
+  {
+    id: "act-eng-01",
+    conceptId: "c-eng-verb-01",
+    conceptName: "Subject-Verb Agreement",
+    subjectCode: "ENG",
+    grade: 4,
+    title: "English Grammar & Sentence Building",
+    titleGujarati: "અંગ્રેજી વ્યાકરણ અને વાક્ય રચના",
+    activityType: "mcq",
+    difficulty: "Easy",
+    estimatedMinutes: 8,
+    questions: [
+      {
+        id: "q-eng-1",
+        questionText: "Choose the correct sentence: The students _____ eager to learn.",
+        questionTextGujarati: "સાચો વિકલ્પ પસંદ કરો: The students _____ eager to learn.",
+        type: "mcq",
+        options: ["is", "are", "was", "am"],
+        correctAnswer: "are",
+        explanation: "'Students' is plural, so we use 'are'.",
+        hint: "Is 'students' singular or plural?",
+      },
+      {
+        id: "q-eng-2",
+        questionText: "Complete the sentence: Pooja _____ to school every morning.",
+        questionTextGujarati: "વાક્ય પૂર્ણ કરો: Pooja _____ to school every morning.",
+        type: "mcq",
+        options: ["walk", "walks", "walking", "walked"],
+        correctAnswer: "walks",
+        explanation: "Third-person singular 'Pooja' takes the verb form ending with -s ('walks').",
+        hint: "Singular subject 'Pooja' takes 'walks'.",
+      },
+      {
+        id: "q-eng-3",
+        questionText: "Which pronoun correctly replaces 'Rohan and Aarav'?",
+        questionTextGujarati: "'Rohan and Aarav' ની જગ્યાએ કયું સર્વનામ વપરાય?",
+        type: "mcq",
+        options: ["He", "She", "They", "It"],
+        correctAnswer: "They",
+        explanation: "'They' refers to two or more people together.",
+        hint: "More than one person is mentioned.",
+      },
+    ],
+    createdAt: "2026-09-01T10:00:00Z",
+  },
 ];
 
 export const SEED_PARENTS: ParentProfile[] = [

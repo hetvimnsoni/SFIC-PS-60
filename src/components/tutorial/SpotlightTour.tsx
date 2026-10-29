@@ -18,9 +18,10 @@ import {
 } from "lucide-react";
 import { fireCelebrationConfetti } from "@/lib/confetti";
 
-interface SpotlightTourProps {
+export interface SpotlightTourProps {
   page: "dashboard" | "students" | "studentDetail" | "learningGaps" | "remedialPlans" | "reports";
   autoStartDelay?: number;
+  onStepChange?: (step: TourStep, index: number) => void;
 }
 
 interface TargetRect {
@@ -32,7 +33,7 @@ interface TargetRect {
   bottom: number;
 }
 
-export function SpotlightTour({ page, autoStartDelay = 600 }: SpotlightTourProps) {
+export function SpotlightTour({ page, autoStartDelay = 600, onStepChange }: SpotlightTourProps) {
   const router = useRouter();
   const { t, language } = useLanguage();
   const [isActive, setIsActive] = useState(false);
@@ -68,6 +69,7 @@ export function SpotlightTour({ page, autoStartDelay = 600 }: SpotlightTourProps
   // End / Skip Tour
   const finishTour = useCallback(() => {
     setIsActive(false);
+    setTargetRect(null);
     if (typeof window !== "undefined") {
       localStorage.setItem(storageKey, "true");
       // Fire action completed for checklist milestone 1 (Review class)
@@ -99,56 +101,188 @@ export function SpotlightTour({ page, autoStartDelay = 600 }: SpotlightTourProps
     return () => window.removeEventListener("shikshasetu_start_tour", handleReplay);
   }, [page, startTour]);
 
-  // Scroll active target into view once when step changes
+  // Dispatch step change notification to listeners and callback
   useEffect(() => {
-    if (!isActive || !currentStep?.targetSelector) return;
-    const el = document.querySelector(currentStep.targetSelector);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-    }
-  }, [isActive, currentStepIndex, currentStep?.targetSelector]);
+    if (!isActive || !currentStep) return;
 
-  // Calculate Target Rect
-  const updateTargetRect = useCallback(() => {
-    if (!isActive || !currentStep?.targetSelector) {
+    onStepChange?.(currentStep, currentStepIndex);
+
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("shikshasetu_tour_step_change", {
+          detail: {
+            page,
+            stepIndex: currentStepIndex,
+            step: currentStep,
+          },
+        })
+      );
+    }
+  }, [isActive, currentStepIndex, currentStep, page, onStepChange]);
+
+  // Robust helper to resolve target DOM element across multiple selectors
+  const getTargetElement = useCallback((): HTMLElement | null => {
+    if (!currentStep?.targetSelector) return null;
+    const selectors = currentStep.targetSelector.split(",").map((s) => s.trim());
+    for (const sel of selectors) {
+      const el = document.querySelector(sel);
+      if (el) return el as HTMLElement;
+    }
+    return null;
+  }, [currentStep?.targetSelector]);
+
+  // Active focus, scroll into view, z-index elevation, and target rect calculation with polling
+  useEffect(() => {
+    if (!isActive) {
       setTargetRect(null);
       return;
     }
 
-    const el = document.querySelector(currentStep.targetSelector);
-    if (el) {
-      const rect = el.getBoundingClientRect();
-      const padding = 8;
-      setTargetRect({
-        top: Math.max(0, rect.top - padding),
-        left: Math.max(0, rect.left - padding),
-        width: rect.width + padding * 2,
-        height: rect.height + padding * 2,
-        right: rect.right + padding,
-        bottom: rect.bottom + padding,
-      });
-    } else {
-      setTargetRect(null);
-    }
-  }, [isActive, currentStep]);
+    let isMounted = true;
+    let attempts = 0;
+    const maxAttempts = 35; // 35 * 30ms = ~1.05s retry window for tab switches/lazy DOM
+    let checkTimer: NodeJS.Timeout | null = null;
+    let activeCleanEl: HTMLElement | null = null;
+    let originalPosition = "";
+    let originalZIndex = "";
+    let originalTransition = "";
+    let hadTabIndex = false;
 
+    const cleanupTarget = () => {
+      if (activeCleanEl) {
+        if (!hadTabIndex) {
+          activeCleanEl.removeAttribute("tabindex");
+        }
+        activeCleanEl.style.position = originalPosition;
+        activeCleanEl.style.zIndex = originalZIndex;
+        activeCleanEl.style.transition = originalTransition;
+        activeCleanEl.classList.remove("tour-target-active");
+        activeCleanEl = null;
+      }
+    };
+
+    const attachToElement = (el: HTMLElement) => {
+      activeCleanEl = el;
+      hadTabIndex = el.hasAttribute("tabindex");
+      originalPosition = el.style.position;
+      originalZIndex = el.style.zIndex;
+      originalTransition = el.style.transition;
+
+      if (!hadTabIndex) {
+        el.setAttribute("tabindex", "-1");
+      }
+      try {
+        el.focus({ preventScroll: true });
+      } catch {
+        // ignore
+      }
+
+      // Elevate target above spotlight backdrop (z-index 54 > backdrop 51)
+      if (!originalPosition || originalPosition === "static") {
+        el.style.position = "relative";
+      }
+      el.style.zIndex = "54";
+      el.style.transition = "all 0.3s ease";
+      el.classList.add("tour-target-active");
+
+      // Smooth scroll target into comfortable center view
+      el.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+
+      // Calculate Target Rect for SVG spotlight mask cutout & glowing outline
+      const computeRect = () => {
+        if (!isMounted || !activeCleanEl) return;
+        const rect = activeCleanEl.getBoundingClientRect();
+        const padding = 8;
+        if (rect.width > 0 && rect.height > 0) {
+          setTargetRect({
+            top: Math.max(0, rect.top - padding),
+            left: Math.max(0, rect.left - padding),
+            width: rect.width + padding * 2,
+            height: rect.height + padding * 2,
+            right: rect.right + padding,
+            bottom: rect.bottom + padding,
+          });
+        }
+      };
+
+      computeRect();
+
+      // Multi-stage update during smooth scroll settlement
+      const t1 = setTimeout(computeRect, 60);
+      const t2 = setTimeout(computeRect, 160);
+      const t3 = setTimeout(computeRect, 320);
+      const t4 = setTimeout(computeRect, 550);
+      const t5 = setTimeout(computeRect, 800);
+
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        clearTimeout(t3);
+        clearTimeout(t4);
+        clearTimeout(t5);
+      };
+    };
+
+    let cleanupSettlement: (() => void) | null = null;
+
+    const findAndBind = () => {
+      if (!isMounted) return;
+      if (!currentStep?.targetSelector) {
+        setTargetRect(null);
+        return;
+      }
+
+      const el = getTargetElement();
+      if (el) {
+        cleanupSettlement = attachToElement(el);
+      } else if (attempts < maxAttempts) {
+        attempts++;
+        checkTimer = setTimeout(findAndBind, 30);
+      } else {
+        setTargetRect(null);
+      }
+    };
+
+    findAndBind();
+
+    return () => {
+      isMounted = false;
+      if (checkTimer) clearTimeout(checkTimer);
+      if (cleanupSettlement) cleanupSettlement();
+      cleanupTarget();
+    };
+  }, [isActive, currentStepIndex, currentStep, getTargetElement]);
+
+  // Keep target rect tightly synced during user window scroll / resize
   useEffect(() => {
     if (!isActive) return;
 
-    // Small delay to let animations settle
-    const timer = setTimeout(() => {
-      updateTargetRect();
-    }, 120);
+    const handleSync = () => {
+      const el = getTargetElement();
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        const padding = 8;
+        if (rect.width > 0 && rect.height > 0) {
+          setTargetRect({
+            top: Math.max(0, rect.top - padding),
+            left: Math.max(0, rect.left - padding),
+            width: rect.width + padding * 2,
+            height: rect.height + padding * 2,
+            right: rect.right + padding,
+            bottom: rect.bottom + padding,
+          });
+        }
+      }
+    };
 
-    window.addEventListener("resize", updateTargetRect, { passive: true });
-    window.addEventListener("scroll", updateTargetRect, { passive: true });
+    window.addEventListener("resize", handleSync, { passive: true });
+    window.addEventListener("scroll", handleSync, { passive: true });
 
     return () => {
-      clearTimeout(timer);
-      window.removeEventListener("resize", updateTargetRect);
-      window.removeEventListener("scroll", updateTargetRect);
+      window.removeEventListener("resize", handleSync);
+      window.removeEventListener("scroll", handleSync);
     };
-  }, [isActive, currentStepIndex, updateTargetRect]);
+  }, [isActive, getTargetElement]);
 
   // Keyboard navigation & Esc to close
   useEffect(() => {
@@ -220,22 +354,16 @@ export function SpotlightTour({ page, autoStartDelay = 600 }: SpotlightTourProps
     const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
     const winWidth = typeof window !== "undefined" ? window.innerWidth : 1200;
     const winHeight = typeof window !== "undefined" ? window.innerHeight : 800;
+    const placement = currentStep.placement || "bottom";
 
-    // Default below target
-    let top = targetRect.bottom + margin;
-    let left = targetRect.left + targetRect.width / 2 - tooltipWidth / 2;
-
-    // Check bottom overflow, flip to top if needed
-    if (top + 220 > winHeight && targetRect.top > 220) {
-      top = Math.max(margin, targetRect.top - 240);
-    }
-
-    // Keep horizontally in bounds
     if (isMobile) {
-      left = margin;
+      let top = targetRect.bottom + margin;
+      if (top + 240 > winHeight && targetRect.top > 240) {
+        top = Math.max(margin, targetRect.top - 250);
+      }
       return {
         position: "fixed",
-        top: `${Math.min(top, winHeight - 250)}px`,
+        top: `${Math.min(top, winHeight - 260)}px`,
         left: `${margin}px`,
         width: `calc(100vw - ${margin * 2}px)`,
         maxWidth: "380px",
@@ -243,11 +371,42 @@ export function SpotlightTour({ page, autoStartDelay = 600 }: SpotlightTourProps
       };
     }
 
+    let top = targetRect.bottom + margin;
+    let left = targetRect.left + targetRect.width / 2 - tooltipWidth / 2;
+
+    if (placement === "top") {
+      top = targetRect.top - 260;
+      if (top < margin) {
+        top = targetRect.bottom + margin;
+      }
+    } else if (placement === "left") {
+      left = targetRect.left - tooltipWidth - margin;
+      top = targetRect.top;
+      if (left < margin) {
+        left = margin;
+        top = targetRect.bottom + margin;
+      }
+    } else if (placement === "right") {
+      left = targetRect.right + margin;
+      top = targetRect.top;
+      if (left + tooltipWidth > winWidth - margin) {
+        left = winWidth - tooltipWidth - margin;
+        top = targetRect.bottom + margin;
+      }
+    } else {
+      // placement === "bottom"
+      top = targetRect.bottom + margin;
+      if (top + 240 > winHeight && targetRect.top > 240) {
+        top = Math.max(margin, targetRect.top - 250);
+      }
+    }
+
     left = Math.max(margin, Math.min(winWidth - tooltipWidth - margin, left));
+    top = Math.max(margin, Math.min(winHeight - 270, top));
 
     return {
       position: "fixed",
-      top: `${Math.max(margin, Math.min(top, winHeight - 260))}px`,
+      top: `${top}px`,
       left: `${left}px`,
       width: `${tooltipWidth}px`,
       zIndex: 60,
