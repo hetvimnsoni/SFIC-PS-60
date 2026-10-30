@@ -675,6 +675,18 @@ export const db = {
     return loadStore().activities.find((a) => a.id === id);
   },
 
+  saveActivity(activity: LearningActivity): LearningActivity {
+    const store = loadStore();
+    const existingIdx = store.activities.findIndex((a) => a.id === activity.id);
+    if (existingIdx >= 0) {
+      store.activities[existingIdx] = activity;
+    } else {
+      store.activities.unshift(activity);
+    }
+    saveStore(store);
+    return activity;
+  },
+
   recordActivityAttempt(attemptData: Omit<ActivityAttempt, "id" | "completedAt">): ActivityAttempt {
     const store = loadStore();
     const pct = calculatePercentage(attemptData.score, attemptData.maximumScore);

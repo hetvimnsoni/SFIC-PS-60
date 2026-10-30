@@ -94,6 +94,7 @@ export default function StudentDetailPage({
   // Modals
   const [showReassessModal, setShowReassessModal] = useState(false);
   const [showActivityModal, setShowActivityModal] = useState(false);
+  const [selectedGapForPractice, setSelectedGapForPractice] = useState<any>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedConceptForReassessment, setSelectedConceptForReassessment] = useState<any>(null);
 
@@ -337,17 +338,18 @@ export default function StudentDetailPage({
               <span>{language === "gu" ? "પ્રોફાઇલ સંપાદિત કરો" : "Edit Profile"}</span>
             </Button>
 
-            {divisionActivity && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowActivityModal(true)}
-                className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15"
-              >
-                <Play className="w-3.5 h-3.5 fill-current mr-1" />
-                <span>{language === "gu" ? "મહાવરા પ્રવૃત્તિ" : "Practice Activity"}</span>
-              </Button>
-            )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setSelectedGapForPractice(gaps[0] || null);
+                setShowActivityModal(true);
+              }}
+              className="rounded-full text-xs bg-[#FAF6E9] hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/20 font-bold shadow-2xs"
+            >
+              <Gamepad2 className="w-3.5 h-3.5 text-[#B26A1B] mr-1" />
+              <span>{language === "gu" ? "મહાવરો ક્વિઝ" : "Practice Quiz"}</span>
+            </Button>
 
             <div
               data-tour="student-reassess-form"
@@ -577,6 +579,19 @@ export default function StudentDetailPage({
                     </div>
 
                     <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedGapForPractice(gap);
+                          setShowActivityModal(true);
+                        }}
+                        className="rounded-full text-xs bg-white hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15 font-bold shadow-xs"
+                      >
+                        <Play className="w-3.5 h-3.5 fill-current mr-1 text-[#B26A1B]" />
+                        <span>{language === "gu" ? "મહાવરો ક્વિઝ" : "Practice Quiz"}</span>
+                      </Button>
+
                       <Button
                         variant="saffron"
                         size="sm"
@@ -828,8 +843,34 @@ export default function StudentDetailPage({
       {showActivityModal && (
         <ActivityPlayerModal
           isOpen={showActivityModal}
-          onClose={() => setShowActivityModal(false)}
-          activity={divisionActivity}
+          onClose={() => {
+            setShowActivityModal(false);
+            setSelectedGapForPractice(null);
+          }}
+          activity={
+            selectedGapForPractice
+              ? {
+                  id: `act-${selectedGapForPractice.conceptId}`,
+                  conceptId: selectedGapForPractice.conceptId,
+                  conceptName: selectedGapForPractice.conceptName,
+                  subjectCode: selectedGapForPractice.subjectCode || "MATH",
+                  grade: 4,
+                  title: `${selectedGapForPractice.conceptName} Practice`,
+                  activityType: "mcq",
+                  difficulty: (selectedGapForPractice.latestPercentage || 0) < 50 ? "Easy" : "Medium",
+                  estimatedMinutes: 8,
+                  questions: [],
+                  createdAt: new Date().toISOString(),
+                }
+              : divisionActivity
+          }
+          initialTopicId={selectedGapForPractice?.conceptId || gaps[0]?.conceptId}
+          initialDifficulty={
+            selectedGapForPractice
+              ? (selectedGapForPractice.latestPercentage || 0) < 50 ? "Easy" : "Medium"
+              : "Easy"
+          }
+          studentGaps={gaps}
           availableActivities={activities}
           studentId={student.id}
           studentName={student.displayName}

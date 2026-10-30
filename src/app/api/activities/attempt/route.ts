@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db/database";
+import type { ActivityQuestion, LearningActivity } from "@/lib/types";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { activityId, studentId, assignmentId, answers } = body;
+    const { activityId, studentId, assignmentId, answers, questions, activityData } = body;
 
     if (!activityId || !studentId || !answers) {
       return NextResponse.json(
@@ -13,16 +14,37 @@ export async function POST(request: Request) {
       );
     }
 
-    const activity = db.getActivityById(activityId);
-    if (!activity) {
-      return NextResponse.json({ success: false, error: "Activity not found" }, { status: 404 });
+    let activity = db.getActivityById(activityId);
+
+    // If activity not found in database but provided in request or questions provided, register it
+    if (!activity && (activityData || questions)) {
+      const newAct: LearningActivity = activityData || {
+        id: activityId,
+        conceptId: "c-practice-01",
+        subjectCode: "MATH",
+        grade: 4,
+        title: "Dynamic Practice Quiz",
+        activityType: "mcq",
+        difficulty: "Easy",
+        estimatedMinutes: 8,
+        questions: questions || [],
+        createdAt: new Date().toISOString(),
+      };
+      activity = db.saveActivity(newAct);
+    }
+
+    const evaluationQuestions: ActivityQuestion[] =
+      activity?.questions || questions || [];
+
+    if (evaluationQuestions.length === 0) {
+      return NextResponse.json({ success: false, error: "No questions found for this activity" }, { status: 404 });
     }
 
     let score = 0;
     const incorrectQuestions: string[] = [];
 
     // Calculate score objectively against activity questions
-    activity.questions.forEach((q) => {
+    evaluationQuestions.forEach((q) => {
       const studentAns = answers[q.id];
       if (
         studentAns !== undefined &&
@@ -34,13 +56,16 @@ export async function POST(request: Request) {
       }
     });
 
+    const totalQuestions = evaluationQuestions.length;
+    const percentage = Math.round((score / totalQuestions) * 100);
+
     const attempt = db.recordActivityAttempt({
       assignmentId,
       studentId,
       activityId,
       score,
-      maximumScore: activity.questions.length,
-      percentage: Math.round((score / activity.questions.length) * 100),
+      maximumScore: totalQuestions,
+      percentage,
       answers,
       incorrectQuestions,
     });

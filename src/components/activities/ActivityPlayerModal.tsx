@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Dialog } from "../ui/Dialog";
 import { Badge } from "../ui/Badge";
 import {
@@ -15,13 +15,24 @@ import {
   Calculator,
   Leaf,
   Globe,
-  ChevronDown,
   RotateCcw,
   Play,
+  Shuffle,
+  RefreshCw,
+  Layers,
+  ChevronRight,
+  Target,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { fireCelebrationConfetti } from "@/lib/confetti";
 import type { LearningActivity, ActivityQuestion } from "@/lib/types";
+import {
+  TOPIC_CATALOG,
+  TopicCatalogItem,
+  generatePracticeQuestions,
+  generateLearningActivity,
+  getTopicsForSubject,
+} from "@/lib/engine/questionGenerator";
 
 interface ActivityPlayerModalProps {
   activity: LearningActivity | null;
@@ -32,6 +43,9 @@ interface ActivityPlayerModalProps {
   onCompleted?: (attempt: any) => void;
   availableActivities?: LearningActivity[];
   startWithSubjectSelector?: boolean;
+  initialTopicId?: string;
+  initialDifficulty?: "Easy" | "Medium" | "Hard";
+  studentGaps?: any[];
 }
 
 export function ActivityPlayerModal({
@@ -43,10 +57,13 @@ export function ActivityPlayerModal({
   onCompleted,
   availableActivities = [],
   startWithSubjectSelector = false,
+  initialTopicId,
+  initialDifficulty,
+  studentGaps = [],
 }: ActivityPlayerModalProps) {
   const { language } = useLanguage();
 
-  // Subject options
+  // Subject metadata
   const SUBJECTS = [
     {
       code: "MATH",
@@ -65,18 +82,8 @@ export function ActivityPlayerModal({
       icon: BookOpen,
       color: "from-emerald-500/20 to-teal-500/10 border-emerald-500/30 text-emerald-900",
       accent: "#2E7D5E",
-      descEn: "Matras, reading comprehension & sentence formation",
-      descGu: "માત્રાઓ, વાંચન અર્થગ્રહણ અને વાક્ય રચના",
-    },
-    {
-      code: "EVS",
-      nameEn: "Environmental Studies",
-      nameGu: "પર્યાવરણ",
-      icon: Leaf,
-      color: "from-lime-500/20 to-green-500/10 border-lime-500/30 text-lime-900",
-      accent: "#4D7C0F",
-      descEn: "Water cycle, conservation, nature & local ecosystem",
-      descGu: "જળચક્ર, જળસંરક્ષણ, પર્યાવરણ અને આપણી આસપાસ",
+      descEn: "Matras, conjuncts, grammar & vocabulary",
+      descGu: "માત્રાઓ, જોડાક્ષરો, વ્યાકરણ અને શબ્દભંડોળ",
     },
     {
       code: "ENG",
@@ -85,68 +92,33 @@ export function ActivityPlayerModal({
       icon: Globe,
       color: "from-sky-500/20 to-indigo-500/10 border-sky-500/30 text-sky-900",
       accent: "#0284C7",
-      descEn: "Subject-verb agreement, phonics & simple comprehension",
-      descGu: "કર્તા-ક્રિયાપદ સુમેળ, ફોનિક્સ અને વાક્ય સમજ",
+      descEn: "Subject-verb agreement, phonics & verb tenses",
+      descGu: "કર્તા-ક્રિયાપદ સુમેળ, ફોનિક્સ અને કાળ",
+    },
+    {
+      code: "EVS",
+      nameEn: "Environmental Studies",
+      nameGu: "પર્યાવરણ",
+      icon: Leaf,
+      color: "from-lime-500/20 to-green-500/10 border-lime-500/30 text-lime-900",
+      accent: "#4D7C0F",
+      descEn: "Water cycle, conservation, nature & community helpers",
+      descGu: "જળચક્ર, જળસંરક્ષણ, વનસ્પતિ અને આપણી આસપાસ",
     },
   ];
 
-  // Fallback activity for English if not in active state
-  const FALLBACK_ENGLISH_ACTIVITY: LearningActivity = {
-    id: "act-eng-01",
-    conceptId: "c-eng-verb-01",
-    conceptName: "Subject-Verb Agreement",
-    subjectCode: "ENG",
-    grade: 4,
-    title: "English Grammar & Sentence Building",
-    titleGujarati: "અંગ્રેજી વ્યાકરણ અને વાક્ય રચના",
-    activityType: "mcq",
-    difficulty: "Easy",
-    estimatedMinutes: 8,
-    questions: [
-      {
-        id: "q-eng-1",
-        questionText: "Choose the correct sentence: The students _____ eager to learn.",
-        questionTextGujarati: "સાચો વિકલ્પ પસંદ કરો: The students _____ eager to learn.",
-        type: "mcq",
-        options: ["is", "are", "was", "am"],
-        correctAnswer: "are",
-        explanation: "'Students' is plural, so we use 'are'.",
-        hint: "Is 'students' singular or plural?",
-      },
-      {
-        id: "q-eng-2",
-        questionText: "Complete the sentence: Pooja _____ to school every morning.",
-        questionTextGujarati: "વાક્ય પૂર્ણ કરો: Pooja _____ to school every morning.",
-        type: "mcq",
-        options: ["walk", "walks", "walking", "walked"],
-        correctAnswer: "walks",
-        explanation: "Third-person singular 'Pooja' takes the verb form ending with -s ('walks').",
-        hint: "Singular subject 'Pooja' takes 'walks'.",
-      },
-      {
-        id: "q-eng-3",
-        questionText: "Which pronoun correctly replaces 'Rohan and Aarav'?",
-        questionTextGujarati: "'Rohan and Aarav' ની જગ્યાએ કયું સર્વનામ વપરાય?",
-        type: "mcq",
-        options: ["He", "She", "They", "It"],
-        correctAnswer: "They",
-        explanation: "'They' refers to two or more people together.",
-        hint: "More than one person is mentioned.",
-      },
-    ],
-    createdAt: new Date().toISOString(),
-  };
+  // Selection states
+  const [selectedSubject, setSelectedSubject] = useState<"MATH" | "GUJ" | "ENG" | "EVS">("MATH");
+  const [selectedTopicId, setSelectedTopicId] = useState<string>("math-division");
+  const [selectedDifficulty, setSelectedDifficulty] = useState<"Easy" | "Medium" | "Hard">("Easy");
 
-  const [selectedSubject, setSelectedSubject] = useState<string>(
-    activity?.subjectCode || "MATH"
-  );
-  const [currentActivity, setCurrentActivity] = useState<LearningActivity | null>(activity);
-  const [inSubjectSelectionStep, setInSubjectSelectionStep] = useState<boolean>(
-    startWithSubjectSelector || false
-  );
-  const [isLoadingSubject, setIsLoadingSubject] = useState(false);
+  // Dynamic activity & questions state
+  const [currentActivity, setCurrentActivity] = useState<LearningActivity | null>(null);
+  const [questions, setQuestions] = useState<ActivityQuestion[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [inSetupStep, setInSetupStep] = useState(false);
 
-  // Player state
+  // Player progress states
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string | number | boolean>>({});
   const [showHint, setShowHint] = useState(false);
@@ -154,74 +126,154 @@ export function ActivityPlayerModal({
   const [isSaving, setIsSaving] = useState(false);
   const [attemptResult, setAttemptResult] = useState<any>(null);
 
-  // Load activity for a subject
-  const loadSubjectActivity = async (subjectCode: string) => {
-    setIsLoadingSubject(true);
-    setSelectedSubject(subjectCode);
-    try {
-      // 1. First check in availableActivities prop
-      const matched = availableActivities.find((a) => a.subjectCode === subjectCode);
-      if (matched) {
-        setCurrentActivity(matched);
+  // Available topics for currently selected subject
+  const currentSubjectTopics = useMemo(() => {
+    return getTopicsForSubject(selectedSubject);
+  }, [selectedSubject]);
+
+  // Find if current topic is an identified learning gap for this student
+  const studentGapForTopic = useCallback((topicItem: TopicCatalogItem) => {
+    if (!studentGaps || studentGaps.length === 0) return null;
+    return studentGaps.find(
+      (g) =>
+        g.conceptId === topicItem.conceptId ||
+        g.conceptId?.toLowerCase().includes(topicItem.id.replace("math-", "").replace("guj-", "").replace("eng-", "").replace("evs-", ""))
+    );
+  }, [studentGaps]);
+
+  // Generate completely fresh questions for given subject, topic, and difficulty
+  const generateFreshQuestions = useCallback(
+    (
+      subj: "MATH" | "GUJ" | "ENG" | "EVS",
+      topicId: string,
+      diff: "Easy" | "Medium" | "Hard",
+      forceFresh = true
+    ) => {
+      setIsGenerating(true);
+
+      try {
+        // Procedurally generate new questions every time
+        const newQuestions = generatePracticeQuestions({
+          subjectCode: subj,
+          topicId,
+          difficulty: diff,
+          count: 4,
+          studentName,
+        });
+
+        const activeCatalog = TOPIC_CATALOG.find((t) => t.id === topicId) || TOPIC_CATALOG[0];
+        const newAct: LearningActivity = {
+          id: `act-${subj.toLowerCase()}-${topicId}-${diff.toLowerCase()}-${Date.now()}`,
+          conceptId: activeCatalog.conceptId,
+          conceptName: activeCatalog.nameEn,
+          subjectCode: subj,
+          grade: 4,
+          title: `${activeCatalog.nameEn} (${diff} Level Practice)`,
+          titleGujarati: `${activeCatalog.nameGu} (${diff === "Easy" ? "સરળ" : diff === "Medium" ? "મધ્યમ" : "કઠિન"} મહાવરો)`,
+          activityType: "mcq",
+          difficulty: diff,
+          estimatedMinutes: 8,
+          questions: newQuestions,
+          createdAt: new Date().toISOString(),
+        };
+
+        setCurrentActivity(newAct);
+        setQuestions(newQuestions);
         setCurrentIdx(0);
         setSelectedAnswers({});
         setShowHint(false);
         setIsSubmitted(false);
         setAttemptResult(null);
-        setIsLoadingSubject(false);
-        return;
+      } catch (err) {
+        console.error("Failed to generate fresh practice questions:", err);
+      } finally {
+        setIsGenerating(false);
       }
+    },
+    [studentName]
+  );
 
-      // 2. Fetch from API
-      const res = await fetch(`/api/activities?subjectCode=${subjectCode}`);
-      const data = await res.json();
-      if (data.success && data.activities && data.activities.length > 0) {
-        setCurrentActivity(data.activities[0]);
-      } else if (subjectCode === "ENG") {
-        setCurrentActivity(FALLBACK_ENGLISH_ACTIVITY);
-      } else if (activity) {
-        setCurrentActivity(activity);
-      }
-    } catch (e) {
-      console.error("Failed to fetch subject activity", e);
-      if (subjectCode === "ENG") {
-        setCurrentActivity(FALLBACK_ENGLISH_ACTIVITY);
-      } else if (activity) {
-        setCurrentActivity(activity);
-      }
-    } finally {
-      setCurrentIdx(0);
-      setSelectedAnswers({});
-      setShowHint(false);
-      setIsSubmitted(false);
-      setAttemptResult(null);
-      setIsLoadingSubject(false);
-    }
-  };
-
-  // Sync on modal open
+  // Initialize on modal open or prop change
   useEffect(() => {
     if (isOpen) {
-      const initialSub = activity?.subjectCode || "MATH";
-      setSelectedSubject(initialSub);
-      setCurrentActivity(activity);
-      setCurrentIdx(0);
-      setSelectedAnswers({});
-      setShowHint(false);
-      setIsSubmitted(false);
-      setAttemptResult(null);
-      setInSubjectSelectionStep(startWithSubjectSelector);
+      // Determine initial subject
+      let initSub: "MATH" | "GUJ" | "ENG" | "EVS" = "MATH";
+      if (activity?.subjectCode) {
+        initSub = activity.subjectCode as any;
+      } else if (studentGaps && studentGaps.length > 0 && studentGaps[0].subjectCode) {
+        initSub = studentGaps[0].subjectCode as any;
+      }
+
+      // Determine initial topic
+      let initTopic = "math-division";
+      const subjectTopics = getTopicsForSubject(initSub);
+      if (initialTopicId) {
+        const found = subjectTopics.find((t) => t.id === initialTopicId || t.conceptId === initialTopicId);
+        if (found) initTopic = found.id;
+      } else if (activity?.conceptId) {
+        const found = subjectTopics.find((t) => t.conceptId === activity.conceptId || t.id.includes(activity.conceptId));
+        if (found) initTopic = found.id;
+        else if (subjectTopics.length > 0) initTopic = subjectTopics[0].id;
+      } else if (studentGaps && studentGaps.length > 0) {
+        const firstGap = studentGaps[0];
+        const found = subjectTopics.find((t) => t.conceptId === firstGap.conceptId);
+        if (found) initTopic = found.id;
+        else if (subjectTopics.length > 0) initTopic = subjectTopics[0].id;
+      } else if (subjectTopics.length > 0) {
+        initTopic = subjectTopics[0].id;
+      }
+
+      // Determine initial difficulty
+      let initDiff: "Easy" | "Medium" | "Hard" = "Easy";
+      if (initialDifficulty) {
+        initDiff = initialDifficulty;
+      } else if (activity?.difficulty) {
+        initDiff = activity.difficulty;
+      } else if (studentGaps && studentGaps.length > 0) {
+        const firstGap = studentGaps[0];
+        initDiff = (firstGap.latestPercentage || 0) < 40 ? "Easy" : (firstGap.latestPercentage || 0) < 70 ? "Medium" : "Hard";
+      }
+
+      setSelectedSubject(initSub);
+      setSelectedTopicId(initTopic);
+      setSelectedDifficulty(initDiff);
+      setInSetupStep(startWithSubjectSelector);
+
+      // ALWAYS generate fresh questions every time practice starts!
+      generateFreshQuestions(initSub, initTopic, initDiff, true);
     }
-  }, [isOpen, activity, startWithSubjectSelector]);
+  }, [isOpen, activity, initialTopicId, initialDifficulty, studentGaps, startWithSubjectSelector, generateFreshQuestions]);
 
-  const activeAct = currentActivity || activity;
-  if (!activeAct && !inSubjectSelectionStep) return null;
+  // Handle changing Subject
+  const handleSubjectChange = (newSubject: "MATH" | "GUJ" | "ENG" | "EVS") => {
+    setSelectedSubject(newSubject);
+    const topics = getTopicsForSubject(newSubject);
+    // If student has a gap in this subject, pick that gap topic
+    const gapTopic = topics.find((t) => studentGapForTopic(t));
+    const nextTopicId = gapTopic ? gapTopic.id : topics[0]?.id || "";
+    setSelectedTopicId(nextTopicId);
+    generateFreshQuestions(newSubject, nextTopicId, selectedDifficulty, true);
+  };
 
-  const currentQ: ActivityQuestion =
-    activeAct && activeAct.questions
-      ? activeAct.questions[currentIdx] || activeAct.questions[0]
-      : ({} as ActivityQuestion);
-  const totalQuestions = activeAct?.questions?.length || 0;
+  // Handle changing Topic
+  const handleTopicChange = (newTopicId: string) => {
+    setSelectedTopicId(newTopicId);
+    generateFreshQuestions(selectedSubject, newTopicId, selectedDifficulty, true);
+  };
+
+  // Handle changing Difficulty
+  const handleDifficultyChange = (newDiff: "Easy" | "Medium" | "Hard") => {
+    setSelectedDifficulty(newDiff);
+    generateFreshQuestions(selectedSubject, selectedTopicId, newDiff, true);
+  };
+
+  // Explicit Shuffle / Regenerate questions on demand
+  const handleRegenerateQuestions = () => {
+    generateFreshQuestions(selectedSubject, selectedTopicId, selectedDifficulty, true);
+  };
+
+  const totalQuestions = questions.length;
+  const currentQ: ActivityQuestion | undefined = questions[currentIdx];
   const currentAnswer = currentQ?.id ? selectedAnswers[currentQ.id] : undefined;
 
   const handleSelectOption = (opt: string | number | boolean) => {
@@ -239,13 +291,13 @@ export function ActivityPlayerModal({
   };
 
   const finishActivity = async () => {
-    if (!activeAct) return;
+    if (!currentActivity) return;
     setIsSaving(true);
 
     // Compute detailed breakdown of all questions for instant review
     let localScore = 0;
     const incorrectIds: string[] = [];
-    const questionReview = (activeAct.questions || []).map((q) => {
+    const questionReview = (questions || []).map((q) => {
       const studentAns = selectedAnswers[q.id];
       const isCorrect =
         studentAns !== undefined &&
@@ -266,7 +318,7 @@ export function ActivityPlayerModal({
       };
     });
 
-    const localTotal = activeAct.questions?.length || 1;
+    const localTotal = questions.length || 1;
     const localPct = Math.round((localScore / localTotal) * 100);
 
     const fallbackResult = {
@@ -277,16 +329,22 @@ export function ActivityPlayerModal({
         maximumScore: localTotal,
         percentage: localPct,
         studentId,
-        activityId: activeAct.id,
+        activityId: currentActivity.id,
         answers: selectedAnswers,
         incorrectQuestions: incorrectIds,
       },
       feedback:
         localPct >= 80
-          ? (language === "gu" ? "અદ્ભુત કાર્ય! સંકલ્પના પર પૂર્ણ પ્રભુત્વ મેળવ્યું." : "Outstanding work! Concept mastered with high confidence.")
+          ? language === "gu"
+            ? "અદ્ભુત કાર્ય! સંકલ્પના પર પૂર્ણ પ્રભુત્વ મેળવ્યું."
+            : "Outstanding work! Concept mastered with high confidence."
           : localPct >= 50
-          ? (language === "gu" ? "સારો પ્રયાસ! જે પ્રશ્નોમાં ભૂલ થઈ છે તેનું પુનરાવર્તન કરો." : "Good practice! Review the questions you missed with your teacher.")
-          : (language === "gu" ? "મહાવરો ચાલુ રાખો! મૂર્ત સાધનોથી શીખવાથી પાયો મજબૂત થશે." : "Keep practicing! Hands-on practice with objects will help build your foundation."),
+          ? language === "gu"
+            ? "સારો પ્રયાસ! જે પ્રશ્નોમાં ભૂલ થઈ છે તેનું પુનરાવર્તન કરો."
+            : "Good practice! Review the questions you missed with your teacher."
+          : language === "gu"
+          ? "મહાવરો ચાલુ રાખો! મૂર્ત સાધનોથી શીખવાથી પાયો મજબૂત થશે."
+          : "Keep practicing! Hands-on practice with objects will help build your foundation.",
       questionReview,
     };
 
@@ -295,9 +353,11 @@ export function ActivityPlayerModal({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          activityId: activeAct.id,
+          activityId: currentActivity.id,
           studentId,
           answers: selectedAnswers,
+          questions,
+          activityData: currentActivity,
         }),
       });
       const data = await res.json();
@@ -309,7 +369,6 @@ export function ActivityPlayerModal({
         }
         if (onCompleted) onCompleted(data);
       } else {
-        // Fallback to locally computed result so the quiz result is never blocked
         setAttemptResult(fallbackResult);
         setIsSubmitted(true);
         if (localPct >= 80) {
@@ -330,178 +389,334 @@ export function ActivityPlayerModal({
     }
   };
 
-  const resetActivity = () => {
-    setCurrentIdx(0);
-    setSelectedAnswers({});
-    setShowHint(false);
-    setIsSubmitted(false);
-    setAttemptResult(null);
-  };
+  const currentTopic = currentSubjectTopics.find((t) => t.id === selectedTopicId) || currentSubjectTopics[0];
 
   return (
     <Dialog
       isOpen={isOpen}
       onClose={onClose}
       title={
-        inSubjectSelectionStep
+        inSetupStep
           ? language === "gu"
-            ? "મહાવરા માટે વિષય પસંદ કરો"
-            : "Choose Practice Subject"
-          : `${activeAct?.title || "Practice Activity"} — ${
+            ? "મહાવરા માટે વિષય, ટોપિક અને સ્તર પસંદ કરો"
+            : "Select Subject, Topic & Difficulty"
+          : `${currentTopic?.nameEn || "Practice Quiz"} — ${
               studentName || (language === "gu" ? "વિદ્યાર્થી મહાવરો" : "Student Practice")
             }`
       }
       description={
-        inSubjectSelectionStep
+        inSetupStep
           ? language === "gu"
-            ? "પ્રવૃત્તિ શરૂ કરતા પહેલાં વિષય પસંદ કરો. વિષય મુજબ પ્રશ્નો તરત જ લોડ થશે."
-            : "Select a specific subject to practice before loading targeted interactive tasks."
+            ? "દરેક વખતે પસંદ કરેલા વિષય, ટોપિક અને મુશ્કેલી સ્તર મુજબ તદ્દન નવા પ્રશ્નો બનશે."
+            : "Every practice session generates fresh, dynamic questions tailored to your chosen subject, topic and difficulty."
           : language === "gu"
-          ? `ઇન્ટરેક્ટિવ મહાવરો • વિષય: ${selectedSubject} • ${totalQuestions} પ્રશ્નો`
-          : `Interactive Practice • Subject: ${selectedSubject} • ${totalQuestions} questions`
+          ? `ઇન્ટરેક્ટિવ ક્વિઝ • વિષય: ${selectedSubject} • ${selectedDifficulty} સ્તર • ${totalQuestions} પ્રશ્નો`
+          : `Interactive Practice Quiz • ${selectedSubject} • ${selectedDifficulty} Level • ${totalQuestions} questions`
       }
       maxWidth="xl"
     >
-      {/* 1. Subject Selection Step Screen */}
-      {inSubjectSelectionStep ? (
-        <div className="space-y-5 py-2">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            {SUBJECTS.map((sub) => {
-              const Icon = sub.icon;
-              const isSelected = selectedSubject === sub.code;
+      {/* 1. Setup / Subject Selection Step */}
+      {inSetupStep ? (
+        <div className="space-y-6 py-2">
+          {/* Step A: Select Subject */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-[#49352F] uppercase tracking-wider block">
+              1. {language === "gu" ? "વિષય પસંદ કરો:" : "Select Subject:"}
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {SUBJECTS.map((sub) => {
+                const Icon = sub.icon;
+                const isSelected = selectedSubject === sub.code;
 
-              return (
-                <button
-                  key={sub.code}
-                  type="button"
-                  onClick={() => loadSubjectActivity(sub.code)}
-                  className={`p-4 rounded-2xl border text-left transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between ${
-                    isSelected
-                      ? "border-[#49352F] bg-[#F2CAB3]/60 shadow-md ring-2 ring-[#B26A1B]"
-                      : "border-[#49352F]/15 bg-white hover:bg-[#FAF6E9] hover:border-[#49352F]/30"
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-xl bg-white border border-[#49352F]/15 flex items-center justify-center text-[#49352F] shadow-2xs shrink-0">
-                        <Icon className="w-4 h-4 text-[#B26A1B]" />
+                return (
+                  <button
+                    key={sub.code}
+                    type="button"
+                    onClick={() => handleSubjectChange(sub.code as any)}
+                    className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between ${
+                      isSelected
+                        ? "border-[#49352F] bg-[#F2CAB3]/60 shadow-md ring-2 ring-[#B26A1B]"
+                        : "border-[#49352F]/15 bg-white hover:bg-[#FAF6E9] hover:border-[#49352F]/30"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-xl bg-white border border-[#49352F]/15 flex items-center justify-center text-[#49352F] shadow-2xs shrink-0">
+                          <Icon className="w-4 h-4 text-[#B26A1B]" />
+                        </div>
+                        <div>
+                          <h4 className="font-heading font-bold text-sm text-[#49352F]">
+                            {language === "gu" ? sub.nameGu : sub.nameEn}
+                          </h4>
+                          <span className="font-mono text-[10px] text-[#7A6862] font-semibold uppercase">
+                            {sub.code}
+                          </span>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-heading font-bold text-sm text-[#49352F]">
-                          {language === "gu" ? sub.nameGu : sub.nameEn}
-                        </h4>
-                        <span className="font-mono text-[10px] text-[#7A6862] font-semibold uppercase">
-                          {sub.code}
-                        </span>
-                      </div>
+
+                      {isSelected && (
+                        <Badge variant="saffron" size="sm">
+                          {language === "gu" ? "પસંદ કરેલ" : "Selected"}
+                        </Badge>
+                      )}
                     </div>
 
-                    {isSelected && (
-                      <Badge variant="saffron" size="sm">
-                        {language === "gu" ? "પસંદ કરેલ" : "Selected"}
-                      </Badge>
-                    )}
-                  </div>
-
-                  <p className="text-xs text-[#7A6862] mt-3 line-clamp-2">
-                    {language === "gu" ? sub.descGu : sub.descEn}
-                  </p>
-                </button>
-              );
-            })}
+                    <p className="text-[11px] text-[#7A6862] mt-2 line-clamp-2">
+                      {language === "gu" ? sub.descGu : sub.descEn}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Action buttons */}
+          {/* Step B: Select Topic */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-[#49352F] uppercase tracking-wider block">
+              2. {language === "gu" ? "ટોપિક / સંકલ્પના પસંદ કરો:" : "Select Practice Topic / Concept:"}
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {currentSubjectTopics.map((top) => {
+                const isSelected = selectedTopicId === top.id;
+                const gap = studentGapForTopic(top);
+
+                return (
+                  <button
+                    key={top.id}
+                    type="button"
+                    onClick={() => setSelectedTopicId(top.id)}
+                    className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                      isSelected
+                        ? "border-[#49352F] bg-[#F2DCB5]/80 shadow-xs ring-2 ring-[#B26A1B]"
+                        : "border-[#49352F]/12 bg-white hover:bg-[#FAF6E9]"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-1.5">
+                      <span className="font-bold text-xs text-[#49352F]">
+                        {language === "gu" ? top.nameGu : top.nameEn}
+                      </span>
+                      {gap && (
+                        <Badge variant="needsSupport" size="sm">
+                          ⭐ {language === "gu" ? "સુધારણા જરૂરી" : "Target Gap"}
+                        </Badge>
+                      )}
+                    </div>
+                    <span className="text-[10px] text-[#7A6862] mt-1 line-clamp-1">
+                      {language === "gu" ? top.descriptionGu : top.descriptionEn}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Step C: Select Difficulty */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-[#49352F] uppercase tracking-wider block">
+              3. {language === "gu" ? "મુશ્કેલી સ્તર પસંદ કરો:" : "Select Difficulty Level:"}
+            </label>
+            <div className="grid grid-cols-3 gap-2.5">
+              {(["Easy", "Medium", "Hard"] as const).map((diff) => {
+                const isSelected = selectedDifficulty === diff;
+                return (
+                  <button
+                    key={diff}
+                    type="button"
+                    onClick={() => setSelectedDifficulty(diff)}
+                    className={`py-2.5 px-3 rounded-xl border text-center transition-all cursor-pointer font-bold text-xs ${
+                      isSelected
+                        ? diff === "Easy"
+                          ? "bg-[#2E7D5E] text-white border-[#2E7D5E] shadow-sm"
+                          : diff === "Medium"
+                          ? "bg-[#B26A1B] text-white border-[#B26A1B] shadow-sm"
+                          : "bg-[#C54738] text-white border-[#C54738] shadow-sm"
+                        : "bg-white text-[#49352F] border-[#49352F]/15 hover:bg-[#FAF6E9]"
+                    }`}
+                  >
+                    <div>{diff === "Easy" ? "🟢 Easy" : diff === "Medium" ? "🟡 Medium" : "🔴 Hard"}</div>
+                    <div className="text-[10px] opacity-80 mt-0.5">
+                      {diff === "Easy"
+                        ? language === "gu" ? "સરળ સ્તર" : "Beginner"
+                        : diff === "Medium"
+                        ? language === "gu" ? "મધ્યમ સ્તર" : "Intermediate"
+                        : language === "gu" ? "કઠિન સ્તર" : "Advanced"}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Action Button: Start Practice with Fresh Generated Questions */}
           <div className="flex items-center justify-between pt-4 border-t border-[#49352F]/10">
             <span className="text-xs font-semibold text-[#7A6862]">
               {language === "gu"
-                ? `પસંદગી: ${SUBJECTS.find((s) => s.code === selectedSubject)?.[language === "gu" ? "nameGu" : "nameEn"]}`
-                : `Active: ${SUBJECTS.find((s) => s.code === selectedSubject)?.nameEn}`}
+                ? `પસંદગી: ${currentTopic?.nameGu} • ${selectedDifficulty}`
+                : `Ready: ${currentTopic?.nameEn} (${selectedDifficulty})`}
             </span>
 
             <button
               type="button"
-              disabled={isLoadingSubject || !activeAct}
-              onClick={() => setInSubjectSelectionStep(false)}
+              disabled={isGenerating}
+              onClick={() => {
+                generateFreshQuestions(selectedSubject, selectedTopicId, selectedDifficulty, true);
+                setInSetupStep(false);
+              }}
               className="inline-flex items-center gap-2 px-6 py-2.5 text-xs font-bold bg-[#F2CAB3] hover:bg-white text-[#49352F] border border-[#49352F]/16 rounded-xl shadow-xs transition-all cursor-pointer disabled:opacity-50"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>
-                {isLoadingSubject
-                  ? language === "gu" ? "લોડ થઈ રહ્યું છે..." : "Loading Tasks..."
-                  : language === "gu" ? "મહાવરો શરૂ કરો" : "Launch Practice"}
+                {isGenerating
+                  ? language === "gu" ? "પ્રશ્નો તૈયાર થઈ રહ્યા છે..." : "Generating Questions..."
+                  : language === "gu" ? "મહાવરો શરૂ કરો (નવા પ્રશ્નો)" : "Launch Practice (Fresh Questions)"}
               </span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
       ) : !isSubmitted ? (
-        /* 2. Active Practice View with Top Subject Dropdown Selector */
-        <div className="space-y-6">
-          {/* Top Control Bar: Subject Selector Dropdown & Question Progress */}
-          <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl bg-[#FAF6E9] border border-[#49352F]/10">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-[#49352F]">
-                {language === "gu" ? "વિષય:" : "Subject:"}
-              </span>
-              {/* Dynamic Subject Selection Dropdown */}
-              <select
-                value={selectedSubject}
-                aria-label="Select Practice Subject"
-                onChange={(e) => loadSubjectActivity(e.target.value)}
-                className="rounded-xl border border-[#49352F]/15 bg-white px-3 py-1.5 text-xs font-bold text-[#49352F] shadow-2xs outline-hidden cursor-pointer"
-              >
-                {SUBJECTS.map((sub) => (
-                  <option key={sub.code} value={sub.code}>
-                    {sub.code}: {language === "gu" ? sub.nameGu : sub.nameEn}
-                  </option>
-                ))}
-              </select>
+        /* 2. Active Interactive Practice Quiz View with Comprehensive Adaptive Controls */
+        <div className="space-y-5">
+          {/* Top Control Bar: Subject, Topic, Difficulty Selector, and Regenerate Questions */}
+          <div className="p-3.5 rounded-2xl bg-[#FAF6E9] border border-[#49352F]/12 shadow-2xs space-y-2.5">
+            <div className="flex flex-wrap items-center justify-between gap-2.5">
+              {/* Subject Dropdown */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-[11px] font-bold text-[#7A6862]">
+                  {language === "gu" ? "વિષય:" : "Subject:"}
+                </span>
+                <select
+                  value={selectedSubject}
+                  aria-label="Select Practice Subject"
+                  onChange={(e) => handleSubjectChange(e.target.value as any)}
+                  className="rounded-xl border border-[#49352F]/15 bg-white px-2.5 py-1 text-xs font-bold text-[#49352F] shadow-2xs cursor-pointer outline-hidden"
+                >
+                  {SUBJECTS.map((sub) => (
+                    <option key={sub.code} value={sub.code}>
+                      {sub.code}: {language === "gu" ? sub.nameGu : sub.nameEn}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
+              {/* Topic Dropdown */}
+              <div className="flex items-center gap-1.5 flex-1 min-w-[200px]">
+                <span className="text-[11px] font-bold text-[#7A6862]">
+                  {language === "gu" ? "ટોપિક:" : "Topic:"}
+                </span>
+                <select
+                  value={selectedTopicId}
+                  aria-label="Select Practice Topic"
+                  onChange={(e) => handleTopicChange(e.target.value)}
+                  className="rounded-xl border border-[#49352F]/15 bg-white px-2.5 py-1 text-xs font-bold text-[#49352F] shadow-2xs cursor-pointer outline-hidden w-full max-w-[280px] truncate"
+                >
+                  {currentSubjectTopics.map((top) => {
+                    const isGap = studentGapForTopic(top);
+                    return (
+                      <option key={top.id} value={top.id}>
+                        {isGap ? "⭐ " : ""}{language === "gu" ? top.nameGu : top.nameEn}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+
+              {/* Shuffle / New Questions Button */}
               <button
                 type="button"
-                onClick={() => setInSubjectSelectionStep(true)}
-                className="text-[11px] font-semibold text-[#B26A1B] hover:underline cursor-pointer ml-1"
+                onClick={handleRegenerateQuestions}
+                title={language === "gu" ? "નવા પ્રશ્નો જનરેટ કરો" : "Generate completely fresh questions"}
+                disabled={isGenerating}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white border border-[#49352F]/15 hover:bg-[#F2CAB3] text-[#49352F] text-xs font-bold shadow-2xs cursor-pointer transition-colors"
               >
-                {language === "gu" ? "બદલો" : "Change Step"}
+                <Shuffle className={`w-3.5 h-3.5 text-[#B26A1B] ${isGenerating ? "animate-spin" : ""}`} />
+                <span>{language === "gu" ? "નવા પ્રશ્નો" : "New Questions"}</span>
               </button>
             </div>
 
-            <Badge variant="outline" size="sm">
-              {activeAct?.conceptName || selectedSubject}
-            </Badge>
+            {/* Difficulty Selector Pills */}
+            <div className="flex items-center justify-between gap-2 pt-2 border-t border-[#49352F]/10">
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-bold text-[#7A6862]">
+                  {language === "gu" ? "મુશ્કેલી સ્તર:" : "Difficulty:"}
+                </span>
+                <div className="inline-flex rounded-xl bg-white border border-[#49352F]/15 p-0.5">
+                  {(["Easy", "Medium", "Hard"] as const).map((diff) => {
+                    const isSelected = selectedDifficulty === diff;
+                    return (
+                      <button
+                        key={diff}
+                        type="button"
+                        onClick={() => handleDifficultyChange(diff)}
+                        className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                          isSelected
+                            ? diff === "Easy"
+                              ? "bg-[#2E7D5E] text-white shadow-2xs"
+                              : diff === "Medium"
+                              ? "bg-[#B26A1B] text-white shadow-2xs"
+                              : "bg-[#C54738] text-white shadow-2xs"
+                            : "text-[#7A6862] hover:text-[#49352F]"
+                        }`}
+                      >
+                        {diff === "Easy"
+                          ? language === "gu" ? "સરળ" : "Easy"
+                          : diff === "Medium"
+                          ? language === "gu" ? "મધ્યમ" : "Medium"
+                          : language === "gu" ? "કઠિન" : "Hard"}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setInSetupStep(true)}
+                className="text-[11px] font-bold text-[#B26A1B] hover:underline cursor-pointer"
+              >
+                {language === "gu" ? "બધા વિષયો જુઓ" : "All Topics →"}
+              </button>
+            </div>
           </div>
 
-          {/* Progress bar */}
+          {/* Progress Bar & Indicators */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between text-xs font-semibold text-[#7A6862]">
-              <span>
-                {language === "gu"
-                  ? `પ્રશ્ન ${currentIdx + 1} / ${totalQuestions}`
-                  : `Question ${currentIdx + 1} of ${totalQuestions}`}
+              <span className="flex items-center gap-1.5">
+                <Badge variant="outline" size="sm">
+                  {selectedSubject} • {selectedDifficulty}
+                </Badge>
+                <span>
+                  {language === "gu"
+                    ? `પ્રશ્ન ${currentIdx + 1} / ${totalQuestions}`
+                    : `Question ${currentIdx + 1} of ${totalQuestions}`}
+                </span>
               </span>
               <span>
                 {language === "gu"
-                  ? `${Math.round(((currentIdx + 1) / totalQuestions) * 100)}% પૂર્ણ`
-                  : `${Math.round(((currentIdx + 1) / totalQuestions) * 100)}% Complete`}
+                  ? `${Math.round(((currentIdx + 1) / (totalQuestions || 1)) * 100)}% પૂર્ણ`
+                  : `${Math.round(((currentIdx + 1) / (totalQuestions || 1)) * 100)}% Complete`}
               </span>
             </div>
             <div className="h-2 w-full rounded-full bg-[#FAF6E9] border border-[#49352F]/10 overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-[#F2CAB3] to-[#B26A1B] transition-all duration-300"
-                style={{ width: `${((currentIdx + 1) / totalQuestions) * 100}%` }}
+                style={{ width: `${((currentIdx + 1) / (totalQuestions || 1)) * 100}%` }}
               />
             </div>
           </div>
 
-          {/* Question card */}
-          {isLoadingSubject ? (
-            <div className="p-12 text-center rounded-2xl bg-[#FAF6E9] text-xs font-semibold text-[#7A6862] animate-pulse">
-              {language === "gu"
-                ? `${selectedSubject} માટે પ્રશ્નો લોડ થઈ રહ્યા છે...`
-                : `Loading questions for ${selectedSubject}...`}
+          {/* Active Question Card */}
+          {isGenerating ? (
+            <div className="p-12 text-center rounded-2xl bg-[#FAF6E9] border border-[#49352F]/12 text-xs font-semibold text-[#7A6862] space-y-3">
+              <RefreshCw className="w-6 h-6 animate-spin text-[#B26A1B] mx-auto" />
+              <p>
+                {language === "gu"
+                  ? `${currentTopic?.nameGu} માટે નવા પ્રશ્નો બની રહ્યા છે...`
+                  : `Generating fresh practice questions for ${currentTopic?.nameEn}...`}
+              </p>
             </div>
-          ) : currentQ?.questionText ? (
+          ) : currentQ ? (
             <div className="rounded-2xl border border-[#49352F]/12 bg-[#FAF6E9] p-5 shadow-2xs space-y-2">
               <div className="flex items-center justify-between gap-2 mb-2">
                 <Badge variant="outline" size="sm">
@@ -549,7 +764,7 @@ export function ActivityPlayerModal({
           ) : null}
 
           {/* Answer Options */}
-          {!isLoadingSubject && currentQ?.options && (
+          {!isGenerating && currentQ?.options && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {currentQ.options.map((opt, i) => {
                 const isSelected = String(currentAnswer) === String(opt);
@@ -572,7 +787,7 @@ export function ActivityPlayerModal({
             </div>
           )}
 
-          {/* Navigation controls */}
+          {/* Navigation Controls */}
           <div className="flex items-center justify-between pt-4 border-t border-[#49352F]/10">
             <button
               type="button"
@@ -606,7 +821,7 @@ export function ActivityPlayerModal({
           </div>
         </div>
       ) : (
-        /* 3. Comprehensive Completion & Quiz Result Screen */
+        /* 3. Comprehensive Completion & Detailed Quiz Review Screen */
         <div className="text-center py-5 space-y-5">
           <div className="w-16 h-16 mx-auto rounded-full bg-[#2E7D5E]/15 text-[#2E7D5E] flex items-center justify-center shadow-inner">
             <Trophy className="w-8 h-8" />
@@ -614,25 +829,27 @@ export function ActivityPlayerModal({
 
           <div>
             <h4 className="text-xl font-bold text-[#49352F]">
-              {language === "gu" ? "પ્રવૃત્તિ પૂર્ણ થઈ!" : "Activity Completed!"}
+              {language === "gu" ? "મહાવરો પૂર્ણ થયો!" : "Practice Quiz Completed!"}
             </h4>
             <p className="text-xs text-[#7A6862] mt-1">
               {language === "gu"
-                ? `${studentName || "વિદ્યાર્થી"} માટે ${selectedSubject} નો સ્કોર અને પરિણામ નોંધાયા`
-                : `Quiz result officially recorded in ${selectedSubject} for ${studentName || "Student"}`}
+                ? `${studentName || "વિદ્યાર્થી"} માટે ${currentTopic?.nameGu} (${selectedDifficulty} સ્તર) નું પરિણામ નોંધાયું`
+                : `Result recorded for ${studentName || "Student"} in ${currentTopic?.nameEn} (${selectedDifficulty} level)`}
             </p>
           </div>
 
           {/* Primary Score & Feedback Card */}
           <div className="p-5 max-w-sm mx-auto rounded-3xl bg-[#FAF6E9] border border-[#49352F]/15 shadow-xs space-y-2">
             <div className="flex items-center justify-center gap-2">
-              <span className={`text-4xl font-extrabold ${
-                (attemptResult?.percentage || 0) >= 80
-                  ? "text-[#2E7D5E]"
-                  : (attemptResult?.percentage || 0) >= 60
-                  ? "text-[#B26A1B]"
-                  : "text-[#C54738]"
-              }`}>
+              <span
+                className={`text-4xl font-extrabold ${
+                  (attemptResult?.percentage || 0) >= 80
+                    ? "text-[#2E7D5E]"
+                    : (attemptResult?.percentage || 0) >= 60
+                    ? "text-[#B26A1B]"
+                    : "text-[#C54738]"
+                }`}
+              >
                 {attemptResult?.percentage}%
               </span>
               <Badge
@@ -734,25 +951,50 @@ export function ActivityPlayerModal({
             </div>
           )}
 
-          {/* Action buttons */}
-          <div className="flex items-center justify-center gap-3 pt-4 flex-wrap">
+          {/* Action Buttons: Practice Again (Fresh Questions), Level Up, Change Topic, Done */}
+          <div className="flex items-center justify-center gap-2.5 pt-4 flex-wrap">
+            {/* Practice Again button: MUST generate BRAND NEW questions every time! */}
             <button
               type="button"
-              onClick={resetActivity}
-              className="px-4 py-2 text-xs font-semibold text-[#7A6862] hover:bg-[#FAF6E9] hover:text-[#49352F] rounded-xl cursor-pointer transition-colors"
+              onClick={() => generateFreshQuestions(selectedSubject, selectedTopicId, selectedDifficulty, true)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold bg-[#FAF6E9] hover:bg-[#F2CAB3] text-[#49352F] border border-[#49352F]/15 rounded-xl cursor-pointer transition-colors shadow-2xs"
             >
-              {language === "gu" ? "ફરીથી મહાવરો કરો" : "Practice Again"}
+              <RotateCcw className="w-3.5 h-3.5 text-[#B26A1B]" />
+              <span>
+                {language === "gu" ? "ફરીથી મહાવરો કરો (નવા પ્રશ્નો)" : "Practice Again (Fresh Questions)"}
+              </span>
             </button>
+
+            {/* Level Up Button if scored >= 80% */}
+            {(attemptResult?.percentage || 0) >= 80 && selectedDifficulty !== "Hard" && (
+              <button
+                type="button"
+                onClick={() => {
+                  const nextDiff = selectedDifficulty === "Easy" ? "Medium" : "Hard";
+                  handleDifficultyChange(nextDiff);
+                }}
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold bg-[#2E7D5E]/15 text-[#2E7D5E] hover:bg-[#2E7D5E] hover:text-white border border-[#2E7D5E]/30 rounded-xl cursor-pointer transition-colors shadow-2xs"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>
+                  {selectedDifficulty === "Easy"
+                    ? language === "gu" ? "મધ્યમ સ્તરે આગળ વધો →" : "Advance to Medium Level →"
+                    : language === "gu" ? "કઠિન સ્તરે આગળ વધો →" : "Advance to Hard Level →"}
+                </span>
+              </button>
+            )}
+
             <button
               type="button"
               onClick={() => {
-                resetActivity();
-                setInSubjectSelectionStep(true);
+                setInSetupStep(true);
+                setIsSubmitted(false);
               }}
               className="px-4 py-2 text-xs font-semibold text-[#B26A1B] hover:bg-[#F2CAB3]/30 rounded-xl cursor-pointer transition-colors"
             >
-              {language === "gu" ? "અન્ય વિષય પસંદ કરો" : "Choose Other Subject"}
+              {language === "gu" ? "અન્ય ટોપિક પસંદ કરો" : "Choose Other Topic"}
             </button>
+
             <button
               type="button"
               onClick={onClose}

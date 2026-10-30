@@ -15,6 +15,8 @@ import {
   Sparkles,
   HelpCircle,
   FileText,
+  Shuffle,
+  Compass,
 } from "lucide-react";
 
 export default function ActivitiesPage() {
@@ -27,6 +29,7 @@ export default function ActivitiesPage() {
 
   // Interactive practice player
   const [activeActivity, setActiveActivity] = useState<any>(null);
+  const [openWithSelector, setOpenWithSelector] = useState(false);
   // Printable worksheet preview
   const [printingActivity, setPrintingActivity] = useState<any>(null);
 
@@ -56,6 +59,22 @@ export default function ActivitiesPage() {
     }, 200);
   };
 
+  const handleLaunchCustomQuiz = () => {
+    setActiveActivity({
+      id: "custom-practice-quiz",
+      conceptId: "math-division",
+      subjectCode: subjectFilter !== "all" ? subjectFilter : "MATH",
+      grade: 4,
+      title: language === "gu" ? "કસ્ટમ અનુકૂલનશીલ મહાવરો" : "Adaptive Practice Quiz",
+      activityType: "mcq",
+      difficulty: difficultyFilter !== "all" ? difficultyFilter : "Easy",
+      estimatedMinutes: 8,
+      questions: [],
+      createdAt: new Date().toISOString(),
+    });
+    setOpenWithSelector(true);
+  };
+
   const filteredActivities = activities.filter((a) => {
     if (subjectFilter !== "all" && a.subjectCode !== subjectFilter) return false;
     if (difficultyFilter !== "all" && a.difficulty !== difficultyFilter) return false;
@@ -72,9 +91,42 @@ export default function ActivitiesPage() {
               {t.activities.title || "Curated Remedial Practice Activities & Worksheets"}
             </h1>
             <p className="text-xs sm:text-sm text-[#7A6862] mt-0.5">
-              {t.activities.subtitle || "Interactive digital questions for classroom devices and printable offline worksheets for primary students."}
+              {language === "gu"
+                ? "દરેક વખતે નવા પ્રશ્નો સાથે ઇન્ટરેક્ટિવ ડિજિટલ ક્વિઝ અને પ્રિન્ટ કરી શકાય તેવી કાર્યપત્રિકાઓ."
+                : "Dynamic interactive quizzes with fresh questions on every practice, plus printable offline worksheets."}
             </p>
           </div>
+
+          <button
+            type="button"
+            onClick={handleLaunchCustomQuiz}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#F2CAB3] hover:bg-white text-[#49352F] border border-[#49352F]/18 text-xs font-bold shadow-xs transition-colors cursor-pointer self-start sm:self-auto"
+          >
+            <Compass className="w-4 h-4 text-[#B26A1B]" />
+            <span>{language === "gu" ? "નવો કસ્ટમ મહાવરો શરૂ કરો" : "Start Custom Practice Quiz"}</span>
+          </button>
+        </div>
+
+        {/* Dynamic Feature Banner */}
+        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-[#FAF6E9] to-[#F2DCB5]/40 border border-[#49352F]/12 flex items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-white border border-[#49352F]/15 flex items-center justify-center text-[#B26A1B] shadow-2xs shrink-0">
+              <Shuffle className="w-4 h-4" />
+            </div>
+            <div>
+              <span className="font-bold text-[#49352F] block">
+                {language === "gu" ? "અનુકૂલનશીલ પ્રશ્ન જનરેશન સક્રિય:" : "Adaptive Question Generation Active:"}
+              </span>
+              <span className="text-[#7A6862] text-[11px]">
+                {language === "gu"
+                  ? "વિદ્યાર્થી જ્યારે પણ મહાવરો શરૂ કરશે, ત્યારે પસંદ કરેલા વિષય, ટોપિક અને મુશ્કેલી સ્તર મુજબ તદ્દન નવા પ્રશ્નો આપમેળે બનશે."
+                  : "Every time a student practices, fresh randomized questions are generated for their selected subject, topic, and difficulty."}
+              </span>
+            </div>
+          </div>
+          <Badge variant="saffron" size="sm" className="hidden sm:inline-flex shrink-0">
+            {language === "gu" ? "ડાયનેમિક બેંક" : "Dynamic Engine"}
+          </Badge>
         </div>
 
         {/* Filters */}
@@ -160,13 +212,19 @@ export default function ActivitiesPage() {
                   <strong className="text-[#49352F]">{act.conceptName}</strong>
                 </p>
 
-                {/* Questions Preview */}
+                {/* Questions Preview with Dynamic Indicator */}
                 <div className="mt-3 p-3 rounded-xl bg-[#FAF6E9] border border-[#49352F]/10 text-xs space-y-1.5">
-                  <span className="font-semibold text-[#49352F] block">
-                    {language === "gu"
-                      ? `નમૂના પ્રશ્નો (${act.questions?.length} પ્રશ્નો):`
-                      : `Sample Questions (${act.questions?.length} items):`}
-                  </span>
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-[#49352F] block">
+                      {language === "gu"
+                        ? `નમૂના પ્રશ્નો (${act.questions?.length || 4} પ્રશ્નો):`
+                        : `Sample Questions (${act.questions?.length || 4} items):`}
+                    </span>
+                    <span className="text-[10px] text-[#B26A1B] font-bold flex items-center gap-1">
+                      <Shuffle className="w-3 h-3" />
+                      {language === "gu" ? "દર વખતે બદલાશે" : "Changes every practice"}
+                    </span>
+                  </div>
                   {act.questions?.slice(0, 2).map((q: any, i: number) => (
                     <p key={i} className="text-[#7A6862] text-[11px] line-clamp-1">
                       • {language === "gu" && q.questionTextGujarati ? q.questionTextGujarati : q.questionText}
@@ -188,7 +246,10 @@ export default function ActivitiesPage() {
 
                 <button
                   type="button"
-                  onClick={() => setActiveActivity(act)}
+                  onClick={() => {
+                    setActiveActivity(act);
+                    setOpenWithSelector(false);
+                  }}
                   className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#F2CAB3] hover:bg-white text-[#49352F] border border-[#49352F]/16 text-xs font-bold shadow-xs transition-colors cursor-pointer"
                 >
                   <Play className="w-3.5 h-3.5 fill-current" />
@@ -208,7 +269,11 @@ export default function ActivitiesPage() {
           studentId="std-aarav"
           studentName={language === "gu" ? "આરવ પટેલ (ધોરણ ૪-અ)" : "Aarav Patel (Class 4-A)"}
           isOpen={Boolean(activeActivity)}
-          onClose={() => setActiveActivity(null)}
+          onClose={() => {
+            setActiveActivity(null);
+            setOpenWithSelector(false);
+          }}
+          startWithSubjectSelector={openWithSelector}
         />
       )}
 

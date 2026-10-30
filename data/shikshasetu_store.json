@@ -675,7 +675,7 @@
       "subjectCode": "MATH",
       "learningObjective": "Understand division as equal grouping, sharing, and inverse multiplication.",
       "recommendationReason": "Recent assessment performance (35%) is below the configured support threshold (60%), and previous result (40%) also showed persistent difficulty.",
-      "status": "Approved",
+      "status": "Completed",
       "estimatedMinutes": 20,
       "difficulty": "Beginner",
       "requiredMaterials": [
@@ -720,7 +720,14 @@
       "teacherInstructions": "Use concrete objects first. Avoid abstract long division symbols until the concept of sharing is crystal clear.",
       "teacherNotes": "Aarav enjoys hands-on token activities. Plan approved for daily zero-period session.",
       "createdAt": "2026-09-25T08:30:00Z",
-      "reviewDate": "2026-10-05T08:30:00Z"
+      "reviewDate": "2026-10-05T08:30:00Z",
+      "completedSteps": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
     },
     {
       "id": "plan-meera-mult-01",
@@ -764,6 +771,679 @@
     }
   ],
   "activities": [
+    {
+      "id": "act-math-math-division-easy-1793383742093",
+      "conceptId": "c-div-01",
+      "conceptName": "Division Basics & Equal Sharing",
+      "subjectCode": "MATH",
+      "grade": 4,
+      "title": "Division Basics & Equal Sharing (Easy Level Practice)",
+      "titleGujarati": "ભાગાકારની મૂળભૂત સંકલ્પના અને સરખા ભાગ (સરળ મહાવરો)",
+      "activityType": "mcq",
+      "difficulty": "Easy",
+      "estimatedMinutes": 8,
+      "questions": [
+        {
+          "id": "q-math-math-division-easy-1793383742093-0-mk6c",
+          "type": "mcq",
+          "questionText": "If Pooja has 12 cricket balls and wants to share them equally among 4 friends, how many cricket balls does each friend get?",
+          "questionTextGujarati": "જો પૂજા પાસે 12 દડા હોય અને 4 મિત્રો વચ્ચે સરખા ભાગે વહેંચવા હોય, તો દરેકને કેટલા દડા મળે?",
+          "options": [
+            "2 cricket balls",
+            "4 cricket balls",
+            "4 cricket balls",
+            "3 cricket balls"
+          ],
+          "correctAnswer": "3 cricket balls",
+          "explanation": "12 divided by 4 is 3 (12 ÷ 4 = 3), because 4 × 3 = 12.",
+          "hint": "Think: What number multiplied by 4 gives 12?"
+        },
+        {
+          "id": "q-math-math-division-easy-1793383742093-1-4em4",
+          "type": "mcq",
+          "questionText": "Which multiplication fact helps you solve 12 ÷ 2 = ?",
+          "questionTextGujarati": "12 ÷ 2 = ? ઉકેલવા માટે કયો ગુણાકાર મદદ કરે છે?",
+          "options": [
+            "2 × 6 = 12",
+            "12 - 2 = 10",
+            "2 + 6 = 8",
+            "2 × 7 = 14"
+          ],
+          "correctAnswer": "2 × 6 = 12",
+          "explanation": "Since 2 × 6 = 12, we know that 12 ÷ 2 = 6. Multiplication is the inverse of division!",
+          "hint": "Find the multiplication equation using 2 and 12."
+        },
+        {
+          "id": "q-math-math-division-easy-1793383742093-2-wiki",
+          "type": "true_false",
+          "questionText": "True or False: 12 ÷ 2 = 6 means subtracting 2 from 12 exactly 6 times until reaching 0.",
+          "questionTextGujarati": "સાચું કે ખોટું: 12 ÷ 2 = 6 નો અર્થ એ છે કે 12 માંથી 2 ને 6 વખત બાદ કરવાથી ૦ મળે છે.",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswer": "True",
+          "explanation": "Yes, division is repeated subtraction of equal groups!",
+          "hint": "Think of equal sharing as repeated taking away."
+        },
+        {
+          "id": "q-math-math-division-easy-1793383742093-3-9w16",
+          "type": "mcq",
+          "questionText": "If Aarav has 6 mangoes and wants to share them equally among 3 friends, how many mangoes does each friend get?",
+          "questionTextGujarati": "જો આરવ પાસે 6 કેરી હોય અને 3 મિત્રો વચ્ચે સરખા ભાગે વહેંચવા હોય, તો દરેકને કેટલા કેરી મળે?",
+          "options": [
+            "3 mangoes",
+            "2 mangoes",
+            "1 mangoes",
+            "3 mangoes"
+          ],
+          "correctAnswer": "2 mangoes",
+          "explanation": "6 divided by 3 is 2 (6 ÷ 3 = 2), because 3 × 2 = 6.",
+          "hint": "Think: What number multiplied by 3 gives 6?"
+        }
+      ],
+      "createdAt": "2026-10-30T18:09:02.093Z"
+    },
+    {
+      "id": "act-evs-evs-water-hard-1793383723003",
+      "conceptId": "c-evs-water-01",
+      "conceptName": "Water Cycle & Conservation",
+      "subjectCode": "EVS",
+      "grade": 4,
+      "title": "Water Cycle & Conservation (Hard Level Practice)",
+      "titleGujarati": "જળચક્ર અને જળસંચય (કઠિન મહાવરો)",
+      "activityType": "mcq",
+      "difficulty": "Hard",
+      "estimatedMinutes": 8,
+      "questions": [
+        {
+          "id": "q-evs-evs-water-hard-1793383723003-0-9sre",
+          "type": "mcq",
+          "questionText": "Why are plant leaves green in color?",
+          "questionTextGujarati": "વનસ્પતિના પાંદડા લીલા રંગના કેમ હોય છે?",
+          "options": [
+            "Due to sunlight reflection only",
+            "Because of water",
+            "Because of mud",
+            "Due to the presence of Chlorophyll"
+          ],
+          "correctAnswer": "Due to the presence of Chlorophyll",
+          "explanation": "Chlorophyll is a green pigment that traps sunlight for making plant food through photosynthesis.",
+          "hint": "The green pigment in leaves."
+        },
+        {
+          "id": "q-evs-evs-water-hard-1793383723003-1-ffyr",
+          "type": "mcq",
+          "questionText": "Which gas do green plants take in from the air during photosynthesis?",
+          "questionTextGujarati": "પ્રકાશસંશ્લેષણ દરમિયાન વનસ્પતિ કયો વાયુ ગ્રહણ કરે છે?",
+          "options": [
+            "Carbon Dioxide",
+            "Nitrogen",
+            "Hydrogen",
+            "Oxygen"
+          ],
+          "correctAnswer": "Carbon Dioxide",
+          "explanation": "Plants absorb carbon dioxide from air and release oxygen, which all animals and humans breathe!",
+          "hint": "The gas that humans exhale."
+        },
+        {
+          "id": "q-evs-evs-water-hard-1793383723003-2-2fxz",
+          "type": "mcq",
+          "questionText": "Which part of the plant absorbs water and minerals from the soil?",
+          "questionTextGujarati": "વનસ્પતિનો કયો ભાગ જમીનમાંથી પાણી અને ક્ષારોનું શોષણ કરે છે?",
+          "options": [
+            "Stem (પ્રકાંડ)",
+            "Leaves (પર્ણ)",
+            "Flower (પુષ્પ)",
+            "Roots (મૂળ)"
+          ],
+          "correctAnswer": "Roots (મૂળ)",
+          "explanation": "Roots anchor the plant firmly in the soil and absorb moisture and essential soil minerals.",
+          "hint": "The underground part of the plant."
+        },
+        {
+          "id": "q-evs-evs-water-hard-1793383723003-3-imte",
+          "type": "mcq",
+          "questionText": "What is the main advantage of Rainwater Harvesting (ટાંકી / વાવ)?",
+          "questionTextGujarati": "વરસાદી પાણીના સંગ્રહ (રેઈનવોટર હાર્વેસ્ટિંગ) નો મુખ્ય ફાયદો શું છે?",
+          "options": [
+            "Recharging underground water table and storing clean water for dry months",
+            "Making the soil completely dry",
+            "Wasting water in the gutters",
+            "Causing soil erosion"
+          ],
+          "correctAnswer": "Recharging underground water table and storing clean water for dry months",
+          "explanation": "Harvesting rainwater directs rooftop runoff into storage tanks or aquifers, raising the groundwater level for summer.",
+          "hint": "Saving water for the future when rains stop."
+        }
+      ],
+      "createdAt": "2026-10-30T18:08:43.003Z"
+    },
+    {
+      "id": "act-evs-evs-water-medium-1793383723001",
+      "conceptId": "c-evs-water-01",
+      "conceptName": "Water Cycle & Conservation",
+      "subjectCode": "EVS",
+      "grade": 4,
+      "title": "Water Cycle & Conservation (Medium Level Practice)",
+      "titleGujarati": "જળચક્ર અને જળસંચય (મધ્યમ મહાવરો)",
+      "activityType": "mcq",
+      "difficulty": "Medium",
+      "estimatedMinutes": 8,
+      "questions": [
+        {
+          "id": "q-evs-evs-water-medium-1793383723001-0-ueox",
+          "type": "mcq",
+          "questionText": "Which of the following is the BEST way to save water at home?",
+          "questionTextGujarati": "નીચેનામાંથી ઘરમાં પાણી બચાવવાની શ્રેષ્ઠ રીત કઈ છે?",
+          "options": [
+            "Leaving the tap running continuously",
+            "Turning off the tap while brushing teeth",
+            "Throwing clean drinking water in the drain",
+            "Washing a bicycle with a hose pipe for 30 minutes"
+          ],
+          "correctAnswer": "Turning off the tap while brushing teeth",
+          "explanation": "Closing the tap while brushing saves up to 5 to 10 liters of pure drinking water every day!",
+          "hint": "Think about avoiding running taps."
+        },
+        {
+          "id": "q-evs-evs-water-medium-1793383723001-1-rmdg",
+          "type": "mcq",
+          "questionText": "Which gas do green plants take in from the air during photosynthesis?",
+          "questionTextGujarati": "પ્રકાશસંશ્લેષણ દરમિયાન વનસ્પતિ કયો વાયુ ગ્રહણ કરે છે?",
+          "options": [
+            "Hydrogen",
+            "Nitrogen",
+            "Carbon Dioxide",
+            "Oxygen"
+          ],
+          "correctAnswer": "Carbon Dioxide",
+          "explanation": "Plants absorb carbon dioxide from air and release oxygen, which all animals and humans breathe!",
+          "hint": "The gas that humans exhale."
+        },
+        {
+          "id": "q-evs-evs-water-medium-1793383723001-2-65iz",
+          "type": "mcq",
+          "questionText": "What happens when the hot sun shines over lakes, rivers, and ponds?",
+          "questionTextGujarati": "જ્યારે સૂર્યની ગરમી તળાવ, નદી અને જળાશયો પર પડે છે ત્યારે શું થાય છે?",
+          "options": [
+            "Water turns into stone",
+            "Water freezes into ice",
+            "Water disappears forever",
+            "Water evaporates into water vapor"
+          ],
+          "correctAnswer": "Water evaporates into water vapor",
+          "explanation": "Sunlight heats up liquid water, converting it into invisible vapor. This process is called Evaporation.",
+          "hint": "Think about steam coming from boiling water."
+        },
+        {
+          "id": "q-evs-evs-water-medium-1793383723001-3-b551",
+          "type": "mcq",
+          "questionText": "Why should drinking water always be stored in clean, covered vessels?",
+          "questionTextGujarati": "પીવાનું પાણી હંમેશા સ્વચ્છ અને ઢાંકેલા વાસણમાં કેમ રાખવું જોઈએ?",
+          "options": [
+            "To protect it from dust, germs, and insects",
+            "To make it heavy",
+            "To change its color",
+            "To make it sweet"
+          ],
+          "correctAnswer": "To protect it from dust, germs, and insects",
+          "explanation": "Covering water prevents dust, flies, and bacteria from contaminating it, preventing diseases like cholera and jaundice.",
+          "hint": "Think about keeping insects and dirt out."
+        }
+      ],
+      "createdAt": "2026-10-30T18:08:43.001Z"
+    },
+    {
+      "id": "act-eng-eng-verb-agreement-hard-1793383722995",
+      "conceptId": "c-eng-verb-01",
+      "conceptName": "Subject-Verb Agreement",
+      "subjectCode": "ENG",
+      "grade": 4,
+      "title": "Subject-Verb Agreement (Hard Level Practice)",
+      "titleGujarati": "કર્તા અને ક્રિયાપદ સુસંગતતા (કઠિન મહાવરો)",
+      "activityType": "mcq",
+      "difficulty": "Hard",
+      "estimatedMinutes": 8,
+      "questions": [
+        {
+          "id": "q-eng-eng-verb-agreement-hard-1793383722995-0-b5x8",
+          "type": "mcq",
+          "questionText": "Select the correct option: One of the books _____ missing from the shelf.",
+          "questionTextGujarati": "સાચો વિકલ્પ પસંદ કરો: One of the books _____ missing from the shelf.",
+          "options": [
+            "is",
+            "were",
+            "are",
+            "have"
+          ],
+          "correctAnswer": "is",
+          "explanation": "The subject is 'One' (singular), not 'books'. So singular verb 'is' is correct.",
+          "hint": "The subject is 'One' of the books."
+        },
+        {
+          "id": "q-eng-eng-verb-agreement-hard-1793383722995-1-g0ty",
+          "type": "mcq",
+          "questionText": "Complete the conditional sentence: If it rains tomorrow, we _____ stay indoors.",
+          "questionTextGujarati": "વાક્ય પૂર્ણ કરો: If it rains tomorrow, we _____ stay indoors.",
+          "options": [
+            "would",
+            "will",
+            "have",
+            "were"
+          ],
+          "correctAnswer": "will",
+          "explanation": "First conditional uses Present Simple in 'if' clause ('rains') and 'will + verb' in main clause.",
+          "hint": "Real future possibility takes 'will'."
+        },
+        {
+          "id": "q-eng-eng-verb-agreement-hard-1793383722995-2-48n9",
+          "type": "mcq",
+          "questionText": "Identify the sentence that has NO grammatical error:",
+          "questionTextGujarati": "વ્યાકરણની દૃષ્ટિએ સાચું વાક્ય શોધો:",
+          "options": [
+            "Each of the participant have received a certificate.",
+            "Each of the participants are received a certificate.",
+            "Each of the participants have received a certificate.",
+            "Each of the participants has received a certificate."
+          ],
+          "correctAnswer": "Each of the participants has received a certificate.",
+          "explanation": "'Each' is an indefinite singular pronoun that takes singular verb 'has'.",
+          "hint": "'Each' takes a singular verb."
+        },
+        {
+          "id": "q-eng-eng-verb-agreement-hard-1793383722995-3-cl81",
+          "type": "mcq",
+          "questionText": "Fill in the blank: Neither the teacher nor the students _____ in the hall.",
+          "questionTextGujarati": "ખાલી જગ્યા પૂરો: Neither the teacher nor the students _____ in the hall.",
+          "options": [
+            "has",
+            "were",
+            "was",
+            "is"
+          ],
+          "correctAnswer": "were",
+          "explanation": "In 'neither... nor...', the verb agrees with the closer subject ('students' -> plural 'were').",
+          "hint": "Look at the subject closest to the blank ('students')."
+        }
+      ],
+      "createdAt": "2026-10-30T18:08:42.995Z"
+    },
+    {
+      "id": "act-eng-eng-verb-agreement-medium-1793383722990",
+      "conceptId": "c-eng-verb-01",
+      "conceptName": "Subject-Verb Agreement",
+      "subjectCode": "ENG",
+      "grade": 4,
+      "title": "Subject-Verb Agreement (Medium Level Practice)",
+      "titleGujarati": "કર્તા અને ક્રિયાપદ સુસંગતતા (મધ્યમ મહાવરો)",
+      "activityType": "mcq",
+      "difficulty": "Medium",
+      "estimatedMinutes": 8,
+      "questions": [
+        {
+          "id": "q-eng-eng-verb-agreement-medium-1793383722990-0-x14z",
+          "type": "mcq",
+          "questionText": "Complete the sentence: Every morning, Rohan _____ his bicycle to school.",
+          "questionTextGujarati": "વાક્ય પૂર્ણ કરો: Every morning, Rohan _____ his bicycle to school.",
+          "options": [
+            "ride",
+            "is ride",
+            "rides",
+            "riding"
+          ],
+          "correctAnswer": "rides",
+          "explanation": "Singular third person (Rohan) takes -s: 'rides'.",
+          "hint": "Rohan is singular, so add -s to the verb."
+        },
+        {
+          "id": "q-eng-eng-verb-agreement-medium-1793383722990-1-g66o",
+          "type": "mcq",
+          "questionText": "Choose the correct sentence:",
+          "questionTextGujarati": "સાચું વાક્ય પસંદ કરો:",
+          "options": [
+            "Birds builds nests in trees.",
+            "Birds building nests in trees.",
+            "Birds is build nests.",
+            "Birds build nests in trees."
+          ],
+          "correctAnswer": "Birds build nests in trees.",
+          "explanation": "Plural subject 'Birds' takes the base verb 'build' without -s.",
+          "hint": "With plural subjects, do not add -s to the verb."
+        },
+        {
+          "id": "q-eng-eng-verb-agreement-medium-1793383722990-2-bl28",
+          "type": "mcq",
+          "questionText": "Fill in the blank: The sun _____ brightly in the morning sky.",
+          "questionTextGujarati": "ખાલી જગ્યા પૂરો: The sun _____ brightly in the morning sky.",
+          "options": [
+            "shines",
+            "shine",
+            "shining",
+            "shined"
+          ],
+          "correctAnswer": "shines",
+          "explanation": "Third-person singular 'The sun' takes the verb form ending with -s ('shines').",
+          "hint": "'Sun' is singular (one)."
+        },
+        {
+          "id": "q-eng-eng-verb-agreement-medium-1793383722990-3-fwpu",
+          "type": "mcq",
+          "questionText": "Fill in the blank: Neither the teacher nor the students _____ in the hall.",
+          "questionTextGujarati": "ખાલી જગ્યા પૂરો: Neither the teacher nor the students _____ in the hall.",
+          "options": [
+            "is",
+            "was",
+            "has",
+            "were"
+          ],
+          "correctAnswer": "were",
+          "explanation": "In 'neither... nor...', the verb agrees with the closer subject ('students' -> plural 'were').",
+          "hint": "Look at the subject closest to the blank ('students')."
+        }
+      ],
+      "createdAt": "2026-10-30T18:08:42.990Z"
+    },
+    {
+      "id": "act-eng-eng-verb-agreement-easy-1793383722987",
+      "conceptId": "c-eng-verb-01",
+      "conceptName": "Subject-Verb Agreement",
+      "subjectCode": "ENG",
+      "grade": 4,
+      "title": "Subject-Verb Agreement (Easy Level Practice)",
+      "titleGujarati": "કર્તા અને ક્રિયાપદ સુસંગતતા (સરળ મહાવરો)",
+      "activityType": "mcq",
+      "difficulty": "Easy",
+      "estimatedMinutes": 8,
+      "questions": [
+        {
+          "id": "q-eng-eng-verb-agreement-easy-1793383722987-0-jpyh",
+          "type": "mcq",
+          "questionText": "Fill in the blank: The sun _____ brightly in the morning sky.",
+          "questionTextGujarati": "ખાલી જગ્યા પૂરો: The sun _____ brightly in the morning sky.",
+          "options": [
+            "shines",
+            "shined",
+            "shining",
+            "shine"
+          ],
+          "correctAnswer": "shines",
+          "explanation": "Third-person singular 'The sun' takes the verb form ending with -s ('shines').",
+          "hint": "'Sun' is singular (one)."
+        },
+        {
+          "id": "q-eng-eng-verb-agreement-easy-1793383722987-1-5cq7",
+          "type": "mcq",
+          "questionText": "Which pronoun correctly replaces 'The peacock' in a sentence?",
+          "questionTextGujarati": "'The peacock' ની જગ્યાએ કયું સર્વનામ વપરાય?",
+          "options": [
+            "He",
+            "We",
+            "They",
+            "It"
+          ],
+          "correctAnswer": "It",
+          "explanation": "'It' is used for animals, birds, and non-living things in singular.",
+          "hint": "For birds and animals, we use 'It'."
+        },
+        {
+          "id": "q-eng-eng-verb-agreement-easy-1793383722987-2-dqyd",
+          "type": "mcq",
+          "questionText": "Select the correct word: Pooja and Diya _____ best friends.",
+          "questionTextGujarati": "સાચો વિકલ્પ પસંદ કરો: Pooja and Diya _____ best friends.",
+          "options": [
+            "am",
+            "is",
+            "are",
+            "was"
+          ],
+          "correctAnswer": "are",
+          "explanation": "'Pooja and Diya' are two people (plural), so we use 'are'.",
+          "hint": "Two people together make a plural subject."
+        },
+        {
+          "id": "q-eng-eng-verb-agreement-easy-1793383722987-3-q218",
+          "type": "mcq",
+          "questionText": "Choose the correct sentence:",
+          "questionTextGujarati": "સાચું વાક્ય પસંદ કરો:",
+          "options": [
+            "Birds builds nests in trees.",
+            "Birds building nests in trees.",
+            "Birds build nests in trees.",
+            "Birds is build nests."
+          ],
+          "correctAnswer": "Birds build nests in trees.",
+          "explanation": "Plural subject 'Birds' takes the base verb 'build' without -s.",
+          "hint": "With plural subjects, do not add -s to the verb."
+        }
+      ],
+      "createdAt": "2026-10-30T18:08:42.987Z"
+    },
+    {
+      "id": "act-guj-guj-matras-hard-1793383722981",
+      "conceptId": "c-guj-matra-01",
+      "conceptName": "Gujarati Matras & Vowel Symbols",
+      "subjectCode": "GUJ",
+      "grade": 4,
+      "title": "Gujarati Matras & Vowel Symbols (Hard Level Practice)",
+      "titleGujarati": "કાનો-માત્રા અને દીર્ઘ-હ્રસ્વ સ્વર ચિહ્નો (કઠિન મહાવરો)",
+      "activityType": "mcq",
+      "difficulty": "Hard",
+      "estimatedMinutes": 8,
+      "questions": [
+        {
+          "id": "q-guj-guj-matras-hard-1793383722981-0-kzqf",
+          "type": "mcq",
+          "questionText": "Identify the correct feminine form of 'વિદ્વાન' (Scholar):",
+          "questionTextGujarati": "'વિદ્વાન' શબ્દનું સ્ત્રીલિંગ રૂપ શું થાય?",
+          "options": [
+            "વિદ્યાવાન",
+            "વિદુષી",
+            "વિદ્વાની",
+            "વિદ્વાન સ્ત્રી"
+          ],
+          "correctAnswer": "વિદુષી",
+          "explanation": "વિદ્વાન પુરુષ માટે વપરાય, સ્ત્રી માટે 'વિદુષી' વપરાય છે.",
+          "hint": "વિદ્યાવાન સ્ત્રી માટે વિદુષી શબ્દ વપરાય છે."
+        },
+        {
+          "id": "q-guj-guj-matras-hard-1793383722981-1-kn1q",
+          "type": "mcq",
+          "questionText": "Identify the conjunct (Jodakshar) word among the following:",
+          "questionTextGujarati": "નીચેનામાંથી જોડાક્ષર શબ્દ કયો છે?",
+          "options": [
+            "પુસ્તક (Book)",
+            "રમકડું",
+            "સરળ",
+            "કાગળ"
+          ],
+          "correctAnswer": "પુસ્તક (Book)",
+          "explanation": "'પુસ્તક' શબ્દમાં સ્ + ત જોડાઈને 'સ્ત' બને છે, જે જોડાક્ષર છે.",
+          "hint": "બે અક્ષરો જોડાયેલા હોય તેવો શબ્દ શોધો."
+        },
+        {
+          "id": "q-guj-guj-matras-hard-1793383722981-2-es02",
+          "type": "mcq",
+          "questionText": "Which two consonants combine to form 'જ્ઞ'?",
+          "questionTextGujarati": "'જ્ઞ' અક્ષર કયા બે વ્યંજનોના જોડાણથી બને છે?",
+          "options": [
+            "ગ્ + ઞ",
+            "જ્ + ય",
+            "જ્ + ઞ",
+            "ધ્ + ય"
+          ],
+          "correctAnswer": "જ્ + ઞ",
+          "explanation": "જ્ + ઞ = જ્ઞ (જેમ કે જ્ઞાન, યજ્ઞ).",
+          "hint": "જ વર્ગનો નાસિક્ય અક્ષર ઞ છે."
+        },
+        {
+          "id": "q-guj-guj-matras-hard-1793383722981-3-x7pm",
+          "type": "mcq",
+          "questionText": "Choose the word where both Hrasva (short) and Dirgha (long) vowels are correctly used:",
+          "questionTextGujarati": "હ્રસ્વ અને દીર્ઘ બંને સ્વરોનો સાચો ઉપયોગ ધરાવતો શબ્દ કયો છે?",
+          "options": [
+            "નીરિક્ષણ",
+            "નીરીક્ષણ",
+            "નિરિક્ષણ",
+            "નિરીક્ષણ"
+          ],
+          "correctAnswer": "નિરીક્ષણ",
+          "explanation": "'નિરીક્ષણ' શબ્દમાં 'ન' ને હ્રસ્વ ઇ (િ) અને 'ર' ને દીર્ઘ ઈ (ી) લાગે છે.",
+          "hint": "પહેલો હ્રસ્વ (િ) અને બીજો દીર્ઘ (ી) હોય."
+        }
+      ],
+      "createdAt": "2026-10-30T18:08:42.981Z"
+    },
+    {
+      "id": "act-guj-guj-matras-medium-1793383722977",
+      "conceptId": "c-guj-matra-01",
+      "conceptName": "Gujarati Matras & Vowel Symbols",
+      "subjectCode": "GUJ",
+      "grade": 4,
+      "title": "Gujarati Matras & Vowel Symbols (Medium Level Practice)",
+      "titleGujarati": "કાનો-માત્રા અને દીર્ઘ-હ્રસ્વ સ્વર ચિહ્નો (મધ્યમ મહાવરો)",
+      "activityType": "mcq",
+      "difficulty": "Medium",
+      "estimatedMinutes": 8,
+      "questions": [
+        {
+          "id": "q-guj-guj-matras-medium-1793383722976-0-t2ih",
+          "type": "mcq",
+          "questionText": "Which two consonants combine to form the conjunct letter 'ક્ષ'?",
+          "questionTextGujarati": "'ક્ષ' અક્ષર કયા બે વ્યંજનોના જોડાણથી બને છે?",
+          "options": [
+            "ક્ + સ",
+            "ખ્ + સ",
+            "શ્ + ર",
+            "ક્ + ષ"
+          ],
+          "correctAnswer": "ક્ + ષ",
+          "explanation": "ક્ + ષ = ક્ષ (જેમ કે ક્ષત્રિય, પક્ષી).",
+          "hint": "ક અને ષ નું મિશ્રણ યાદ કરો."
+        },
+        {
+          "id": "q-guj-guj-matras-medium-1793383722976-1-7xj4",
+          "type": "mcq",
+          "questionText": "What vowel mark is attached to 'મ' in the word 'મોર'?",
+          "questionTextGujarati": "'મોર' શબ્દમાં 'મ' ને કઈ માત્રા લાગેલી છે?",
+          "options": [
+            "કાનો અને માત્ર (ો)",
+            "દીર્ઘ ઈ (ી)",
+            "કાનો (ા)",
+            "માત્ર (ે)"
+          ],
+          "correctAnswer": "કાનો અને માત્ર (ો)",
+          "explanation": "મ + ો = મો, તેથી 'મોર' બને છે.",
+          "hint": "ઓ નો ઉચ્ચાર ધરાવતી માત્રા (ો) છે."
+        },
+        {
+          "id": "q-guj-guj-matras-medium-1793383722976-2-8zj8",
+          "type": "mcq",
+          "questionText": "Find the correctly spelled conjunct word:",
+          "questionTextGujarati": "સાચી જોડણીવાળો જોડાક્ષર શબ્દ પસંદ કરો:",
+          "options": [
+            "ઉસતવ",
+            "ઉત્ત્વ",
+            "ઉત્સવ",
+            "ઉતસવ"
+          ],
+          "correctAnswer": "ઉત્સવ",
+          "explanation": "'ઉત્સવ' સાચી જોડણી છે (ત્ + સ = ત્સ).",
+          "hint": "ત અને સ ના જોડાણવાળો શબ્દ."
+        },
+        {
+          "id": "q-guj-guj-matras-medium-1793383722976-3-3nz9",
+          "type": "mcq",
+          "questionText": "In the word 'સૂર્ય' (Sun), which vowel matra is attached to 'સ'?",
+          "questionTextGujarati": "'સૂર્ય' શબ્દમાં 'સ' ને કઈ માત્રા લાગેલી છે?",
+          "options": [
+            "એક માત્ર (ે)",
+            "દીર્ઘ ઊ (ૂ)",
+            "કાનો (ા)",
+            "હ્રસ્વ ઉ (ુ)"
+          ],
+          "correctAnswer": "દીર્ઘ ઊ (ૂ)",
+          "explanation": "સૂર્ય શબ્દમાં સ + ૂ = સૂ (દીર્ઘ ઊ) થાય છે.",
+          "hint": "અક્ષરની નીચે વાળેલું ચિહ્ન (ૂ) જુઓ."
+        }
+      ],
+      "createdAt": "2026-10-30T18:08:42.977Z"
+    },
+    {
+      "id": "act-math-math-division-hard-1793383722972",
+      "conceptId": "c-div-01",
+      "conceptName": "Division Basics & Equal Sharing",
+      "subjectCode": "MATH",
+      "grade": 4,
+      "title": "Division Basics & Equal Sharing (Hard Level Practice)",
+      "titleGujarati": "ભાગાકારની મૂળભૂત સંકલ્પના અને સરખા ભાગ (કઠિન મહાવરો)",
+      "activityType": "mcq",
+      "difficulty": "Hard",
+      "estimatedMinutes": 8,
+      "questions": [
+        {
+          "id": "q-math-math-division-hard-1793383722971-0-5y2j",
+          "type": "mcq",
+          "questionText": "A farmer packs 208 apples into boxes of 16 each. He sells each box for ₹6. How much total money does he earn?",
+          "questionTextGujarati": "એક ખેડૂત 208 સફરજન ને દરેક બોક્સમાં 16 મુજબ પેક કરે છે. તે દરેક બોક્સ ₹6 માં વેચે છે. તો તેને કુલ કેટલા રૂપિયા મળશે?",
+          "options": [
+            "₹78",
+            "₹195",
+            "₹38",
+            "₹128"
+          ],
+          "correctAnswer": "₹78",
+          "explanation": "Step 1: 208 ÷ 16 = 13 boxes. Step 2: 13 boxes × ₹6 = ₹78.",
+          "hint": "First find the number of boxes by dividing, then multiply by price per box."
+        },
+        {
+          "id": "q-math-math-division-hard-1793383722971-1-u772",
+          "type": "mcq",
+          "questionText": "Solve the two-step expression: (70 ÷ 2) + (8 × 3) = ?",
+          "questionTextGujarati": "દાખલો ગણો: (70 ÷ 2) + (8 × 3) = ?",
+          "options": [
+            "51",
+            "63",
+            "59",
+            "69"
+          ],
+          "correctAnswer": "59",
+          "explanation": "First calculate 70 ÷ 2 = 35. Then calculate 8 × 3 = 24. Add them: 35 + 24 = 59.",
+          "hint": "Use order of operations: solve inside parentheses first!"
+        },
+        {
+          "id": "q-math-math-division-hard-1793383722971-2-uhre",
+          "type": "mcq",
+          "questionText": "A farmer packs 126 notebooks into boxes of 14 each. He sells each box for ₹8. How much total money does he earn?",
+          "questionTextGujarati": "એક ખેડૂત 126 નોટબુક ને દરેક બોક્સમાં 14 મુજબ પેક કરે છે. તે દરેક બોક્સ ₹8 માં વેચે છે. તો તેને કુલ કેટલા રૂપિયા મળશે?",
+          "options": [
+            "₹72",
+            "₹135",
+            "₹32",
+            "₹122"
+          ],
+          "correctAnswer": "₹72",
+          "explanation": "Step 1: 126 ÷ 14 = 9 boxes. Step 2: 9 boxes × ₹8 = ₹72.",
+          "hint": "First find the number of boxes by dividing, then multiply by price per box."
+        },
+        {
+          "id": "q-math-math-division-hard-1793383722971-3-jfkj",
+          "type": "mcq",
+          "questionText": "Solve the two-step expression: (74 ÷ 2) + (5 × 7) = ?",
+          "questionTextGujarati": "દાખલો ગણો: (74 ÷ 2) + (5 × 7) = ?",
+          "options": [
+            "64",
+            "82",
+            "76",
+            "72"
+          ],
+          "correctAnswer": "72",
+          "explanation": "First calculate 74 ÷ 2 = 37. Then calculate 5 × 7 = 35. Add them: 37 + 35 = 72.",
+          "hint": "Use order of operations: solve inside parentheses first!"
+        }
+      ],
+      "createdAt": "2026-10-30T18:08:42.972Z"
+    },
     {
       "id": "act-div-01",
       "conceptId": "c-div-01",
@@ -994,6 +1674,38 @@
       "incorrectQuestions": [],
       "id": "att-1793308862466",
       "completedAt": "2026-10-29T21:21:02.467Z"
+    },
+    {
+      "studentId": "std-aarav",
+      "activityId": "act-guj-01",
+      "score": 1,
+      "maximumScore": 2,
+      "percentage": 50,
+      "answers": {
+        "q-g-1": "દિવાડો",
+        "q-g-2": "કાનો (ા)"
+      },
+      "incorrectQuestions": [
+        "q-g-1"
+      ],
+      "id": "att-1793380939986",
+      "completedAt": "2026-10-30T17:22:19.986Z"
+    },
+    {
+      "studentId": "std-aarav",
+      "activityId": "act-math-math-division-easy-1793383742093",
+      "score": 4,
+      "maximumScore": 4,
+      "percentage": 100,
+      "answers": {
+        "q-math-math-division-easy-1793383742093-0-mk6c": "3 cricket balls",
+        "q-math-math-division-easy-1793383742093-1-4em4": "2 × 6 = 12",
+        "q-math-math-division-easy-1793383742093-2-wiki": "True",
+        "q-math-math-division-easy-1793383742093-3-9w16": "2 mangoes"
+      },
+      "incorrectQuestions": [],
+      "id": "att-1793383765382",
+      "completedAt": "2026-10-30T18:09:25.382Z"
     }
   ],
   "parents": [
