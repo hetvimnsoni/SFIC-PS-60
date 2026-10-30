@@ -1164,7 +1164,7 @@ export function generateLearningActivity(options: GenerateQuestionsOptions): Lea
   const questions = generatePracticeQuestions(options);
 
   // Match catalog item
-  let topicId = options.topicId || options.conceptId || "";
+  const topicId = options.topicId || options.conceptId || "";
   let matchedCatalog = TOPIC_CATALOG.find((t) => t.id === topicId || t.conceptId === topicId);
   if (!matchedCatalog) {
     matchedCatalog = TOPIC_CATALOG.find((t) => t.subjectCode === subjectCode) || TOPIC_CATALOG[0];
